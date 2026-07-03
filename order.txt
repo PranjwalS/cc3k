@@ -1,2 +1,11 @@
+src/character.cc
+src/enemy.cc
+src/player.cc
+src/chamber.cc
+src/floor.cc
+
+src/player-impl.cc
+src/chamber-impl.cc
+src/floor-impl.cc
+src/enemy-impl.cc
 src/cc3k.cc
-src/getch.cc
