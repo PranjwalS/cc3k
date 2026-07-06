@@ -9,6 +9,7 @@ export class Character {
     public:
     Floor& attack(Floor& m);
     Floor& defend(Floor& m);
+    Floor& move(Floor& m);
     Floor& step(Floor& m);
-    Floor& spawn(Floor& m);
+    Floor& spawn(Floor& m, int _x, int _y);
 };
