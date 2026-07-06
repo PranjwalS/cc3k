@@ -1,11 +1,16 @@
 export module enemy;
 
+import random;
 import character;
 class Floor;
 
 export class Enemy : public Character {
     public:
     Floor& drop(Floor& m);
+    Enemy(int hp, int atk, int def, Floor& m) : 
+        hp{hp}, atk{atk}, def{def} {
+            spawn(m);
+        }
 };
 export class Human : public Enemy;
 export class Dwarf : public Enemy;
