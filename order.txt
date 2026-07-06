@@ -1,3 +1,6 @@
+src/random.cc
+src/direction.cc
+
 src/character.cc
 src/enemy.cc
 src/player.cc

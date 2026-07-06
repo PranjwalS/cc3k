@@ -1,9 +1,11 @@
 export module random;
-import <algorithm>
 
-unsigned seed = std::chrone::system_clock::now().time_since_epoch().count();
+import <algorithm>;
+import <chrono>;
+import <random>; 
+
+unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
 std::vector<int> v = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-
 
 export int random(int seed = seed) {
     std::default_random_engine rng(seed);
