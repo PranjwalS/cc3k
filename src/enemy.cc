@@ -2,7 +2,6 @@ export module enemy;
 
 import <string>;
 import <utility>;
-import geometry;
 import character;
 import floor;
 

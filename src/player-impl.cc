@@ -2,9 +2,12 @@ module player;
 
 void Player::attack(Floor& f, std::string dir) {
     if (!validMove(f, dir)) return;
-    auto [atkX, atkY] = toDir(dir) + std::pair<int, int>{x, y};
+    auto atkDir = toDir(dir);
+    int atkX = atkDir.first + x;
+    int atkY = atkDir.second + y;
     if (f.enemies[atkX][atkY]) f.enemies[atkX][atkY].defend(f,atk);
 }
+
 void Player::defend(Floor& f, int atkVal) {}
 void Player::endTurn(Floor& f) {}
 
