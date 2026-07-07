@@ -1,7 +1,5 @@
 export module enemy;
 
-import floor;
-
 import <string>;
 import <utility>;
 import character;

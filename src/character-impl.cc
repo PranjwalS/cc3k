@@ -1,21 +1,22 @@
 module character;
 
+import constants;
 import floor;
 import random;
 
 void Character::spawn(Floor& f) {
-    x = random(0, MAX_Y_POSITION);
-    y = random(0, MAX_X_POSITION);
+    x = random(0, constants::board::MAX_Y);
+    y = random(0, constants::board::MAX_X);
     while (!f.validSpawn(x, y)) {
-        x = random(0, MAX_Y_POSITION);
-        y = random(0, MAX_X_POSITION);
+        x = random(0, constants::board::MAX_Y);
+        y = random(0, constants::board::MAX_X);
     }
 }
 
 bool Character::validMove(Floor& f, std::string dir) {
     auto [dx, dy] = toDir(dir);
-    if (x + dx < 0 || x + dx > MAX_X_POSITION ||
-        y + dy < 0 || y + dy > MAX_Y_POSITION) return false;
+    if (x + dx < 0 || x + dx > constants::board::MAX_X ||
+        y + dy < 0 || y + dy > constants::board::MAX_Y) return false;
     return true;
 }
 

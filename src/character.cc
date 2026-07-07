@@ -4,7 +4,6 @@ import <string>;
 import <utility>;
 import floor; // i lwky needed this
 import random;
-import constants;
 
 export std::pair<int,int> toDir(std::string dir) {
     if (dir == "no") return {0, -1};

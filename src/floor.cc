@@ -9,11 +9,11 @@ class Potion;
 
 export class Floor {
     public:
-    char grid[BOARD_WIDTH][BOARD_HEIGHT];
-    Enemy* enemies[BOARD_WIDTH][BOARD_HEIGHT];
+    char grid[constants::board::WIDTH][constants::board::HEIGHT];
+    Enemy* enemies[constants::board::WIDTH][constants::board::HEIGHT];
     Player* player;
-    Gold* gold[BOARD_WIDTH][BOARD_HEIGHT];
-    Potion* potions[BOARD_WIDTH][BOARD_HEIGHT];
+    Gold* gold[constants::board::WIDTH][constants::board::HEIGHT];
+    Potion* potions[constants::board::WIDTH][constants::board::HEIGHT];
 
     Floor();
     bool validSpawn(int x, int y);
