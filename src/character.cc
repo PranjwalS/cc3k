@@ -6,8 +6,6 @@ import floor; // i lwky needed this
 import random;
 import constants;
 
-class Enemy;
-
 export std::pair<int,int> toDir(std::string dir) {
     if (dir == "no") return {0, -1};
     if (dir == "so") return {0, 1};
