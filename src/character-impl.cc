@@ -8,3 +8,16 @@ void Character::spawn(Floor& f) {
         y = random(0, MAX_X_POSITION);
     }
 }
+
+bool Character::validMove(Floor& f, std::string dir) {
+    auto [dx, dy] = toDir(dir);
+    if (x + dx < 0 || x + dx > MAX_X_POSITION ||
+        y + dy < 0 || y + dy > MAX_Y_POSITION) return false;
+    return true;
+}
+
+void Character::move(Floor& f, std::string dir) {
+    auto [dx, dy] = toDir(dir);
+    x += dx;
+    y += dy;
+}

@@ -1,9 +1,11 @@
 export module character;
 
 import <string>;
+import <utility>;
 import floor; // i lwky needed this
 import random;
 import constants;
+import geometry;
 
 class Enemy;
 

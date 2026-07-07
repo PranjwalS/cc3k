@@ -1,8 +1,8 @@
 module enemy;
 
-import floor;
-
-void Enemy::attack(Floor& f, std::string dir) {}
+void Enemy::attack(Floor& f, std::string dir) {
+    Character::toDir(dir) + std::pair<int, int>{x, y};
+}
 void Enemy::defend(Floor& f, int atkVal) {}
 void Enemy::drop(Floor& f) {}
 void Enemy::move(Floor& f) {}
