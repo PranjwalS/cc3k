@@ -2,6 +2,8 @@ export module character;
 
 import <string>;
 import floor; // i lwky needed this
+import random;
+import constants;
 
 class Enemy;
 

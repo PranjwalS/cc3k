@@ -1,13 +1,10 @@
 module character;
-import floor;
-import random;
 
 void Character::spawn(Floor& f) {
-    x = random(0, 78);
-    y = random(0, 29);
+    x = random(0, MAX_Y_POSITION);
+    y = random(0, MAX_X_POSITION);
     while (!f.validSpawn(x, y)) {
-        x = random(0, 78);
-        y = random(0, 29);
+        x = random(0, MAX_Y_POSITION);
+        y = random(0, MAX_X_POSITION);
     }
 }
-

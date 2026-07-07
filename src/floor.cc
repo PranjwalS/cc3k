@@ -1,5 +1,7 @@
 export module floor;
 
+import constants;
+
 class Enemy;
 class Player;
 class Gold;
@@ -7,13 +9,12 @@ class Potion;
 
 export class Floor {
     public:
-    char grid[30][79];
-    Enemy* enemies[30][79];
+    char grid[BOARD_WIDTH][BOARD_HEIGHT];
+    Enemy* enemies[BOARD_WIDTH][BOARD_HEIGHT];
     Player* player;
-    Gold* gold[30][79];
-    Potion* potions[30][79];
+    Gold* gold[BOARD_WIDTH][BOARD_HEIGHT];
+    Potion* potions[BOARD_WIDTH][BOARD_HEIGHT];
 
     Floor();
     bool validSpawn(int x, int y);
 };
-
