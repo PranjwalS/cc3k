@@ -31,8 +31,8 @@ export class Character {
             spawn(f);
         }
 
-    virtual void attack(Floor& f, std::string dir) = 0;
-    virtual void defend(Floor& f, int atkVal) = 0;
+    virtual void attack(Floor& f, std::string dir) = 0; // like cannot attack like
+    virtual void defend(Floor& f, int atkVal);
     bool isAlive() { return hp > 0; }
     void spawn(Floor& f);
     bool validMove(Floor& f, std::string dir);

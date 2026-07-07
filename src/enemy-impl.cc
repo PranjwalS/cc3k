@@ -1,10 +1,13 @@
 module enemy;
 
 void Enemy::attack(Floor& f, std::string dir) {
-    Character::toDir(dir) + std::pair<int, int>{x, y};
+    if (!validMove(f, dir)) return;
+    auto [atkX, atkY] = toDir(dir) + std::pair<int, int>{x, y};
+    if (f.player.x == atkX && f.player.y == atkY) f.player.defend(f, atk);
 }
-void Enemy::defend(Floor& f, int atkVal) {}
-void Enemy::drop(Floor& f) {}
+void Enemy::drop(Floor& f) {
+    f.player.gold
+}
 void Enemy::move(Floor& f) {}
 
 void Elf::attack(Floor& f, std::string dir) {}

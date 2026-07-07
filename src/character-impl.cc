@@ -17,7 +17,17 @@ bool Character::validMove(Floor& f, std::string dir) {
 }
 
 void Character::move(Floor& f, std::string dir) {
+    if (!validMove(f, dir)) return;
     auto [dx, dy] = toDir(dir);
     x += dx;
     y += dy;
+}
+
+void Enemy::defend(Floor& f, int atkVal) {
+    if (def <= atkVal) {
+        def = 0;
+        hp -= atkVal;
+    } else {
+        def -= atkVal;
+    }
 }

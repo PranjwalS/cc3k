@@ -9,8 +9,6 @@ import floor;
 export class Enemy : public Character {
     public:
     Enemy(int hp, int atk, int def, Floor& f) : Character{hp, atk, def, f} {}
-    void attack(Floor& f, std::string dir);
-    void defend(Floor& f, int atkVal);
     void drop(Floor& f);
     virtual void move(Floor& f); // not the same as move in Character, this is just for Dragon mainly
 };
