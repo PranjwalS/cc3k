@@ -1,5 +1,7 @@
 module player;
 
+import floor;
+
 void Player::attack(Floor& f, std::string dir) {
     if (!validMove(f, dir)) return;
     auto atkDir = toDir(dir);

@@ -1,5 +1,8 @@
 module character;
 
+import floor;
+import random;
+
 void Character::spawn(Floor& f) {
     x = random(0, MAX_Y_POSITION);
     y = random(0, MAX_X_POSITION);
