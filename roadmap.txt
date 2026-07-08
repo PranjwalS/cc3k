@@ -13,6 +13,8 @@
 
 --- (kinda close to being done the above ^)
 
+
+
     10. Add reusable spawning helpers: random floor tile selection, chamber selection, checking occupied cells, placing objects.
     11. Implement spawnPotions(): spawn exactly 10 potions, random type (1/6 each), random chamber, random valid tile.
     12. Implement spawnGold(): spawn exactly 10 gold piles, probabilities (5/8 normal, 1/8 dragon hoard, 1/4 small), random chamber/tile.
