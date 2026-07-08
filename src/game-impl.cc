@@ -22,8 +22,8 @@ void Game::playerAttack(std::string dir) {
         if (e->x == tx && e->y == ty && e->isAlive()) {
             if (e->missChance()) return;
             // elf double attack unless drow
-            int attacks = (e->race == constants::race::Enemy::ELF && 
-                           player->race != constants::race::Enemy::DWARF) ? 2 : 1;
+            int attacks = (e->race == constants::race::Enemy::Elf && 
+                           player->race != constants::race::Player::Drow) ? 2 : 1;
             for (int i = 0; i < attacks; i++) {
                 int dmg = calcDamage(e->atk, player->def);
                 player->takeDamage(dmg);
@@ -31,13 +31,13 @@ void Game::playerAttack(std::string dir) {
             // player hits back
             int dmg = calcDamage(player->atk, e->def);
             // orc bonus vs goblin
-            if (e->race == constants::race::Enemy::DWARF && 
+            if (e->race == constants::race::Enemy::Dwarf && 
                 player->race == constants::race::Player::Goblin) dmg = (int)(dmg * 1.5);
             e->takeDamage(dmg);
-            player->onHit(e->symbol);
+            player->onHit(e->race);
             if (!e->isAlive()) {
                 e->onDeath(player->gold);
-                player->onKill(e->symbol);
+                player->onKill(e->race);
             }
             return;
         }
@@ -50,7 +50,7 @@ void Game::enemyTurns() {
         if (!e->isAlive()) continue;
         bool inRadius = std::abs(e->x - player->x) <= 1 && 
                         std::abs(e->y - player->y) <= 1;
-        if (inRadius && (e->hostile || e->symbol != 'M')) {
+        if (inRadius && (e->hostile || e->race != constants::race::Enemy::Merchant)) {
             if (random(0, 1)) {
                 int dmg = calcDamage(e->atk, player->def);
                 player->takeDamage(dmg);
