@@ -4,11 +4,13 @@ import constants;
 import gold;
 import potion;
 
+using namespace constants;
+
 export class Floor {
     public:
-    char grid[constants::board::HEIGHT][constants::board::WIDTH];
-    Gold* gold[constants::board::HEIGHT][constants::board::WIDTH];
-    Potion* potions[constants::board::HEIGHT][constants::board::WIDTH];
+    char grid[board::HEIGHT][board::WIDTH];
+    Gold* gold[board::HEIGHT][board::WIDTH];
+    Potion* potions[board::HEIGHT][board::WIDTH];
     int stairX, stairY;
 
     Floor();

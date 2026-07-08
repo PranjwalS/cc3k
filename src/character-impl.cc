@@ -14,7 +14,7 @@ void Character::spawn(Floor& f) {
 }
 
 bool Character::validMove(Floor& f, std::string dir) {
-    auto [dx, dy] = toDir(dir);
+    auto [dx, dy] = constants::toDir(dir);
     if (x + dx < 0 || x + dx > constants::board::MAX_X ||
         y + dy < 0 || y + dy > constants::board::MAX_Y) return false;
     return true;
@@ -22,7 +22,7 @@ bool Character::validMove(Floor& f, std::string dir) {
 
 void Character::move(Floor& f, std::string dir) {
     if (!validMove(f, dir)) return;
-    auto [dx, dy] = toDir(dir);
+    auto [dx, dy] = constants::toDir(dir);
     x += dx;
     y += dy;
 }

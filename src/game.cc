@@ -22,10 +22,10 @@ export class Game {
     bool merchantsHostile = false;
     bool frozen = false;
 
-    Game() {}
-    ~Game() { delete player; for (auto e : enemies) delete e; }
+    Game();
+    ~Game();
 
-    void init(constants::race::Player race);
+    void init(constants::Player race);
     void nextFloor();
     void handleInput(std::string cmd);
 
@@ -33,16 +33,14 @@ export class Game {
     void spawnPotions();
     void spawnGold();
 
-    void playerMove(std::string dir);
-    void playerAttack(std::string dir);
+    bool playerMove(std::string dir);
+    bool playerAttack(std::string dir);
     void usePotion(std::string dir);
     void enemyTurns();
 
-    int calcDamage(int atkVal, int defVal) {
-        return (int)std::ceil((100.0 / (100.0 + defVal)) * atkVal);
-    }
+    int calcDamage(int atkVal, int defVal);
 
-    bool isOver() { return !player->isAlive() || floorNum > 5; }
+    bool isOver();
     int score();
     void display();
 };
