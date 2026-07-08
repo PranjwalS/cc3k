@@ -1,17 +1,18 @@
+src/constants.cc
 src/random.cc
+src/gold.cc
+src/potion.cc
 src/floor.cc
 src/character.cc
 src/enemy.cc
 src/player.cc
 src/chamber.cc
-src/constants.cc
-src/gold.cc
-src/potion.cc
+src/game.cc
 
 src/floor-impl.cc
 src/character-impl.cc
 src/enemy-impl.cc
 src/player-impl.cc
 src/chamber-impl.cc
+src/game-impl.cc
 src/cc3k.cc
-src/gold-impl.cc

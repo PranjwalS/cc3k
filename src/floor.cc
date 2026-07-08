@@ -1,20 +1,17 @@
 export module floor;
 
 import constants;
-
-class Enemy;
-class Player;
-class Gold;
-class Potion;
+import gold;
+import potion;
 
 export class Floor {
     public:
-    char grid[constants::board::WIDTH][constants::board::HEIGHT];
-    Enemy* enemies[constants::board::WIDTH][constants::board::HEIGHT];
-    Player* player;
-    Gold* gold[constants::board::WIDTH][constants::board::HEIGHT];
-    Potion* potions[constants::board::WIDTH][constants::board::HEIGHT];
+    char grid[constants::board::HEIGHT][constants::board::WIDTH];
+    Gold* gold[constants::board::HEIGHT][constants::board::WIDTH];
+    Potion* potions[constants::board::HEIGHT][constants::board::WIDTH];
+    int stairX, stairY;
 
     Floor();
     bool validSpawn(int x, int y);
+    bool isWalkable(int x, int y);
 };

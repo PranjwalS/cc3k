@@ -27,11 +27,7 @@ void Character::move(Floor& f, std::string dir) {
     y += dy;
 }
 
-void Character::defend(Floor& f, int atkVal) {
-    if (def <= atkVal) {
-        def = 0;
-        hp -= atkVal;
-    } else {
-        def -= atkVal;
-    }
+
+void Character::takeDamage(int amount) {
+    hp -= amount;
 }

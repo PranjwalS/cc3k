@@ -1,0 +1,28 @@
+    1. Fix combat flow: playerAttack() should only handle player attacking enemies; enemy attacks should happen inside enemyTurns().
+
+    2. Implement and verify player hooks: Drow::applyPotion(), Vampire::onHit(), Troll::endTurn(), Goblin::onKill().
+    3. Implement and verify enemy hooks: Human::onDeath(), Merchant hostility behavior, Halfling miss chance, Dwarf vs Vampire interaction, Elf double attack, Orc bonus damage.
+    4. Verify all hooks everywhere, basically check all impl files (character, floor, player and enemy) ie. damage calculation matches spec: ceil((100/(100 + defender_def)) * attacker_atk).
+
+    5. Finish Player movement logic: movement validation, collisions, stairs, gold pickup, potion interaction.
+    6. Finish Enemy movement logic: random movement, stay inside spawn chamber, avoid occupied cells, move once per turn in line-by-line order.
+    7. Finish Dragon behavior: stationary movement, dragon hoard protection, attack when player is near dragon or dragon hoard.
+
+    8. Finalize Potion class: implement all 6 potion effects (RH, BA, BD, PH, WA, WD) and connect them to Player::applyPotion().
+    9. Finalize Gold class: implement small/normal/merchant/dragon hoards and values (1/2/4/6), including dragon hoard pickup restriction.
+
+--- (kinda close to being done the above ^)
+
+    10. Add reusable spawning helpers: random floor tile selection, chamber selection, checking occupied cells, placing objects.
+    11. Implement spawnPotions(): spawn exactly 10 potions, random type (1/6 each), random chamber, random valid tile.
+    12. Implement spawnGold(): spawn exactly 10 gold piles, probabilities (5/8 normal, 1/8 dragon hoard, 1/4 small), random chamber/tile.
+    13. Implement spawnEnemies(): spawn exactly 20 enemies with correct probabilities, random chamber/tile, no overlap.
+    14. Ensure generation order follows spec: player -> stairs -> potions -> gold -> enemies.
+   
+    15. Finish display logic: render board, colors, player/enemies/gold/potions priority.
+    16. Finish command loop: race selection, movement commands, attack commands, potion commands, quitting/restarting.
+    17. Add game state checks IMPORTANT: player death, floor completion, moving to next floor, game restart.
+   
+    18. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.
+    19. Final memory cleanup: ensure all dynamically allocated Player/Enemy/Item objects are deleted correctly.
+    20. Final compile + gameplay testing before submission.

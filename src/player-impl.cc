@@ -1,18 +1,22 @@
 module player;
 
-import floor;
+import <algorithm>;
 
-void Player::attack(Floor& f, std::string dir) {
-    if (!validMove(f, dir)) return;
-    auto atkDir = toDir(dir);
-    int atkX = atkDir.first + x;
-    int atkY = atkDir.second + y;
-    if (f.enemies[atkX][atkY]) f.enemies[atkX][atkY].defend(f,atk);
+void Drow::applyPotion(int hpMod, int atkMod, int defMod) {
+    hp = std::min(maxHp, hp + (int)(hpMod * 1.5));
+    atk += (int)(atkMod * 1.5);
+    def += (int)(defMod * 1.5);
 }
 
-void Player::defend(Floor& f, int atkVal) {}
-void Player::endTurn(Floor& f) {}
+void Vampire::onHit(char enemySymbol) {
+    if (enemySymbol == 'W') hp -= 5;
+    else hp = std::min(maxHp, hp + 5);
+}
 
-void Vampire::attack(Floor& f, std::string dir) {}
-void Goblin::attack(Floor& f, std::string dir) {}
-void Troll::endTurn(Floor& f) {}
+void Troll::endTurn() {
+    hp = std::min(120, hp + 5);
+}
+
+void Goblin::onKill(char enemySymbol) {
+    gold += 5;
+}

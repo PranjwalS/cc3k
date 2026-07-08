@@ -1,9 +1,7 @@
 export module character;
 
+import floor;
 import <string>;
-import <utility>;
-import floor; // i lwky needed this
-import random;
 
 export std::pair<int,int> toDir(std::string dir) {
     if (dir == "no") return {0, -1};
@@ -25,15 +23,12 @@ export class Character {
     Character(int hp, int atk, int def, Floor& f) :
         x{0}, y{0}, hp{hp}, maxHp{hp}, atk{atk}, def{def} {
             spawn(f);
-        }
+        }    
+    virtual ~Character() = default;
 
-    virtual void attack(Floor& f, std::string dir) = 0; // like cannot attack like
-    virtual void defend(Floor& f, int atkVal);
     bool isAlive() { return hp > 0; }
     void spawn(Floor& f);
     bool validMove(Floor& f, std::string dir);
     void move(Floor& f, std::string dir);
-
-    int getX() { return x; }
-    int getY() { return y; }
+    void takeDamage(int dmg);
 };

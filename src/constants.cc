@@ -1,6 +1,6 @@
 export module constants;
 
-namespace constants {
+export namespace constants {
     // Board features
     namespace board {
         // Board dimensions
