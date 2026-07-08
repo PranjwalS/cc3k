@@ -1,5 +1,6 @@
 export module game;
 
+import constants;
 import character;
 import player;
 import enemy;
@@ -24,7 +25,7 @@ export class Game {
     Game() {}
     ~Game() { delete player; for (auto e : enemies) delete e; }
 
-    void init(char race);
+    void init(constants::race::Player race);
     void nextFloor();
     void handleInput(std::string cmd);
 
