@@ -18,6 +18,8 @@ export class Game {
     Floor floor;
     Player* player = nullptr;
     std::vector<Enemy*> enemies;
+    std::vector<Gold*> gold;
+    std::vector<Potion*> potions;
     int floorNum = 1;
     bool merchantsHostile = false;
     bool frozen = false;
@@ -33,9 +35,9 @@ export class Game {
     void spawnPotions();
     void spawnGold();
 
-    bool playerMove(std::string dir);
-    bool playerAttack(std::string dir);
-    void usePotion(std::string dir);
+    bool playerMove(constants::Direction dir);
+    bool playerAttack(constants::Direction dir);
+    void usePotion(constants::Direction dir);
     void enemyTurns();
 
     int calcDamage(int atkVal, int defVal);

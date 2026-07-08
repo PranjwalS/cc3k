@@ -10,6 +10,8 @@ Game::Game() {
 Game::~Game() {
     delete player;
     for (Enemy* e : enemies) delete e;
+    for (Gold* g : gold) delete g;
+    for (Potion* p : potions) delete p;
 }
 
 void Game::init(constants::Player race) {
@@ -23,38 +25,41 @@ void Game::init(constants::Player race) {
     spawnGold();
 }
 
-bool Game::playerAttack(std::string dir) {
-    auto [dx, dy] = constants::toDir(dir);
-    int tx = player->x + dx;
-    int ty = player->y + dy;
-    
-    if (constants::charToEnemy(floor.grid[ty][tx])) {
+bool Game::playerAttack(constants::Direction d) {
+    if (!constants::isValidMove(player->x, player->y, d)) {
         return false;
     }
 
-    for (Enemy* e : enemies) {
-        if (e->x == tx && e->y == ty && e->isAlive()) {
-            if (e->missChance()) return true;
-            // elf double attack unless drow
-            int attacks = (e->race == constants::Enemy::Elf && 
-                            player->race != constants::Player::Drow) ? 2 : 1;
-            for (int i = 0; i < attacks; i++) {
-                int dmg = calcDamage(e->atk, player->def);
-                player->takeDamage(dmg);
-            }
-            // player hits back
-            int dmg = calcDamage(player->atk, e->def);
-            // orc bonus vs goblin
-            if (e->race == constants::Enemy::Dwarf && 
-                player->race == constants::Player::Goblin) dmg = (int)(dmg * 1.5);
-            e->takeDamage(dmg);
-            player->onHit(e->race);
-            if (!e->isAlive()) {
-                e->onDeath(player->gold);
-                player->onKill(e->race);
-            }
-            return true;
+    auto [dx, dy] = constants::dirToPair(d);
+
+    int tx = player->x + dx;
+    int ty = player->y + dy;
+
+    int idx = floor.enemiesIndex[ty][tx];
+
+    if (idx != -1) {
+        Enemy* e = enemies[idx];
+        if (e->missChance()) return true;
+        // elf double attack unless drow
+        int attacks = (e->race == constants::Enemy::Elf && 
+                        player->race != constants::Player::Drow) ? 2 : 1;
+        for (int i = 0; i < attacks; i++) {
+            int dmg = calcDamage(e->atk, player->def);
+            player->takeDamage(dmg);
         }
+        // player hits back
+        int dmg = calcDamage(player->atk, e->def);
+        // orc bonus vs goblin
+        if (e->race == constants::Enemy::Dwarf && 
+            player->race == constants::Player::Goblin) dmg = (int)(dmg * 1.5);
+        e->takeDamage(dmg);
+        player->onHit(e->race);
+        if (!e->isAlive()) {
+            floor.removeEnemy(tx, ty);
+            e->onDeath(player->gold);
+            player->onKill(e->race);
+        }
+        return true;
     }
 
     return false;
