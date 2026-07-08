@@ -74,4 +74,3 @@ void Game::spawnPotions() {
 
 void Game::spawnGold() {
 }
-

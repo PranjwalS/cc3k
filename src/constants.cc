@@ -33,6 +33,8 @@ export namespace constants {
             Halfling = 'L'
         };
 
+        constexpr char enemyToChar(Enemy e) { return static_cast<char>(e); }
+
         constexpr std::optional<Enemy> charToEnemy(char c) {
             const Enemy race = static_cast<Enemy>(c);
             
