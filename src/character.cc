@@ -1,5 +1,6 @@
 export module character;
 
+import constants;
 import floor;
 import <string>;
 
@@ -16,7 +17,7 @@ export class Character {
 
     bool isAlive() { return hp > 0; }
     void spawn(Floor& f);
-    bool validMove(Floor& f, std::string dir);
-    void move(Floor& f, std::string dir);
+    bool isValidMove(Floor& f, const constants::Direction& dir);
+    void move(Floor& f, const constants::Direction& dir);
     void takeDamage(int dmg);
 };

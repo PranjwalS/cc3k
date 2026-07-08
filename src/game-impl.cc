@@ -1,6 +1,7 @@
 module game;
 
 import constants;
+import character;
 import <iostream>;
 
 Game::Game() {
@@ -26,7 +27,7 @@ void Game::init(constants::Player race) {
 }
 
 bool Game::playerAttack(constants::Direction d) {
-    if (!constants::isValidMove(player->x, player->y, d)) {
+    if (!player->isValidMove(floor, d)) {
         return false;
     }
 
