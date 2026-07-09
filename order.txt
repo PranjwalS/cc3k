@@ -8,6 +8,7 @@ src/enemy.cc
 src/player.cc
 src/game.cc
 
+src/random-impl.cc
 src/floor-impl.cc
 src/character-impl.cc
 src/enemy-impl.cc

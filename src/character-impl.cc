@@ -5,11 +5,11 @@ import floor;
 import random;
 
 void Character::spawn(Floor& f) {
-    x = random(0, constants::board::MAX_Y);
-    y = random(0, constants::board::MAX_X);
+    x = randomNum(0, constants::board::MAX_Y);
+    y = randomNum(0, constants::board::MAX_X);
     while (!f.validSpawn(x, y)) {
-        x = random(0, constants::board::MAX_Y);
-        y = random(0, constants::board::MAX_X);
+        x = randomNum(0, constants::board::MAX_Y);
+        y = randomNum(0, constants::board::MAX_X);
     }
 }
 

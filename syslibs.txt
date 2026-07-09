@@ -2,7 +2,6 @@ iostream
 optional
 string
 algorithm
-chrono
 random
 vector
 climits

@@ -7,7 +7,6 @@ import enemy;
 import floor;
 import potion;
 import gold;
-import random;
 import <string>;
 import <vector>;
 import <cmath>;

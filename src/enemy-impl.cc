@@ -6,7 +6,7 @@ import constants;
 
 void Enemy::move(Floor& f) {
     while (true) {
-        constants::Direction n = static_cast<constants::Direction>(random(0, constants::NUM_DIRECTIONS - 1));
+        constants::Direction n = static_cast<constants::Direction>(randomNum(0, constants::NUM_DIRECTIONS - 1));
         auto [dx, dy] = constants::dirToPair(n);
         if (isValidMove(f, n) && f.grid[y + dy][x + dx] == '.') {
             y += dy;

@@ -1,6 +1,7 @@
 module game;
 
 import constants;
+import random;
 import character;
 import <iostream>;
 
@@ -73,7 +74,7 @@ void Game::enemyTurns() {
         bool inRadius = std::abs(e->x - player->x) <= 1 && 
                         std::abs(e->y - player->y) <= 1;
         if (inRadius && (e->hostile || e->race != constants::Enemy::Merchant)) {
-            if (random(0, 1)) {
+            if (randomChance(constants::probability::ENEMY_MISS)) {
                 int dmg = calcDamage(e->atk, player->def);
                 player->takeDamage(dmg);
             }

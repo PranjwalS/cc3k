@@ -55,5 +55,5 @@ export class Dragon : public Enemy {
 export class Halfling : public Enemy {
     public:
     Halfling(Floor& f) : Enemy{100, 15, 20, constants::Enemy::Halfling, f} {}
-    bool missChance() { return random(0, 1) == 0; }
+    bool missChance() { return randomChance(constants::probability::HALFLING_MISS); }
 };
