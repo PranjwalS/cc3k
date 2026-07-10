@@ -3,13 +3,14 @@ module character;
 import constants;
 import floor;
 import random;
+import <algorithm>;
 
 void Character::spawn(Floor& f) {
     x = randomNum(0, constants::board::MAX_Y);
     y = randomNum(0, constants::board::MAX_X);
     while (!f.validSpawn(x, y)) {
-        x = randomNum(0, constants::board::MAX_Y);
-        y = randomNum(0, constants::board::MAX_X);
+        x = randomNum(0, constants::board::MAX_X);
+        y = randomNum(0, constants::board::MAX_Y);
     }
 }
 
@@ -18,7 +19,8 @@ bool Character::isValidMove(Floor& f, const constants::Direction& dir) {
     auto [dx, dy] = constants::dirToPair(dir);
     int tx = x + dx;
     int ty = y + dy;
-    return tx >= 0 && tx <= constants::board::MAX_X && ty >= 0 && ty <= constants::board::MAX_Y;
+    if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
+    return f.grid[ty][tx] == '.' || f.grid[ty][tx] == '#' || f.grid[ty][tx] == '+';
 }
 
 void Character::move(Floor& f, const constants::Direction& dir) {
@@ -30,5 +32,5 @@ void Character::move(Floor& f, const constants::Direction& dir) {
 
 
 void Character::takeDamage(int amount) {
-    hp -= amount;
+    hp = std::max(0, hp - amount);
 }
