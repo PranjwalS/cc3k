@@ -32,7 +32,6 @@ export class Dwarf : public Enemy {
 
 export class Elf : public Enemy {
     public:
-    bool doubleAttack = true;
     Elf(Floor& f) : Enemy{140, 30, 10, constants::Enemy::Elf, f} {}
 };
 
@@ -48,7 +47,8 @@ export class Merchant : public Enemy {
 
 export class Dragon : public Enemy {
     public:
-    Dragon(Floor& f) : Enemy{150, 20, 20, constants::Enemy::Dragon, f} {}
+    int hoardX, hoardY;
+    Dragon(Floor& f, int hx, int hy) : Enemy{150, 20, 20, constants::Enemy::Dragon, f}, hoardX{hx}, hoardY{hy} {}
     void move(Floor& f);
 };
 
