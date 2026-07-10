@@ -38,6 +38,7 @@ export class Game {
     bool playerAttack(constants::Direction dir);
     void usePotion(constants::Direction dir);
     void enemyTurns();
+    void enemyAttack(Enemy& e);
 
     int calcDamage(int atkVal, int defVal);
 
