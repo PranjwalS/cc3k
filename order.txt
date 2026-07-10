@@ -2,6 +2,7 @@ src/constants.cc
 src/random.cc
 src/gold.cc
 src/potion.cc
+src/chamber.cc
 src/floor.cc
 src/character.cc
 src/enemy.cc

@@ -1,11 +1,13 @@
 export module floor;
 
 import constants;
+import chamber;
 
 using namespace constants;
 
 export class Floor {
     public:
+    Chamber* chambers[board::NUM_CHAMBERS];
     char grid[board::HEIGHT][board::WIDTH];
     int enemiesIndex[board::HEIGHT][board::WIDTH];
     int goldIndex[board::HEIGHT][board::WIDTH];

@@ -1,7 +1,6 @@
 module random;
 
-import <random>; 
-
+import <random>;
 
 static std::random_device seed;
 static std::mt19937 gen(seed());

@@ -11,6 +11,7 @@ Floor::Floor() {
             potionsIndex[i][j] = -1;
         }
     }
+    for (int i = 0; i < constants::board::NUM_CHAMBERS; ++i) chambers[i] = nullptr;
 }
 
 bool Floor::validSpawn(int x, int y) {

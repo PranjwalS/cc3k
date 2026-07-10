@@ -62,7 +62,6 @@ export namespace constants {
         }
         constexpr double ENEMY_MISS = 0.5;
         constexpr double HALFLING_MISS = 0.5;
-
     }
 
     constexpr char enemyToChar(const Enemy& e) { return static_cast<char>(e); }

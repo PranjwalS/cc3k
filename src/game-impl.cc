@@ -102,11 +102,7 @@ int Game::calcDamage(int atkVal, int defVal) {
 
 bool Game::isOver() { return !player->isAlive() || floorNum > 5; }
 
-
-
-// Game::playerMove -> handles the full player movement action including gold pickup, potion detection, stair check, then calls Character::move
-
-
+bool Game::playerMove(constants::Direction dir) { return player->move(floor, dir); }
 
 // TODO 
 void Game::spawnEnemies() {

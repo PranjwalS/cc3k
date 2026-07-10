@@ -23,11 +23,12 @@ bool Character::isValidMove(Floor& f, const constants::Direction& dir) {
     return f.grid[ty][tx] == '.' || f.grid[ty][tx] == '#' || f.grid[ty][tx] == '+';
 }
 
-void Character::move(Floor& f, const constants::Direction& dir) {
-    if (!isValidMove(f, dir)) return;
+bool Character::move(Floor& f, const constants::Direction& dir) {
+    if (!isValidMove(f, dir)) return false;
     auto [dx, dy] = constants::dirToPair(dir);
     x += dx;
     y += dy;
+    return true;
 }
 
 
