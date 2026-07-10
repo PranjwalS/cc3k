@@ -5,6 +5,7 @@ import character;
 import floor;
 import <string>;
 import <climits>;
+import <algorithm>;
 
 export class Player : public Character {
     public:
@@ -19,8 +20,9 @@ export class Player : public Character {
     virtual void endTurn() {}
     virtual void applyPotion(int hpMod, int atkMod, int defMod) {
         hp = std::min(maxHp, hp + hpMod);
-        atk += atkMod;
-        def += defMod;
+        hp = std::max(0, hp);
+        atk = std::max(0, atk + atkMod);
+        def = std::max(0, def + defMod);
     }
 };
 
