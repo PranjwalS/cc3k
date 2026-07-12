@@ -7,15 +7,19 @@ import random;
 import <string>;
 
 export class Enemy : public Character {
-    public:
+    protected:
     constants::Enemy race;
-    bool hostile = false;
+    bool hostile;
+    public:
 
-    Enemy(int hp, int atk, int def, constants::Enemy race, Floor& f) :
-        Character{hp, atk, def, f}, race{race} {}
+    Enemy(int hp, int atk, int def, constants::Enemy race, Floor& f, bool hostile = true) :
+        Character{hp, atk, def, f}, race{race}, hostile{hostile} {}
+    
+    constants::Enemy getRace() const { return race; }
+    bool isHostile() const { return hostile; }
 
     virtual bool missChance() { return false; }
-    virtual void onDeath(int& playerGold) {}
+    virtual void onDeath(int& playerGold) {} // Needs fix, gold is a protected data field
     virtual void move(Floor& f);
 };
 
@@ -42,7 +46,8 @@ export class Orc : public Enemy {
 
 export class Merchant : public Enemy {
     public:
-    Merchant(Floor& f) : Enemy{30, 70, 5, constants::Enemy::Merchant, f} {}
+    Merchant(Floor& f) : Enemy{30, 70, 5, constants::Enemy::Merchant, f, false} {}
+    void becomeHostile() { hostile = true; }
 };
 
 export class Dragon : public Enemy {

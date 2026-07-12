@@ -5,15 +5,24 @@ import floor;
 import <string>;
 
 export class Character {
-    public:
+    protected:
     int x, y;
     int hp, maxHp, atk, def;
+
+    public:
 
     Character(int hp, int atk, int def, Floor& f) :
         x{0}, y{0}, hp{hp}, maxHp{hp}, atk{atk}, def{def} {
             spawn(f);
         }    
     virtual ~Character() = default;
+
+    int getX() const { return x; }
+    int getY() const { return y; }
+    int getHp() const { return hp; }
+    int getMaxHp() const { return maxHp; }
+    int getAtk() const { return atk; }
+    int getDef() const { return def; }
 
     bool isAlive() { return hp > 0; }
     void spawn(Floor& f);

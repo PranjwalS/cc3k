@@ -14,6 +14,7 @@ export namespace constants {
         constexpr int MAX_Y = HEIGHT - 1;
         constexpr int MAX_X = WIDTH - 1;
 
+        constexpr int NUM_FLOORS = 5;
         constexpr int NUM_CHAMBERS = 5;
     }
     
@@ -45,6 +46,17 @@ export namespace constants {
         Potion = 'P'
     };
     
+    enum class PotionType { 
+        // Positive Potions:
+        RH, // Restore health: Restore up to 10 HP
+        BA, // Boost Atk: Increase ATK by 5
+        BD, // Boost Def: Increase Def by 5
+        // Negative Potions:
+        PH, // Poison health: Lose up to 10 HP
+        WA, // Wound Atk: Decrease Atk by 5
+        WD // Wound Def: Decrease Def by 5
+    };
+
     constexpr int NUM_POTION_TYPES = 6;
 
     namespace probability {

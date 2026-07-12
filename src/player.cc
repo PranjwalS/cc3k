@@ -8,13 +8,19 @@ import <climits>;
 import <algorithm>;
 
 export class Player : public Character {
-    public:
+    protected:
     int gold = 0;
+    int score = 0;
     constants::Player race;
+    
+    public:
 
     Player(int hp, int atk, int def, constants::Player race, Floor& f) :
         Character{hp, atk, def, f}, race{race} {}
 
+    int getGold() const { return gold; }
+    int getScore() const { return score; }
+    constants::Player getRace() const { return race; }
     virtual void onHit(constants::Enemy race) {}
     virtual void onKill(constants::Enemy race) {}
     virtual void endTurn() {}
