@@ -1,7 +1,9 @@
 export module constants;
 
+import random;
 import <optional>;
 import <string>;
+
 
 export namespace constants {
     // Board features
@@ -46,7 +48,7 @@ export namespace constants {
         Potion = 'P'
     };
     
-    enum class PotionType { 
+    enum class PotionType : int { 
         // Positive Potions:
         RH, // Restore health: Restore up to 10 HP
         BA, // Boost Atk: Increase ATK by 5
@@ -54,10 +56,18 @@ export namespace constants {
         // Negative Potions:
         PH, // Poison health: Lose up to 10 HP
         WA, // Wound Atk: Decrease Atk by 5
-        WD // Wound Def: Decrease Def by 5
-    };
+        WD, // Wound Def: Decrease Def by 5
 
-    constexpr int NUM_POTION_TYPES = 6;
+        Count // == 6 automatically
+    };
+    
+    constexpr int NUM_POTION_TYPES = static_cast<int>(PotionType::Count);
+
+    PotionType randomPotion() {
+        return static_cast<PotionType>(
+            randomNum(0, static_cast<int>(PotionType::Count) - 1)
+        );
+    }
 
     namespace probability {
         namespace spawn {
@@ -96,10 +106,19 @@ export namespace constants {
     }
 
     enum class Direction : int {
-        NO, NE, EA, SE, SO, SW, WE, NW, SELF 
+        NO, // == 0
+        NE, // == 1
+        EA, // ...
+        SE, 
+        SO, 
+        SW, 
+        WE, 
+        NW, 
+        Count, // == 8
+        SELF // == 9
     };
 
-    constexpr int NUM_DIRECTIONS = 8;
+    int NUM_DIRECTIONS = static_cast<int>(Direction::Count);
 
     constexpr Direction strToDir(const std::string& s) {
         if (s == "no") return Direction::NO;

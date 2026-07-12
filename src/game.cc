@@ -1,5 +1,6 @@
 export module game;
 
+import random;
 import constants;
 import character;
 import player;
@@ -51,6 +52,7 @@ export class Game {
     void nextFloor();
     void handleInput(std::string cmd);
 
+    int chooseChamber() const { return randomNum(0, chambers.size() - 1); }
     void spawnEnemies();
     void spawnPotions();
     void spawnGold();
