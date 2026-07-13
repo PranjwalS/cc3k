@@ -31,7 +31,15 @@ bool Character::move(Floor& f, const constants::Direction& dir) {
     return true;
 }
 
-
+void Character::changeHp(int amount) {
+    hp = std::min(hp + amount, maxHp);
+    hp = std::max(0, hp);
+}
+void Character::heal(int amount) {
+    if (amount <= 0) return;
+    changeHp(amount);
+}
 void Character::takeDamage(int amount) {
-    hp = std::max(0, hp - amount);
+    if (amount <= 0) return;
+    changeHp(-amount);
 }

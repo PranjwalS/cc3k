@@ -20,6 +20,11 @@ export class Player : public Character {
 
     int getGold() const { return gold; }
     int getScore() const { return score; }
+
+    void changeGold(int amount);
+    // gainGold and loseGold must take in positive integers
+    void gainGold(int amount);
+    void loseGold(int amount);
     constants::Player getRace() const { return race; }
     virtual void onHit(constants::Enemy race) {}
     virtual void onKill(constants::Enemy race) {}

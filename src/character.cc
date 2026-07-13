@@ -24,9 +24,13 @@ export class Character {
     int getAtk() const { return atk; }
     int getDef() const { return def; }
 
+    void changeHp(int amount);
+    // heal and takeDamage must take in positive integers
+    void heal(int amount);
+    void takeDamage(int amount);
+
     bool isAlive() { return hp > 0; }
     void spawn(Floor& f);
     bool isValidMove(Floor& f, const constants::Direction& dir);
     bool move(Floor& f, const constants::Direction& dir);
-    void takeDamage(int dmg);
 };

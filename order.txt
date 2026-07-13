@@ -5,8 +5,8 @@ src/potion.cc
 src/chamber.cc
 src/floor.cc
 src/character.cc
-src/enemy.cc
 src/player.cc
+src/enemy.cc
 src/game.cc
 
 src/random-impl.cc

@@ -64,8 +64,8 @@ bool Game::playerAttack(constants::Direction d) {
 
     if (idx != -1) {
         Enemy* e = enemies[idx];
-        // halfling miss chance — takes priority
-        if (e->missChance()) return true;
+        // halfling chance of evasion — takes priority
+        if (e->evasionChance()) return true;
 
         // player hits
         int dmg = calcDamage(player->getAtk(), e->getDef());
@@ -76,7 +76,7 @@ bool Game::playerAttack(constants::Direction d) {
 
         if (!e->isAlive()) {
             floor.removeEnemy(tx, ty);
-            // e->onDeath(player->getGold());        NEED TO FIX Enemy::onDeath
+            e->onDeath(*player);
             player->onKill(e->getRace());
         }
         return true;
@@ -93,7 +93,7 @@ void Game::enemyTurns() {
         bool inRadius = std::abs(e->getX() - player->getX()) <= 1 && std::abs(e->getY() - player->getY()) <= 1;
         if (e->getRace() == constants::Enemy::Dragon) { // dragon stuff, if player near hoard then ATTACK
             Dragon* d = static_cast<Dragon*>(e);
-            bool nearHoard = std::abs(d->hoardX - player->getX()) <= 1 && std::abs(d->hoardY - player->getY()) <= 1;
+            bool nearHoard = std::abs(d->getHoardX() - player->getX()) <= 1 && std::abs(d->getHoardY() - player->getY()) <= 1;
             inRadius = inRadius || nearHoard;
         }
 

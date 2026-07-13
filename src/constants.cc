@@ -47,6 +47,16 @@ export namespace constants {
         Gold = 'G',
         Potion = 'P'
     };
+
+    // Amount of gold in each type of pile
+    namespace goldPile {
+        constexpr int SMALL = 1;
+        constexpr int NORMAL = 2;
+        constexpr int MERCHANT_HOARD = 4;
+        constexpr int DRAGON_HOARD = 6;
+    }
+
+    constexpr int VAMPIRE_ALLERGY_GOLD_LOSS = 5;
     
     enum class PotionType : int { 
         // Positive Potions:
@@ -78,12 +88,13 @@ export namespace constants {
             constexpr double ELF = 1.0 / 9.0;
             constexpr double ORC = 1.0 / 9.0;
             constexpr double MERCHANT = 1.0 / 9.0;
-
-            // Item rates
-            // constexpr double POTION_TYPE = 1.0 / NUM_POTION_TYPES;
         }
         constexpr double ENEMY_MISS = 0.5;
-        constexpr double HALFLING_MISS = 0.5;
+        constexpr double HALFLING_EVASION = 0.5;
+        
+        // Probability an enemy that is not a dragon, human, or merchant drops a normal
+        // pile of gold as opposed to a small pile of gold.
+        constexpr double GOLD_LUCK = 0.5;
     }
 
     constexpr char enemyToChar(const Enemy& e) { return static_cast<char>(e); }
