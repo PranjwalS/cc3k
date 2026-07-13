@@ -134,8 +134,8 @@ bool Game::playerMove(constants::Direction dir) { return player->move(floor, dir
 
 void Game::usePotion(constants::Direction dir) {
     auto [dx, dy] = constants::dirToPair(dir);
-    int tx = player->x + dx;
-    int ty = player->y + dy;
+    int tx = player->getX() + dx;
+    int ty = player->getY() + dy;
     if (tx < 0 || tx >= constants::board::WIDTH || ty < 0 || ty >= constants::board::HEIGHT) return; // out of bounds
     int idx = floor.potionsIndex[ty][tx];
     if (idx == -1) return; // no found :(
