@@ -1,9 +1,9 @@
 export module constants;
 
-import random;
 import <optional>;
+import <utility>;
 import <string>;
-
+import <string_view>;
 
 export namespace constants {
     // Board features
@@ -13,11 +13,13 @@ export namespace constants {
         constexpr int WIDTH{79};
 
         // Maximum x/y positions: DO NOT MODIFY
-        constexpr int MAX_Y = HEIGHT - 1;
-        constexpr int MAX_X = WIDTH - 1;
+        inline constexpr int MAX_Y = HEIGHT - 1;
+        inline constexpr int MAX_X = WIDTH - 1;
 
         constexpr int NUM_FLOORS = 5;
         constexpr int NUM_CHAMBERS = 5;
+
+        bool isInBounds(const std::pair<int, int> pos);
     }
     
     constexpr int NUM_POTIONS = 10;
@@ -25,6 +27,32 @@ export namespace constants {
 
     constexpr char PLAYER_CHAR = '@';
 
+    enum class Player : char;
+
+    namespace command {
+        constexpr std::string FREEZE = "f";
+        constexpr std::string RESTART = "r";
+        constexpr std::string QUIT = "q";
+        constexpr std::string USE = "u";
+        constexpr std::string ATTACK = "a";
+
+        namespace direction {
+            constexpr std::string NORTH = "no";
+            constexpr std::string SOUTH = "so";
+            constexpr std::string EAST = "ea";
+            constexpr std::string WEST = "we";
+            constexpr std::string NORTH_EAST = "ne";
+            constexpr std::string NORTH_WEST = "nw";
+            constexpr std::string SOUTH_EAST = "se";
+            constexpr std::string SOUTH_WEST = "sw";
+        }
+        bool isDirection(const std::string &s);
+
+        std::optional<Player> toPlayerRace(const std::string &s);
+        bool isPlayerRace(const std::string &s);
+    }
+
+    // Player Races : Command
     enum class Player : char {
         Shade='s',
         Drow='d',
@@ -33,6 +61,7 @@ export namespace constants {
         Goblin='g',
     };
 
+    // Enemy Races : Symbol
     enum class Enemy : char {
         Human = 'H',
         Dwarf = 'W',
@@ -43,6 +72,11 @@ export namespace constants {
         Halfling = 'L'
     };
 
+    char enemyToChar(const Enemy& e) { return static_cast<char>(e); }
+
+    std::optional<Enemy> charToEnemy(const char& c);
+
+    // Item : Symbol
     enum class Item : char {
         Gold = 'G',
         Potion = 'P'
@@ -56,29 +90,25 @@ export namespace constants {
         constexpr int DRAGON_HOARD = 6;
     }
 
+    // Amount of gold lost when Vampire kills an enemy it is allergic to
     constexpr int VAMPIRE_ALLERGY_GOLD_LOSS = 5;
 
-
+    // Potion Type : int value
     enum class PotionType : int { 
         // Positive Potions:
         RH, // Restore health: Restore up to 10 HP
         BA, // Boost Atk: Increase ATK by 5
         BD, // Boost Def: Increase Def by 5
+
         // Negative Potions:
         PH, // Poison health: Lose up to 10 HP
         WA, // Wound Atk: Decrease Atk by 5
         WD, // Wound Def: Decrease Def by 5
 
-        Count // == 6 automatically
+        Count // Number of potion types == 6
     };
     
     constexpr int NUM_POTION_TYPES = static_cast<int>(PotionType::Count);
-
-    PotionType randomPotion() {
-        return static_cast<PotionType>(
-            randomNum(0, static_cast<int>(PotionType::Count) - 1)
-        );
-    }
 
     namespace probability {
         namespace spawn {
@@ -98,77 +128,20 @@ export namespace constants {
         constexpr double GOLD_LUCK = 0.5;
     }
 
-    constexpr char enemyToChar(const Enemy& e) { return static_cast<char>(e); }
-
-    constexpr std::optional<Enemy> charToEnemy(const char& c) {
-        const Enemy race = static_cast<Enemy>(c);
-        
-        switch (race) {
-            case Enemy::Human:
-            case Enemy::Dwarf:
-            case Enemy::Elf: 
-            case Enemy::Orc: 
-            case Enemy::Merchant: 
-            case Enemy::Dragon: 
-            case Enemy::Halfling:
-                return race;
-            default:
-                return std::nullopt; // Invalid enemy character
-        }
-    }
-
-    enum class Direction : int {
-        NO, // == 0
-        NE, // == 1
-        EA, // ...
-        SE, 
-        SO, 
-        SW, 
-        WE, 
-        NW, 
-        Count, // == 8
-        SELF // == 9
+    // Direction : int value
+    enum class Direction : int { 
+        NO, NE, EA, SE, SO, SW, WE, NW, // Cardinal directions
+        Count, // Number of directions == 8
+        SELF
     };
 
-    int NUM_DIRECTIONS = static_cast<int>(Direction::Count);
+    constexpr int NUM_DIRECTIONS = static_cast<int>(Direction::Count);
 
-    constexpr Direction strToDir(const std::string& s) {
-        if (s == "no") return Direction::NO;
-        if (s == "ne") return Direction::SO;
-        if (s == "ea") return Direction::EA;
-        if (s == "se") return Direction::WE;
-        if (s == "so") return Direction::NE;
-        if (s == "sw") return Direction::NW;
-        if (s == "we") return Direction::SE;
-        if (s == "nw") return Direction::SW;
-        return Direction::SELF;
-    }
+    Direction strToDir(const std::string& s);
+    std::pair<int, int> dirToPair(const Direction& dir);
+    std::pair<int, int> strToPair(const std::string& s);
 
-    constexpr std::pair<int, int> dirToPair(const Direction& dir) {
-        if (dir == Direction::NO) return {0, -1};
-        if (dir == Direction::SO) return {0, 1};
-        if (dir == Direction::EA) return {1, 0};
-        if (dir == Direction::WE) return {-1, 0};
-        if (dir == Direction::NE) return {1, -1};
-        if (dir == Direction::NW) return {-1, -1};
-        if (dir == Direction::SE) return {1, 1};
-        if (dir == Direction::SW) return {-1, 1};
-        return {0, 0};
-    }
-
-    constexpr std::pair<int, int> strToPair(const std::string& s) {
-        return dirToPair(strToDir(s));
-    }
-
-    constexpr std::pair<int, int> operator+(std::pair<int, int> pos, Direction dir) {
-        auto [dx, dy] = dirToPair(dir);
-        return {pos.first + dx, pos.second + dy};
-    }
-
-    constexpr bool isInBounds(std::pair<int, int> pos) {
-        return pos.first >= 0 && pos.first <= board::MAX_X &&
-               pos.second >= 0 && pos.second <= board::MAX_Y;
-    }
+    std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir);
 
     constexpr std::string_view EMPTY_FLOOR = 
     "|-----------------------------------------------------------------------------|"

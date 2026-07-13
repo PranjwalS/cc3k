@@ -1,6 +1,7 @@
 export module potion;
 
 import constants;
+import random;
 
 export class Potion {
     public:
@@ -16,5 +17,11 @@ export class Potion {
         else if (t == constants::PotionType::WA) { atkMod=-5; }
         else if (t == constants::PotionType::BD) { defMod=5; }
         else if (t == constants::PotionType::WD) { defMod=-5; }
+    }
+
+    constants::PotionType randomPotion() {
+        return static_cast<constants::PotionType>(
+            randomNum(0, static_cast<int>(constants::PotionType::Count) - 1)
+        );
     }
 };

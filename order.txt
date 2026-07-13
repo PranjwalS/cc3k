@@ -10,6 +10,7 @@ src/enemy.cc
 src/game.cc
 
 src/random-impl.cc
+src/constants-impl.cc
 src/chamber-impl.cc
 src/floor-impl.cc
 src/character-impl.cc

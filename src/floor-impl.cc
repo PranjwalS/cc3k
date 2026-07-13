@@ -24,7 +24,7 @@ void expand(std::string &emptyBoard, int x, int y,
     auto w = std::pair{x, y} + constants::Direction::WE;
     
     for (auto [nx, ny] : {n, e, s, w}) {
-        if (constants::isInBounds({nx, ny}) && emptyBoard[ny * constants::board::WIDTH + nx] == '.') {
+        if (constants::board::isInBounds({nx, ny}) && emptyBoard[ny * constants::board::WIDTH + nx] == '.') {
             cells[ny][nx] = true;
             emptyBoard[ny * constants::board::WIDTH + nx] = 'x';
             expand(emptyBoard, nx, ny, cells);
