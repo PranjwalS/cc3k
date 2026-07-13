@@ -21,7 +21,7 @@ export class Potion {
 
     constants::PotionType randomPotion() {
         return static_cast<constants::PotionType>(
-            randomNum(0, static_cast<int>(constants::PotionType::Count) - 1)
+            randomNum(0, constants::NUM_POTION_TYPES - 1)
         );
     }
 };

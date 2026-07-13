@@ -140,7 +140,6 @@ export namespace constants {
     Direction strToDir(const std::string& s);
     std::pair<int, int> dirToPair(const Direction& dir);
     std::pair<int, int> strToPair(const std::string& s);
-
     std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir);
 
     constexpr std::string_view EMPTY_FLOOR = 

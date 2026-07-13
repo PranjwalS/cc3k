@@ -7,7 +7,7 @@ export class Gold {
     
     public:
     Gold(int x, int y, int value, bool dragonGuarded = false) : 
-        value{value} {
+        x{x}, y{y}, value{value}, dragonGuarded{dragonGuarded} {
             // f.addGold(x, y, indice?? need to add to game.gold first to get an indice)
         }
 };

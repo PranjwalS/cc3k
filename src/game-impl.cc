@@ -145,8 +145,6 @@ void Game::usePotion(constants::Direction dir) {
     floor.removePotion(tx, ty); // need to figure whether potion dissapears if used, or just becomes unusable
 }
 
-
-
 // TODO 
 void Game::spawnEnemies() {
 }
