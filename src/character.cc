@@ -31,6 +31,6 @@ export class Character {
 
     bool isAlive() { return hp > 0; }
     void spawn(Floor& f);
-    bool isValidMove(Floor& f, const constants::Direction& dir);
+    virtual bool isValidMove(Floor& f, const constants::Direction& dir);
     bool move(Floor& f, const constants::Direction& dir);
 };

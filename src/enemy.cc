@@ -22,6 +22,7 @@ export class Enemy : public Character {
     virtual bool evasionChance() { return false; }
     virtual void onDeath(Player& player);
     virtual void move(Floor& f);
+    bool isValidMove(Floor& f, const constants::Direction& dir) override;
 };
 
 export class Human : public Enemy {

@@ -13,6 +13,14 @@ void Enemy::onDeath(Player& player) {
     }
 }
 
+bool Enemy::isValidMove(Floor& f, const constants::Direction& dir) {
+    auto [dx, dy] = constants::dirToPair(dir);
+    int tx = x + dx;
+    int ty = y + dy;
+    if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
+    return f.grid[ty][tx] == '.';
+}
+
 // risk of infinite loop if no valid move exists, deal with later ig
 void Enemy::move(Floor& f) {
     std::vector<constants::Direction> legal;
@@ -25,7 +33,7 @@ void Enemy::move(Floor& f) {
 
     if (legal.size() == 0) return;
 
-    auto [dx, dy] = constants::dirToPair(legal[randomNum(0, constants::NUM_DIRECTIONS)]);
+    auto [dx, dy] = constants::dirToPair(legal[randomNum(0, legal.size() - 1)]);
 
     f.moveEnemy(x, y, x + dx, y + dy);
     y += dy;
