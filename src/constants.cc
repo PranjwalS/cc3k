@@ -159,6 +159,16 @@ export namespace constants {
         return dirToPair(strToDir(s));
     }
 
+    constexpr std::pair<int, int> operator+(std::pair<int, int> pos, Direction dir) {
+        auto [dx, dy] = dirToPair(dir);
+        return {pos.first + dx, pos.second + dy};
+    }
+
+    constexpr bool isInBounds(std::pair<int, int> pos) {
+        return pos.first >= 0 && pos.first <= board::MAX_X &&
+               pos.second >= 0 && pos.second <= board::MAX_Y;
+    }
+
     constexpr std::string_view EMPTY_FLOOR = 
     "|-----------------------------------------------------------------------------|"
     "|                                                                             |"

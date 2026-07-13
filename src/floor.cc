@@ -17,6 +17,7 @@ export class Floor {
     Floor();
     bool validSpawn(int x, int y);
     bool isWalkable(int x, int y);
+    void initChambers();
     void addEnemy(int x, int y, int index, constants::Enemy e);
     void removeEnemy(int x, int y);
     void moveEnemy(int px, int py, int nx, int ny); // move from prevx, prevy to newx, newy.

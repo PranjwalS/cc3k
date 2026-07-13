@@ -1,6 +1,7 @@
 module floor;
 
 import constants;
+import <string>;
 
 Floor::Floor() {
     for (int i = 0; i < constants::board::HEIGHT; i++) {
@@ -11,7 +12,40 @@ Floor::Floor() {
             potionsIndex[i][j] = -1;
         }
     }
-    for (int i = 0; i < constants::board::NUM_CHAMBERS; ++i) chambers[i] = nullptr;
+
+    initChambers();
+}
+
+void expand(std::string &emptyBoard, int x, int y,
+            bool (&cells)[constants::board::HEIGHT][constants::board::WIDTH]) {
+    auto n = std::pair{x, y} + constants::Direction::NO;
+    auto e = std::pair{x, y} + constants::Direction::EA;
+    auto s = std::pair{x, y} + constants::Direction::SO;
+    auto w = std::pair{x, y} + constants::Direction::WE;
+    
+    for (auto [nx, ny] : {n, e, s, w}) {
+        if (constants::isInBounds({nx, ny}) && emptyBoard[ny * constants::board::WIDTH + nx] == '.') {
+            cells[ny][nx] = true;
+            emptyBoard[ny * constants::board::WIDTH + nx] = 'x';
+            expand(emptyBoard, nx, ny, cells);
+        }
+    }
+}
+
+void Floor::initChambers() {
+    std::string emptyBoard(constants::EMPTY_FLOOR);
+    int currChamber = 0;
+
+    for (int y = 0; y < constants::board::HEIGHT; y++) {
+        for (int x = 0; x < constants::board::WIDTH; x++) {
+            if (grid[y][x] == '.') {
+                bool cells[constants::board::HEIGHT][constants::board::WIDTH] = {};
+                expand(emptyBoard, x, y, cells);
+                chambers[currChamber] = new Chamber(cells);
+                currChamber += 1;
+            }
+        }
+    }
 }
 
 bool Floor::validSpawn(int x, int y) {

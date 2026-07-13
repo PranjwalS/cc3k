@@ -10,25 +10,25 @@ export class Potion {
 };
 
 
-export module potion;
-import constants;
+// export module potion;
+// import constants;
 
-export class Potion {
-    public:
-    constants::Potion type;
-    bool known = false;
-    int hpMod, atkMod, defMod;
-    bool permanent;
+// export class Potion {
+//     public:
+//     constants::Potion type;
+//     bool known = false;
+//     int hpMod, atkMod, defMod;
+//     bool permanent;
 
-    Potion(constants::Potion t) : type{t} {
-        if (t == constants::Potion::RH)  { hpMod=10;  atkMod=0;  defMod=0;  permanent=true; }
-        if (t == constants::Potion::PH)  { hpMod=-10; atkMod=0;  defMod=0;  permanent=true; }
-        if (t == constants::Potion::BA)  { hpMod=0;   atkMod=5;  defMod=0;  permanent=false; }
-        if (t == constants::Potion::WA)  { hpMod=0;   atkMod=-5; defMod=0;  permanent=false; }
-        if (t == constants::Potion::BD)  { hpMod=0;   atkMod=0;  defMod=5;  permanent=false; }
-        if (t == constants::Potion::WD)  { hpMod=0;   atkMod=0;  defMod=-5; permanent=false; }
-    }
-};
+//     Potion(constants::Potion t) : type{t} {
+//         if (t == constants::Potion::RH)  { hpMod=10;  atkMod=0;  defMod=0;  permanent=true; }
+//         if (t == constants::Potion::PH)  { hpMod=-10; atkMod=0;  defMod=0;  permanent=true; }
+//         if (t == constants::Potion::BA)  { hpMod=0;   atkMod=5;  defMod=0;  permanent=false; }
+//         if (t == constants::Potion::WA)  { hpMod=0;   atkMod=-5; defMod=0;  permanent=false; }
+//         if (t == constants::Potion::BD)  { hpMod=0;   atkMod=0;  defMod=5;  permanent=false; }
+//         if (t == constants::Potion::WD)  { hpMod=0;   atkMod=0;  defMod=-5; permanent=false; }
+//     }
+// };
 
 
 //keeping this for now, have yet to figure what to do with applyPotion

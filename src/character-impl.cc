@@ -14,13 +14,12 @@ void Character::spawn(Floor& f) {
     }
 }
 
-// only checks if move is in the confines of Floor.
 bool Character::isValidMove(Floor& f, const constants::Direction& dir) {
     auto [dx, dy] = constants::dirToPair(dir);
     int tx = x + dx;
     int ty = y + dy;
     if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
-    return f.grid[ty][tx] == '.' || f.grid[ty][tx] == '#' || f.grid[ty][tx] == '+';
+    return f.grid[ty][tx] == '.';
 }
 
 bool Character::move(Floor& f, const constants::Direction& dir) {

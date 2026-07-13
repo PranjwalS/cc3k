@@ -1,5 +1,5 @@
-src/constants.cc
 src/random.cc
+src/constants.cc
 src/gold.cc
 src/potion.cc
 src/chamber.cc
@@ -10,6 +10,7 @@ src/enemy.cc
 src/game.cc
 
 src/random-impl.cc
+src/chamber-impl.cc
 src/floor-impl.cc
 src/character-impl.cc
 src/enemy-impl.cc
