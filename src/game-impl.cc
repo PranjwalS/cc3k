@@ -131,6 +131,22 @@ bool Game::isWon() const { return floorNum > numFloors; }
 
 bool Game::playerMove(constants::Direction dir) { return player->move(floor, dir); }
 
+
+void Game::usePotion(constants::Direction dir) {
+    auto [dx, dy] = constants::dirToPair(dir);
+    int tx = player->x + dx;
+    int ty = player->y + dy;
+    if (tx < 0 || tx >= constants::board::WIDTH || ty < 0 || ty >= constants::board::HEIGHT) return; // out of bounds
+    int idx = floor.potionsIndex[ty][tx];
+    if (idx == -1) return; // no found :(
+    Potion* p = potions[idx];
+    p->known = true;  // so cant be reused, check p->known == false when calling in game loop ig
+    player->applyPotion(p->hpMod, p->atkMod, p->defMod);
+    floor.removePotion(tx, ty); // need to figure whether potion dissapears if used, or just becomes unusable
+}
+
+
+
 // TODO 
 void Game::spawnEnemies() {
 }

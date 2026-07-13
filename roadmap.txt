@@ -9,7 +9,7 @@
     6. Finish Enemy::move ; movement logic: random movement, stay inside spawn chamber, avoid occupied cells, move once per turn in line-by-line order AND Dragon behavior: stationary movement, dragon hoard protection, attack when player is near dragon or dragon hoard.
     7. Finish Character::move logic, figure it out
 
-    8. Finalize Potion class: implement all 6 potion effects (RH, BA, BD, PH, WA, WD) and connect them to Player::applyPotion().
+    X. Finalize Potion class: implement all 6 potion effects (RH, BA, BD, PH, WA, WD) and connect them to Player::applyPotion().
     9. Finalize Gold class: implement small/normal/merchant/dragon hoards and values (1/2/4/6), including dragon hoard pickup restriction.
 
 --- (kinda close to being done the above ^)
@@ -28,3 +28,7 @@
     18. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.
     19. Final memory cleanup: ensure all dynamically allocated Player/Enemy/Item objects are deleted correctly.
     20. Final compile + gameplay testing before submission.
+
+
+  --- questions;
+  // need to figure whether potion dissapears if used, or just becomes unusable
