@@ -13,7 +13,9 @@ export class Chamber {
         for (int i = 0; i < constants::board::HEIGHT; i++) {
             for (int j = 0; j < constants::board::WIDTH; j++) {
                 occupancy[i][j] = other[i][j];
-                cells.push_back({j, i});
+                if (occupancy[i][j]) {
+                    cells.push_back({j, i});
+                }
             }
         }
     };
