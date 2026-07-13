@@ -13,6 +13,7 @@ export class Floor {
     int goldIndex[board::HEIGHT][board::WIDTH];
     int potionsIndex[board::HEIGHT][board::WIDTH];
     int stairX, stairY;
+    char underPlayer = '.';   // previous char before @ moved on it
 
     Floor();
     bool validSpawn(int x, int y);
@@ -25,4 +26,5 @@ export class Floor {
     void removePotion(int x, int y);
     void addGold(int x, int y, int index);
     void removeGold(int x, int y);
+    void movePlayer(int px, int py, int nx, int ny);
 };

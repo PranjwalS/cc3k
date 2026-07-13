@@ -87,3 +87,9 @@ void Floor::removeGold(int x, int y) {
     goldIndex[y][x] = -1;
     grid[y][x] = '.';
 }
+
+void Floor::movePlayer(int px, int py, int nx, int ny) {
+    grid[py][px] = underPlayer;
+    underPlayer = grid[ny][nx];
+    grid[ny][nx] = '@';
+}
