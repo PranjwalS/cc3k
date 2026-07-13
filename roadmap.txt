@@ -4,10 +4,10 @@
     X. Implement and verify enemy hooks: Human::onDeath(), Merchant hostility behavior, Halfling miss chance, Dwarf vs Vampire interaction, Elf double attack, Orc bonus damage.
     X. Verify all hooks everywhere, basically check all impl files (character, floor, player and enemy) ie. damage calculation matches spec: ceil((100/(100 + defender_def)) * attacker_atk).
 
-    5. IMPORTANT ; Finish Game::playerMove() logic: movement validation, collisions, stairs, gold pickup, potion interaction, etc
+    X. IMPORTANT ; Finish Game::playerMove() logic: movement validation, collisions, stairs, gold pickup, potion interaction, etc
       the next two are kinda done, just check the impl files, small tweaks (dragon might need some, i didnt read the spec)
-    6. Finish Enemy::move ; movement logic: random movement, stay inside spawn chamber, avoid occupied cells, move once per turn in line-by-line order AND Dragon behavior: stationary movement, dragon hoard protection, attack when player is near dragon or dragon hoard.
-    7. Finish Character::move logic, figure it out
+    X. Finish Enemy::move ; movement logic: random movement, stay inside spawn chamber, avoid occupied cells, move once per turn in line-by-line order AND Dragon behavior: stationary movement, dragon hoard protection, attack when player is near dragon or dragon hoard.
+    X. Finish Character::move logic, figure it outis
 
     X. Finalize Potion class: implement all 6 potion effects (RH, BA, BD, PH, WA, WD) and connect them to Player::applyPotion().
     9. Finalize Gold class: implement small/normal/merchant/dragon hoards and values (1/2/4/6), including dragon hoard pickup restriction.
