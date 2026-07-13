@@ -57,7 +57,8 @@ export namespace constants {
     }
 
     constexpr int VAMPIRE_ALLERGY_GOLD_LOSS = 5;
-    
+
+
     enum class PotionType : int { 
         // Positive Potions:
         RH, // Restore health: Restore up to 10 HP
