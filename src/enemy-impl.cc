@@ -3,6 +3,7 @@ module enemy;
 import floor;
 import random;
 import constants;
+import <vector>;
 
 void Enemy::onDeath(Player& player) {
     if (randomChance(constants::probability::GOLD_LUCK)) {
@@ -14,16 +15,21 @@ void Enemy::onDeath(Player& player) {
 
 // risk of infinite loop if no valid move exists, deal with later ig
 void Enemy::move(Floor& f) {
-    while (true) {
-        constants::Direction n = static_cast<constants::Direction>(randomNum(0, constants::NUM_DIRECTIONS - 1));
-        auto [dx, dy] = constants::dirToPair(n);
-        if (isValidMove(f, n) && f.grid[y + dy][x + dx] == '.') {
-            f.moveEnemy(x, y, x+dx, y+dy);
-            y += dy;
-            x += dx;
-            break;
+    std::vector<constants::Direction> legal;
+    for (int i = 0; i < constants::NUM_DIRECTIONS; i++) {
+        constants::Direction n = static_cast<constants::Direction>(i);
+        if (isValidMove(f, n)) {
+            legal.push_back(n);
         }
     }
+
+    if (legal.size() == 0) return;
+
+    auto [dx, dy] = constants::dirToPair(legal[randomNum(0, constants::NUM_DIRECTIONS)]);
+
+    f.moveEnemy(x, y, x + dx, y + dy);
+    y += dy;
+    x += dx;
 }
 
 void Dragon::move(Floor& f) {
