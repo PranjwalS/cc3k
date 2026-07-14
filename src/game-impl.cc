@@ -3,6 +3,9 @@ module game;
 import constants;
 import random;
 import character;
+import enemy;
+import potion;
+import gold;
 import <iostream>;
 
 const std::vector<const Enemy*> Game::getEnemies() const {
@@ -16,7 +19,9 @@ const std::vector<const Potion*> Game::getPotions() const {
 }
 
 Game::Game(Player* player, const int numFloors, const int numChambers) : 
-            player{player}, chambers(numChambers), numFloors{numFloors} {}
+            player{player}, 
+            numChambers{numChambers}, chambers(numChambers), 
+            numFloors{numFloors} {}
 
 Game::~Game() {
     delete player;
@@ -140,17 +145,70 @@ void Game::usePotion(constants::Direction dir) {
     int idx = floor.potionsIndex[ty][tx];
     if (idx == -1) return; // no found :(
     Potion* p = potions[idx];
-    p->known = true;  // so cant be reused, check p->known == false when calling in game loop ig
-    player->applyPotion(p->hpMod, p->atkMod, p->defMod);
+    p->becomeKnown();  // so cant be reused, check p->known == false when calling in game loop ig
+    player->applyPotion(p->getHpMod(), p->getAtkMod(), p->getDefMod());
     floor.removePotion(tx, ty); // need to figure whether potion dissapears if used, or just becomes unusable
 }
 
-// TODO 
 void Game::spawnEnemies() {
+    for (int i = 0; i < constants::NUM_ENEMIES; ++i) {
+        int chamberNum = chooseChamber();
+
+        // Pick cell
+        std::vector<std::pair<int, int>> emptyCells = chambers.at(chamberNum).getEmptyCells();
+        if (emptyCells.empty()) break; // not enough empty cells
+        int cellIdx = randomNum(0, static_cast<int>(emptyCells.size()) - 1);
+        auto [x, y] = emptyCells.at(cellIdx);
+
+        // Pick race
+        constants::Enemy race = randomEnemy();
+
+        // Spawn
+        Enemy* enemy = newEnemy(race, floor);
+        enemies.emplace_back(enemy);
+        int enemyIdx = enemies.size() - 1;
+        floor.addEnemy(x, y, enemyIdx, race);
+    }
 }
 
 void Game::spawnPotions() {
+    for (int i = 0; i < constants::NUM_POTIONS; ++i) {
+        int chamberNum = chooseChamber();
+
+        // Pick cell
+        std::vector<std::pair<int, int>> emptyCells = chambers.at(chamberNum).getEmptyCells();
+        if (emptyCells.empty()) break; // not enough empty cells
+        int cellIdx = randomNum(0, static_cast<int>(emptyCells.size()) - 1);
+        auto [x, y] = emptyCells.at(cellIdx);
+
+        // Pick type
+        constants::PotionType type = randomPotion();
+
+        // Spawn
+        Potion* potion = new Potion{type};
+        potions.emplace_back(potion);
+        int potionIdx = potions.size() - 1;
+        floor.addPotion(x, y, potionIdx);
+    }
 }
 
 void Game::spawnGold() {
+    for (int i = 0; i < constants::NUM_GOLD; ++i) {
+        int chamberNum = chooseChamber();
+
+        // Pick cell
+        std::vector<std::pair<int, int>> emptyCells = chambers.at(chamberNum).getEmptyCells();
+        if (emptyCells.empty()) break; // not enough empty cells
+        int cellIdx = randomNum(0, static_cast<int>(emptyCells.size()) - 1);
+        auto [x, y] = emptyCells.at(cellIdx);
+
+        // Determine amount of gold
+        int amount = randomGold();
+
+        // Spawn
+        Gold* newGold = new Gold{amount};
+        gold.emplace_back(newGold);
+        int goldIdx = gold.size() - 1;
+        floor.addGold(x, y, goldIdx);
+    }
 }

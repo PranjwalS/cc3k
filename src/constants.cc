@@ -13,8 +13,8 @@ export namespace constants {
         constexpr int WIDTH{79};
 
         // Maximum x/y positions: DO NOT MODIFY
-        inline constexpr int MAX_Y = HEIGHT - 1;
-        inline constexpr int MAX_X = WIDTH - 1;
+        constexpr int MAX_Y = HEIGHT - 1;
+        constexpr int MAX_X = WIDTH - 1;
 
         constexpr int NUM_FLOORS = 5;
         constexpr int NUM_CHAMBERS = 5;
@@ -23,6 +23,7 @@ export namespace constants {
     }
     
     constexpr int NUM_POTIONS = 10;
+    constexpr int NUM_GOLD = 10;
     constexpr int NUM_ENEMIES = 20;
 
     constexpr char PLAYER_CHAR = '@';
@@ -59,7 +60,11 @@ export namespace constants {
         Vampire='v',
         Troll='t',
         Goblin='g',
+
+        Count
     };
+
+    constexpr int NUM_PLAYER_RACES = static_cast<int>(Player::Count);
 
     // Enemy Races : Symbol
     enum class Enemy : char {
@@ -69,8 +74,12 @@ export namespace constants {
         Orc = 'O',
         Merchant = 'M',
         Dragon = 'D',
-        Halfling = 'L'
+        Halfling = 'L',
+
+        Count
     };
+
+    constexpr int NUM_ENEMY_RACES = static_cast<int>(Enemy::Count);
 
     char enemyToChar(const Enemy& e) { return static_cast<char>(e); }
 
@@ -113,12 +122,35 @@ export namespace constants {
     namespace probability {
         namespace spawn {
             // Enemy rates
-            constexpr double HUMAN = 2.0 / 9.0;
-            constexpr double DWARF = 3.0 / 18.0;
-            constexpr double HALFLING = 5.0 / 18.0;
-            constexpr double ELF = 1.0 / 9.0;
-            constexpr double ORC = 1.0 / 9.0;
-            constexpr double MERCHANT = 1.0 / 9.0;
+            struct WeightedEnemy {
+                const Enemy race;
+                const double probability;
+            };
+
+            constexpr WeightedEnemy ENEMIES[] = {
+                { Enemy::Human, 2.0 / 9.0 },
+                { Enemy::Dwarf, 3.0 / 18.0 },
+                { Enemy::Halfling, 5.0 / 18.0 },
+                { Enemy::Elf, 1.0 / 9.0 },
+                { Enemy::Orc, 1.0 / 9.0 },
+                { Enemy::Merchant, 1.0 / 9.0 }
+            };
+
+            constexpr int NUM_WEIGHTED_ENEMIES = 6;
+
+            // Gold rates
+            struct WeightedGold {
+                const int goldPile;
+                const double probability;
+            };
+
+            constexpr WeightedGold GOLD[] = {
+                { goldPile::NORMAL, 5.0 / 8.0 },
+                { goldPile::DRAGON_HOARD, 1.0 / 8.0 },
+                { goldPile::SMALL, 1.0 / 4.0 },
+            };
+
+            constexpr int NUM_WEIGHTED_GOLD = 3;
         }
         constexpr double ENEMY_MISS = 0.5;
         constexpr double HALFLING_EVASION = 0.5;

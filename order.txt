@@ -11,6 +11,7 @@ src/game.cc
 
 src/random-impl.cc
 src/constants-impl.cc
+src/gold-impl.cc
 src/chamber-impl.cc
 src/floor-impl.cc
 src/character-impl.cc

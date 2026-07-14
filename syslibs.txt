@@ -1,5 +1,6 @@
 iostream
 optional
+stdexcept
 string
 string_view
 algorithm

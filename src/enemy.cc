@@ -15,14 +15,16 @@ export class Enemy : public Character {
 
     Enemy(int hp, int atk, int def, constants::Enemy race, Floor& f, bool hostile = true) :
         Character{hp, atk, def, f}, race{race}, hostile{hostile} {}
-    
+
+    virtual ~Enemy() = default;
+
     constants::Enemy getRace() const { return race; }
     bool isHostile() const { return hostile; }
 
     virtual bool evasionChance() { return false; }
     virtual void onDeath(Player& player);
     virtual void move(Floor& f);
-    bool isValidMove(Floor& f, const constants::Direction& dir) override;
+    bool isValidMove(Floor& f, const constants::Direction& dir) override;  
 };
 
 export class Human : public Enemy {
@@ -68,3 +70,6 @@ export class Halfling : public Enemy {
     Halfling(Floor& f) : Enemy{100, 15, 20, constants::Enemy::Halfling, f} {}
     bool evasionChance() { return randomChance(constants::probability::HALFLING_EVASION); }
 };
+
+export constants::Enemy randomEnemy();
+export Enemy* newEnemy(constants::Enemy race, Floor& f, int dragonHoardX = 0, int dragonHoardY = 0);

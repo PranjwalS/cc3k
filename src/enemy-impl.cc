@@ -4,6 +4,7 @@ import floor;
 import random;
 import constants;
 import <vector>;
+import <stdexcept>;
 
 void Enemy::onDeath(Player& player) {
     if (randomChance(constants::probability::GOLD_LUCK)) {
@@ -57,4 +58,35 @@ void Dwarf::onDeath(Player& player) {
 void Merchant::onDeath(Player& player) {
     player.gainGold(constants::goldPile::MERCHANT_HOARD);
     becomeHostile();
+}
+
+constants::Enemy randomEnemy() {
+    using namespace constants::probability::spawn;
+    double probabilities[NUM_WEIGHTED_ENEMIES];
+    for (int i = 0; i < NUM_WEIGHTED_ENEMIES; ++i) {
+        probabilities[i] = ENEMIES[i].probability;
+    }
+    int idx = randomWeightedIndex(probabilities, NUM_WEIGHTED_ENEMIES);
+    return ENEMIES[idx].race;
+}
+
+Enemy* newEnemy(constants::Enemy race, Floor& f, int dragonHoardX, int dragonHoardY) {
+    switch (race) {
+        case constants::Enemy::Human:
+            return new Human(f);
+        case constants::Enemy::Dwarf:
+            return new Dwarf(f);
+        case constants::Enemy::Elf:
+            return new Elf(f);
+        case constants::Enemy::Orc:
+            return new Orc(f);
+        case constants::Enemy::Merchant:
+            return new Merchant(f);
+        case constants::Enemy::Dragon:
+            return new Dragon(f, dragonHoardX, dragonHoardY);
+        case constants::Enemy::Halfling:
+            return new Halfling(f);
+        default:
+            throw std::invalid_argument("Invalid Enemy");
+    }
 }

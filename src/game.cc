@@ -17,6 +17,7 @@ import <algorithm>;
 export class Game {
     Floor floor;
     Player* player;
+    const int numChambers;
     std::vector<Chamber> chambers;
     std::vector<Enemy*> enemies;
     std::vector<Gold*> gold;
@@ -44,6 +45,7 @@ export class Game {
     
     int getFloorNum() const { return floorNum; }
     int getNumFloors() const { return numFloors; }
+    int getNumChambers() const { return numChambers; }
     
     bool areMerchantsHostile() const { return merchantsHostile; }
     bool isFrozen() const { return frozen; }
@@ -52,7 +54,7 @@ export class Game {
     void nextFloor();
     void handleInput(std::string cmd);
 
-    int chooseChamber() const { return randomNum(0, chambers.size() - 1); }
+    int chooseChamber() const { return randomNum(0, numChambers); }
     void spawnEnemies();
     void spawnPotions();
     void spawnGold();
