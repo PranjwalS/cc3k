@@ -2,6 +2,7 @@ module game;
 
 import constants;
 import random;
+import chamber;
 import character;
 import enemy;
 import potion;
@@ -152,13 +153,11 @@ void Game::usePotion(constants::Direction dir) {
 
 void Game::spawnEnemies() {
     for (int i = 0; i < constants::NUM_ENEMIES; ++i) {
-        int chamberNum = chooseChamber();
-
         // Pick cell
-        std::vector<std::pair<int, int>> emptyCells = chambers.at(chamberNum).getEmptyCells();
-        if (emptyCells.empty()) break; // not enough empty cells
-        int cellIdx = randomNum(0, static_cast<int>(emptyCells.size()) - 1);
-        auto [x, y] = emptyCells.at(cellIdx);
+        Chamber chamber = chambers.at(chooseChamber());
+        auto cell = chamber.randomEmptyCell();
+        if (!cell) continue; // No available cells
+        auto [x, y] = *cell;
 
         // Pick race
         constants::Enemy race = randomEnemy();
@@ -173,13 +172,11 @@ void Game::spawnEnemies() {
 
 void Game::spawnPotions() {
     for (int i = 0; i < constants::NUM_POTIONS; ++i) {
-        int chamberNum = chooseChamber();
-
         // Pick cell
-        std::vector<std::pair<int, int>> emptyCells = chambers.at(chamberNum).getEmptyCells();
-        if (emptyCells.empty()) break; // not enough empty cells
-        int cellIdx = randomNum(0, static_cast<int>(emptyCells.size()) - 1);
-        auto [x, y] = emptyCells.at(cellIdx);
+        Chamber chamber = chambers.at(chooseChamber());
+        auto cell = chamber.randomEmptyCell();
+        if (!cell) continue; // No available cells
+        auto [x, y] = *cell;
 
         // Pick type
         constants::PotionType type = randomPotion();
@@ -194,13 +191,11 @@ void Game::spawnPotions() {
 
 void Game::spawnGold() {
     for (int i = 0; i < constants::NUM_GOLD; ++i) {
-        int chamberNum = chooseChamber();
-
         // Pick cell
-        std::vector<std::pair<int, int>> emptyCells = chambers.at(chamberNum).getEmptyCells();
-        if (emptyCells.empty()) break; // not enough empty cells
-        int cellIdx = randomNum(0, static_cast<int>(emptyCells.size()) - 1);
-        auto [x, y] = emptyCells.at(cellIdx);
+        Chamber chamber = chambers.at(chooseChamber());
+        auto cell = chamber.randomEmptyCell();
+        if (!cell) continue; // No available cells
+        auto [x, y] = *cell;
 
         // Determine amount of gold
         int amount = randomGold();

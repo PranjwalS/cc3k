@@ -1,12 +1,13 @@
 export module chamber;
 import <utility>;
 import <vector>;
+import <optional>;
 import constants;
 
 export class Chamber {
     bool occupancy[constants::board::HEIGHT][constants::board::WIDTH];
-    std::vector<std::pair<int, int>> occupied;
-    std::vector<std::pair<int, int>> empty;
+    std::vector<std::pair<int, int>> occupiedCells;
+    std::vector<std::pair<int, int>> emptyCells;
 
     public:
     Chamber() = default;
@@ -15,16 +16,18 @@ export class Chamber {
             for (int j = 0; j < constants::board::WIDTH; j++) {
                 occupancy[i][j] = other[i][j];
                 if (occupancy[i][j]) {
-                    occupied.emplace_back(j, i);
+                    occupiedCells.emplace_back(j, i);
                 } else {
-                    empty.emplace_back(j, i);
+                    emptyCells.emplace_back(j, i);
                 }
             }
         }
     };
 
-    const std::vector<std::pair<int, int>>& getOccupiedCells() const { return occupied; };
-    const std::vector<std::pair<int, int>>& getEmptyCells() const { return empty; };
+    const std::vector<std::pair<int, int>>& getOccupiedCells() const { return occupiedCells; };
+    const std::vector<std::pair<int, int>>& getEmptyCells() const { return emptyCells; };
 
     bool contains(int x, int y);
+
+    std::optional<std::pair<int, int>> randomEmptyCell() const;
 };

@@ -87,6 +87,6 @@ Enemy* newEnemy(constants::Enemy race, Floor& f, int dragonHoardX, int dragonHoa
         case constants::Enemy::Halfling:
             return new Halfling(f);
         default:
-            throw std::invalid_argument("Invalid Enemy");
+            throw std::invalid_argument("Invalid enemy type");
     }
 }
