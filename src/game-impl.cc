@@ -144,7 +144,7 @@ void Game::usePotion(constants::Direction dir) {
 }
 
 void Game::spawnEnemies() {
-    for (int i = 0; i < constants::NUM_ENEMIES; ++i) {
+    for (int i = 0; i < constants::NUM_ENEMIES; ) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
         Chamber chamber = floor.chooseChamber();
@@ -159,11 +159,13 @@ void Game::spawnEnemies() {
         enemies.emplace_back(newEnemy(race, floor));
         int enemyIdx = enemies.size() - 1;
         floor.addEnemy(x, y, enemyIdx, race);
+
+        ++i
     }
 }
 
 void Game::spawnPotions() {
-    for (int i = 0; i < constants::NUM_POTIONS; ++i) {
+    for (int i = 0; i < constants::NUM_POTIONS; ) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
         Chamber chamber = floor.chooseChamber();
@@ -178,6 +180,8 @@ void Game::spawnPotions() {
         potions.emplace_back(std::make_unique<Potion>(type));
         int potionIdx = potions.size() - 1;
         floor.addPotion(x, y, potionIdx);
+
+        ++i
     }
 }
 
