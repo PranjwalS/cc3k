@@ -16,11 +16,11 @@ export class Generation {
         ChamberShapeGeneration();
     }
 
+    void binarySpacePartition(const int numChambers) {}
+
     void ChamberShapeGeneration() {
         binarySpacePartition(numChambers);
     }
-
-    void binarySpacePartition(const int numChambers);
 
     const std::vector<std::pair<int, int>>& getChamberPoints(const int chamberNum) const {
         if (chamberNum < 0 || 
