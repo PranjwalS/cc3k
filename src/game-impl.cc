@@ -145,6 +145,7 @@ void Game::usePotion(constants::Direction dir) {
 
 void Game::spawnEnemies() {
     for (int i = 0; i < constants::NUM_ENEMIES; ++i) {
+        if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
         Chamber chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
@@ -163,6 +164,7 @@ void Game::spawnEnemies() {
 
 void Game::spawnPotions() {
     for (int i = 0; i < constants::NUM_POTIONS; ++i) {
+        if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
         Chamber chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
@@ -180,7 +182,8 @@ void Game::spawnPotions() {
 }
 
 void Game::spawnGold() {
-    for (int i = 0; i < constants::NUM_GOLD; ++i) {
+    for (int i = 0; i < constants::NUM_GOLD; ) {
+        if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
         Chamber chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
@@ -194,6 +197,8 @@ void Game::spawnGold() {
         gold.emplace_back(std::make_unique<Gold>(amount));
         int goldIdx = gold.size() - 1;
         floor.addGold(x, y, goldIdx);
+
+        ++i;
     }
 }
 

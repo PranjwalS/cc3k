@@ -23,6 +23,7 @@ export class Floor {
     Floor& operator=(const Floor& other);
 
     bool validSpawn(int x, int y);
+    bool spawnCapacityReached() const;
     bool isWalkable(int x, int y);
 
     void initChambers();

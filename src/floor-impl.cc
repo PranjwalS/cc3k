@@ -90,6 +90,13 @@ bool Floor::validSpawn(int x, int y) {
     return grid[y][x] == '.' && goldIndex[y][x] == -1 && potionsIndex[y][x] == -1;
 }
 
+bool Floor::spawnCapacityReached() const {
+    for (const Chamber& c : chambers) {
+        if (!c.getEmptyCells().empty()) return false;
+    }
+    return true;
+}
+
 void Floor::addEnemy(int x, int y, int index, constants::Enemy race) {
     enemiesIndex[y][x] = index;
     grid[y][x] = static_cast<char>(race);
