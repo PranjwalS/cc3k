@@ -1,13 +1,8 @@
 module chamber;
 import random;
-import generation;
 import <optional>;
 import <span>;
 import <iostream>;
-// Chamber::Chamber(const int chamberNum, const Generation& generation) {
-//     const auto& cells = generation.getChamberPoints(chamberNum);
-//     addSpawnableCells(cells);
-// }
 
 Chamber::Chamber(bool (&other)[constants::board::HEIGHT][constants::board::WIDTH]) {
     for (int i = 0; i < constants::board::HEIGHT; i++) {
@@ -30,48 +25,24 @@ void Chamber::removeEmpty(int x, int y) {
     emptyCells.erase({x, y});
 }
 
-// void Chamber::refreshEmptyCells() {
-//     for (int i = 0; i < constants::board::HEIGHT; i++) {
-//         for (int j = 0; j < constants::board::WIDTH; j++) {
-//             if (!empty[i][j]) {
-//                 emptyCells.emplace_back(j, i);
-//             }
-//         }
-//     }
-// }
-
-// void Chamber::addSpawnableCells(std::span<const std::pair<int, int>> cells) {
-//     for (const auto& [x, y] : cells) {
-//         if (!occupancy[y][x]) {
-//             occupancy[y][x] = true;
-//             occupiedCells.emplace_back(x, y);
-//         }
-//     }
-//     refreshEmptyCells();
-// }
-
-std::optional<std::pair<std::pair<int, int>, constants::Direction>> Chamber::randomEmptyPair() {
-    auto it = emptyCells.begin();
+std::optional<std::pair<std::pair<int, int>, constants::Direction>> Chamber::randomHoard() const {
     std::vector<std::pair<std::pair<int, int>, std::vector<constants::Direction>>> res;
 
-    for (int i = 0; i < static_cast<int>(emptyCells.size()); i++) {
+    for (const auto& cell : emptyCells) {
         std::vector<constants::Direction> validDirs;
-        auto p = *it;
 
         for (int d = 0; d < constants::NUM_DIRECTIONS; d++) {
             constants::Direction dir = static_cast<constants::Direction>(d);
 
-            if (emptyCells.contains(p + dir)) {
+            if (emptyCells.contains(cell + dir)) {
                 validDirs.push_back(dir);
             }
         }
         if (validDirs.size() > 0) {
-            res.push_back({p, validDirs});
+            res.push_back({cell, validDirs});
         }
-        
-        it++;
     }
-    
+
     if (res.size() == 0) {
         return std::nullopt;
     }

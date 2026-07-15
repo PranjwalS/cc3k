@@ -146,12 +146,12 @@ void Game::usePotion(constants::Direction dir) {
 }
 
 void Game::spawnEnemies() {
-    for (int i = 0; i < constants::NUM_ENEMIES; i++) {
+    for (int i = 0; i < constants::NUM_ENEMIES; ) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
         Chamber chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
-        if (!cell) continue; // No available cells
+        if (!cell) continue; // chamber is full
         auto [x, y] = *cell;
 
         // Pick race
@@ -162,16 +162,18 @@ void Game::spawnEnemies() {
         int enemyIdx = enemies.size() - 1;
         floor.addEnemy(x, y, enemyIdx, race);
         chamber.removeEmpty(x, y);
+
+        ++i;
     }
 }
 
 void Game::spawnPotions() {
-    for (int i = 0; i < constants::NUM_POTIONS; i++) {
+    for (int i = 0; i < constants::NUM_POTIONS; ) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
         Chamber chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
-        if (!cell) continue; // No available cells
+        if (!cell) continue; // chamber is full
         auto [x, y] = *cell;
 
         // Pick type
@@ -182,11 +184,13 @@ void Game::spawnPotions() {
         int potionIdx = potions.size() - 1;
         floor.addPotion(x, y, potionIdx);
         chamber.removeEmpty(x, y);
+
+        ++i;
     }
 }
 
 void Game::spawnGold() {
-    for (int i = 0; i < constants::NUM_GOLD; i++) {
+    for (int i = 0; i < constants::NUM_GOLD; ) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Determine amount of gold
         int amount = randomGold();
@@ -194,7 +198,7 @@ void Game::spawnGold() {
         int x, y;
 
         if (amount == constants::goldPile::DRAGON_HOARD) {
-            auto pair = chamber.randomEmptyPair();
+            auto pair = chamber.randomHoard();
             if (!pair) continue; // no pairs of cells to spawn hoard
             auto [p, d] = *pair;
             x = p.first; y = p.second;
@@ -215,6 +219,8 @@ void Game::spawnGold() {
         int goldIdx = gold.size() - 1;
         floor.addGold(x, y, goldIdx);
         chamber.removeEmpty(x, y);
+
+        ++i;
     }
 }
 

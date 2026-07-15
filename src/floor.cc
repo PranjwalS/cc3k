@@ -15,6 +15,7 @@ export class Floor {
     int enemiesIndex[board::HEIGHT][board::WIDTH];
     int goldIndex[board::HEIGHT][board::WIDTH];
     int potionsIndex[board::HEIGHT][board::WIDTH];
+    
 
     int stairX, stairY;
     char underPlayer = '.';   // previous char before @ moved on it
