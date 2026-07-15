@@ -69,9 +69,16 @@ void expand(std::string &emptyBoard, int x, int y,
 }
 
 void Floor::initChambers() {
-    Generation generation;
-    for (int i = 0; i < numChambers; ++i) {
-        chambers[i] = Chamber(i, generation);
+    std::string emptyBoard(constants::EMPTY_FLOOR);
+
+    for (int y = 0; y < constants::board::HEIGHT; y++) {
+        for (int x = 0; x < constants::board::WIDTH; x++) {
+            if (grid[y][x] == '.') {
+                bool cells[constants::board::HEIGHT][constants::board::WIDTH] = {};
+                expand(emptyBoard, x, y, cells);
+                chambers.emplace_back(cells);
+            }
+        }
     }
 }
 
