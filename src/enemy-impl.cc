@@ -17,7 +17,7 @@ void Enemy::onDeath(Player& player) {
 }
 
 bool Enemy::isValidMove(Floor& f, const constants::Direction& dir) {
-    auto [dx, dy] = constants::dirToPair(dir);
+    auto [dx, dy] = dirToPair(dir);
     int tx = x + dx;
     int ty = y + dy;
     if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
@@ -35,7 +35,7 @@ void Enemy::move(Floor& f) {
 
     if (legal.size() == 0) return;
 
-    auto [dx, dy] = constants::dirToPair(legal[randomNum(0, legal.size() - 1)]);
+    auto [dx, dy] = dirToPair(legal[randomNum(0, legal.size() - 1)]);
 
     f.moveEnemy(x, y, x + dx, y + dy);
     y += dy;

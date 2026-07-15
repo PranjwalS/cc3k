@@ -13,6 +13,7 @@ export class Player : public Character {
     int gold = 0;
     int score = 0;
     constants::Player race;
+    // Potion potion;
     
     public:
 

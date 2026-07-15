@@ -15,7 +15,7 @@ void Character::spawn(Floor& f) {
 }
 
 bool Character::isValidMove(Floor& f, const constants::Direction& dir) {
-    auto [dx, dy] = constants::dirToPair(dir);
+    auto [dx, dy] = dirToPair(dir);
     int tx = x + dx;
     int ty = y + dy;
     if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
@@ -24,7 +24,7 @@ bool Character::isValidMove(Floor& f, const constants::Direction& dir) {
 
 bool Character::move(Floor& f, const constants::Direction& dir) {
     if (!isValidMove(f, dir)) return false;
-    auto [dx, dy] = constants::dirToPair(dir);
+    auto [dx, dy] = dirToPair(dir);
     x += dx;
     y += dy;
     return true;

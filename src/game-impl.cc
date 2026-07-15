@@ -10,6 +10,7 @@ import gold;
 import <iostream>;
 import <cmath>;
 import <memory>;
+import <iomanip>;
 
 std::vector<const Enemy*> Game::getEnemies() const {
     std::vector<const Enemy*> result;
@@ -53,7 +54,7 @@ bool Game::playerAttack(constants::Direction d) {
         return false;
     }
 
-    auto [dx, dy] = constants::dirToPair(d);
+    auto [dx, dy] = dirToPair(d);
 
     int tx = player->getX() + dx;
     int ty = player->getY() + dy;
@@ -132,8 +133,9 @@ bool Game::isWon() const { return floorNum > numFloors; }
 bool Game::playerMove(constants::Direction dir) { return player->move(floor, dir); }
 
 
+
 void Game::usePotion(constants::Direction dir) {
-    auto [dx, dy] = constants::dirToPair(dir);
+    auto [dx, dy] = dirToPair(dir);
     int tx = player->getX() + dx;
     int ty = player->getY() + dy;
     if (tx < 0 || tx >= constants::board::WIDTH || ty < 0 || ty >= constants::board::HEIGHT) return; // out of bounds
@@ -234,4 +236,28 @@ void Game::removeAll() {
     enemies.clear();
     potions.clear();
     gold.clear();
+}
+
+void Game::displayAction(std::ostream& os) const {
+    // Missing implementation
+}
+
+void Game::displayInfo(std::ostream& os) const {
+    std::string playerRaceStr = playerToStr(player->getRace()).value();
+    os << "Race: " << playerRaceStr << " ";
+    os << "Gold: " << player->getGold();
+    os << std::right << std::setw(15) << "Floor " << floorNum << "\n";
+    os << "HP: " << player->getHp() << "\n";
+    os << "Atk: " << player->getAtk() << "\n";
+    os << "Def: " << player->getDef() << "\n";
+    displayAction(os);
+}
+void Game::displayScore(std::ostream& os) const {
+    int score = player->getScore();
+    os << "Score: " << score;
+}
+
+void Game::display(std::ostream& os) const {
+    os << floor;
+    displayInfo(os);
 }

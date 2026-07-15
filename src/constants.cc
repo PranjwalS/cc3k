@@ -41,7 +41,7 @@ export namespace constants {
         constexpr std::string FREEZE = "f";
         constexpr std::string RESTART = "r";
         constexpr std::string QUIT = "q";
-        constexpr std::string USE = "u";
+        constexpr std::string USE_POTION = "u";
         constexpr std::string ATTACK = "a";
 
         namespace direction {
@@ -54,12 +54,7 @@ export namespace constants {
             constexpr std::string SOUTH_EAST = "se";
             constexpr std::string SOUTH_WEST = "sw";
         }
-        bool isDirection(const std::string &s);
-
         // Player commands stored in Player enum class
-
-        std::optional<Player> toPlayerRace(const std::string &s);
-        bool isPlayerRace(const std::string &s);
     }
 
     // Player Races : Command
@@ -89,10 +84,6 @@ export namespace constants {
     };
 
     constexpr int NUM_ENEMY_RACES = static_cast<int>(Enemy::Count);
-
-    char enemyToChar(const Enemy& e) { return static_cast<char>(e); }
-
-    std::optional<Enemy> charToEnemy(const char& c);
 
     // Item : Symbol
     enum class Item : char {
@@ -191,11 +182,6 @@ export namespace constants {
 
     constexpr int NUM_DIRECTIONS = static_cast<int>(Direction::Count);
 
-    Direction strToDir(const std::string& s);
-    std::pair<int, int> dirToPair(const Direction& dir);
-    std::pair<int, int> strToPair(const std::string& s);
-    std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir);
-
     constexpr std::string_view EMPTY_FLOOR = 
     "|-----------------------------------------------------------------------------|"
     "|                                                                             |"
@@ -223,3 +209,17 @@ export namespace constants {
     "|                                                                             |"
     "|-----------------------------------------------------------------------------|";
 }
+
+export bool isDirection(const std::string &s);
+
+export std::optional<constants::Player> cmdToPlayer(const std::string &s);
+export bool isPlayerCmd(const std::string &s) { return cmdToPlayer(s) != std::nullopt; }
+export std::optional<std::string> playerToStr(constants::Player race);
+
+export char enemyToChar(const constants::Enemy& e) { return static_cast<char>(e); }
+export std::optional<constants::Enemy> charToEnemy(const char& c);
+
+export constants::Direction strToDir(const std::string& s);
+export std::pair<int, int> dirToPair(const constants::Direction& dir);
+export std::pair<int, int> strToPair(const std::string& s);
+export std::pair<int, int> operator+(const std::pair<int, int> pos, const constants::Direction dir);

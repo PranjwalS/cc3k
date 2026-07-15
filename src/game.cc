@@ -52,7 +52,6 @@ export class Game {
     bool isFrozen() const { return frozen; }
 
     void nextFloor();
-    void handleInput(std::string cmd);
 
     void spawnEnemies();
     void spawnPotions();
@@ -71,13 +70,16 @@ export class Game {
     void quitGame();
     bool isOver() const;
     bool isWon() const;
-    void displayScore() const;
+    
+    void displayAction(std::ostream& os) const; // MISSING IMPLEMENTATION: NEED TO FIGURE OUT
+    void displayInfo(std::ostream& os) const;
+    void displayScore(std::ostream& os) const;
+    void display(std::ostream& os) const;
 
-    void display() const;
     friend std::ostream& operator<<(std::ostream& os, const Game& g);
 };
 
 export std::ostream& operator<<(std::ostream& os, const Game& g) {
-    os << g.floor;
+    g.display(os);
     return os;
 }
