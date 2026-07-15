@@ -160,7 +160,7 @@ void Game::spawnEnemies() {
         int enemyIdx = enemies.size() - 1;
         floor.addEnemy(x, y, enemyIdx, race);
 
-        ++i
+        ++i;
     }
 }
 
@@ -181,7 +181,7 @@ void Game::spawnPotions() {
         int potionIdx = potions.size() - 1;
         floor.addPotion(x, y, potionIdx);
 
-        ++i
+        ++i;
     }
 }
 
