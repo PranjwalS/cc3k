@@ -7,7 +7,7 @@ import generation;
 import <string>;
 import <utility>;
 
-Floor::Floor(const int numChambers) : numChambers{numChambers}, chambers(numChambers) {
+Floor::Floor(const int numChambers) : numChambers{numChambers} {
     for (int i = 0; i < constants::board::HEIGHT; i++) {
         for (int j = 0; j < constants::board::WIDTH; j++) {
             grid[i][j] = constants::EMPTY_FLOOR[i * constants::board::WIDTH + j];
@@ -54,6 +54,9 @@ Floor& Floor::operator=(const Floor& other) {
 
 void expand(std::string &emptyBoard, int x, int y,
             bool (&cells)[constants::board::HEIGHT][constants::board::WIDTH]) {
+    emptyBoard[y * constants::board::WIDTH + x] = 'x';
+    cells[y][x] = true;
+    
     auto n = std::pair{x, y} + constants::Direction::NO;
     auto e = std::pair{x, y} + constants::Direction::EA;
     auto s = std::pair{x, y} + constants::Direction::SO;
@@ -61,8 +64,6 @@ void expand(std::string &emptyBoard, int x, int y,
     
     for (auto [nx, ny] : {n, e, s, w}) {
         if (constants::board::isInBounds({nx, ny}) && emptyBoard[ny * constants::board::WIDTH + nx] == '.') {
-            cells[ny][nx] = true;
-            emptyBoard[ny * constants::board::WIDTH + nx] = 'x';
             expand(emptyBoard, nx, ny, cells);
         }
     }
@@ -70,10 +71,9 @@ void expand(std::string &emptyBoard, int x, int y,
 
 void Floor::initChambers() {
     std::string emptyBoard(constants::EMPTY_FLOOR);
-
     for (int y = 0; y < constants::board::HEIGHT; y++) {
         for (int x = 0; x < constants::board::WIDTH; x++) {
-            if (grid[y][x] == '.') {
+            if (emptyBoard[y * constants::board::WIDTH + x] == '.') {
                 bool cells[constants::board::HEIGHT][constants::board::WIDTH] = {};
                 expand(emptyBoard, x, y, cells);
                 chambers.emplace_back(cells);

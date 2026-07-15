@@ -74,4 +74,10 @@ export class Game {
     void displayScore() const;
 
     void display() const;
+    friend std::ostream& operator<<(std::ostream& os, const Game& g);
 };
+
+export std::ostream& operator<<(std::ostream& os, const Game& g) {
+    os << g.floor;
+    return os;
+}

@@ -3,6 +3,7 @@ export module floor;
 import constants;
 import chamber;
 import <vector>;
+import <iostream>;
 
 using namespace constants;
 
@@ -40,4 +41,16 @@ export class Floor {
     void removeGold(int x, int y);
 
     void movePlayer(int px, int py, int nx, int ny);
+    friend std::ostream& operator<<(std::ostream& os, const Floor& f);
 };
+
+export std::ostream& operator<<(std::ostream& os, const Floor& f) {
+    for (int i = 0; i < board::HEIGHT; i++) {
+        for (int j = 0; j < board::WIDTH; j++) {
+            os << f.grid[i][j];
+        }
+        os << "\n";
+    }
+
+    return os;
+}
