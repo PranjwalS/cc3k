@@ -10,25 +10,22 @@
     X. Finish Character::move logic, figure it outis
 
     X. Finalize Potion class: implement all 6 potion effects (RH, BA, BD, PH, WA, WD) and connect them to Player::applyPotion().
-    9. Finalize Gold class: implement small/normal/merchant/dragon hoards and values (1/2/4/6), including dragon hoard pickup restriction.
+    X. Finalize Gold class: implement small/normal/merchant/dragon hoards and values (1/2/4/6), including dragon hoard pickup restriction.
 
---- (kinda close to being done the above ^)
-
-    10. Add reusable spawning helpers: random floor tile selection, chamber selection, checking occupied cells, placing objects.
-  10.5. Implement spawnFloor(): works mainly for the randomly generation of floors when prompted, it generates the inner walls of chambers and fills with either (blank) or (.) and walls with (|, -) as well as passages (#, +) and whatnot
-    11. Implement spawnPotions(): spawn exactly 10 potions, random type (1/6 each), random chamber, random valid tile.
-    12. Implement spawnGold(): spawn exactly 10 gold piles, probabilities (5/8 normal, 1/8 dragon hoard, 1/4 small), random chamber/tile.
-    13. Implement spawnEnemies(): spawn exactly 20 enemies with correct probabilities, random chamber/tile, no overlap.
-    14. Ensure generation order follows spec: player -> stairs -> potions -> gold -> enemies.
+    X. Add reusable spawning helpers: random floor tile selection, chamber selection, checking occupied cells, placing objects.
+    X. Implement spawnFloor(): works mainly for the randomly generation of floors when prompted, it generates the inner walls of chambers and fills with either (blank) or (.) and walls with (|, -) as well as passages (#, +) and whatnot
+    X. Implement spawnPotions(): spawn exactly 10 potions, random type (1/6 each), random chamber, random valid tile.
+    X. Implement spawnGold(): spawn exactly 10 gold piles, probabilities (5/8 normal, 1/8 dragon hoard, 1/4 small), random chamber/tile.
+    X. Implement spawnEnemies(): spawn exactly 20 enemies with correct probabilities, random chamber/tile, no overlap.
+    X. Ensure generation order follows spec: player -> stairs -> potions -> gold -> enemies.
    
     15. Finish display logic: render board, colors, player/enemies/gold/potions priority.
     16. Finish command loop: race selection, movement commands, attack commands, potion commands, quitting/restarting.
     17. Add game state checks IMPORTANT: player death, floor completion, moving to next floor, game restart.
+    18. for #17 create an outer class FullGame ig, and it just handles switching between floors and recalling all the init and takes care of the state,
+         the game-loop iterates (while loop) thru this outer class which is initialized with all floors (IDK ABT THIS, WHETHER ALL AT INIT OR ONLY IF PLAYER PROGRESSES)
    
     18. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.
     19. Final memory cleanup: ensure all dynamically allocated Player/Enemy/Item objects are deleted correctly.
     20. Final compile + gameplay testing before submission.
 
-
-  --- questions;
-  // need to figure whether potion dissapears if used, or just becomes unusable
