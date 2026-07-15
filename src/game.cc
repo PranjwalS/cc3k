@@ -11,17 +11,16 @@ import gold;
 import chamber;
 import <string>;
 import <vector>;
-import <cmath>;
 import <algorithm>;
+import <memory>;
 
 export class Game {
     Floor floor;
-    Player* player;
-    const int numChambers;
+    std::unique_ptr<Player> player;
     std::vector<Chamber> chambers;
-    std::vector<Enemy*> enemies;
-    std::vector<Gold*> gold;
-    std::vector<Potion*> potions;
+    std::vector<std::unique_ptr<Enemy>> enemies;
+    std::vector<std::unique_ptr<Gold>> gold;
+    std::vector<std::unique_ptr<Potion>> potions;
     const int numFloors;
     int floorNum = 1;
     bool merchantsHostile = false;
@@ -30,34 +29,36 @@ export class Game {
 
     public:
 
-    Game(Player* player = nullptr, 
-        const int numFloors = constants::board::NUM_FLOORS, 
-        const int numChambers = constants::board::NUM_CHAMBERS);
-    ~Game();
+    Game(const constants::Player race,
+         const int numFloors = constants::board::NUM_FLOORS, 
+         const int numChambers = constants::board::NUM_CHAMBERS):
+            floor(numChambers), 
+            player{newPlayer(race, floor)}, 
+            numFloors{numFloors} {}
+    ~Game() = default;
 
     const Floor& getFloor() const { return floor; }
-    const Player* const getPlayer() const { return player; }
+    const std::unique_ptr<Player>& getPlayer() const { return player; }
     const std::vector<Chamber>& getChambers() const { return chambers; }
 
-    const std::vector<const Enemy*> getEnemies() const;
-    const std::vector<const Gold*> getGold() const;
-    const std::vector<const Potion*> getPotions() const;
+    std::vector<const Enemy*> getEnemies() const;
+    std::vector<const Gold*> getGold() const;
+    std::vector<const Potion*> getPotions() const;
     
     int getFloorNum() const { return floorNum; }
     int getNumFloors() const { return numFloors; }
-    int getNumChambers() const { return numChambers; }
     
     bool areMerchantsHostile() const { return merchantsHostile; }
     bool isFrozen() const { return frozen; }
 
-    void init(constants::Player race);
     void nextFloor();
     void handleInput(std::string cmd);
 
-    int chooseChamber() const { return randomNum(0, numChambers); }
     void spawnEnemies();
     void spawnPotions();
     void spawnGold();
+    void spawnAll();
+    void removeAll();
 
     bool playerMove(constants::Direction dir);
     bool playerAttack(constants::Direction dir);

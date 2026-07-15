@@ -9,3 +9,6 @@ vector
 climits
 utility
 cmath
+array
+memory
+span

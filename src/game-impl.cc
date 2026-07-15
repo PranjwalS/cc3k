@@ -8,52 +8,42 @@ import enemy;
 import potion;
 import gold;
 import <iostream>;
+import <cmath>;
+import <memory>;
 
-const std::vector<const Enemy*> Game::getEnemies() const {
-    return std::vector<const Enemy*>(enemies.begin(), enemies.end());
+std::vector<const Enemy*> Game::getEnemies() const {
+    std::vector<const Enemy*> result;
+    result.reserve(enemies.size());
+    
+    for (const auto& enemy : enemies) {
+        result.push_back(enemy.get());
+    }
+    return result;
 }
-const std::vector<const Gold*> Game::getGold() const {
-    return std::vector<const Gold*>(gold.begin(), gold.end());
+std::vector<const Gold*> Game::getGold() const {
+    std::vector<const Gold*> result;
+    result.reserve(gold.size());
+    
+    for (const auto& curGold : gold) {
+        result.push_back(curGold.get());
+    }
+    return result;
 }
-const std::vector<const Potion*> Game::getPotions() const {
-    return std::vector<const Potion*>(potions.begin(), potions.end());
-}
-
-Game::Game(Player* player, const int numFloors, const int numChambers) : 
-            player{player}, 
-            numChambers{numChambers}, chambers(numChambers), 
-            numFloors{numFloors} {}
-
-Game::~Game() {
-    delete player;
-    for (Enemy* e : enemies) delete e;
-    for (Gold* g : gold) delete g;
-    for (Potion* p : potions) delete p;
-}
-
-void Game::init(constants::Player race) {
-    if (race == constants::Player::Shade) player = new Shade{floor};
-    else if (race == constants::Player::Drow) player = new Drow{floor};
-    else if (race == constants::Player::Vampire) player = new Vampire{floor};
-    else if (race == constants::Player::Troll) player = new Troll{floor};
-    else if (race == constants::Player::Goblin) player = new Goblin{floor};
-    spawnEnemies();     // todo these 3
-    spawnPotions();
-    spawnGold();
+std::vector<const Potion*> Game::getPotions() const {
+    std::vector<const Potion*> result;
+    result.reserve(potions.size());
+    
+    for (const auto& potion : potions) {
+        result.push_back(potion.get());
+    }
+    return result;
 }
 
 void Game::nextFloor() {
     if (floorNum > numFloors) return;
+    int numChambers = floor.numChambers;
     ++floorNum;
-    
-    for (Enemy* e : enemies) delete e;
-    for (Gold* g : gold) delete g;
-    for (Potion* p : potions) delete p;
-    enemies.clear();
-    gold.clear();
-    potions.clear();
-
-    floor = Floor();
+    floor = Floor(numChambers);
 }
 
 bool Game::playerAttack(constants::Direction d) {
@@ -69,7 +59,7 @@ bool Game::playerAttack(constants::Direction d) {
     int idx = floor.enemiesIndex[ty][tx];
 
     if (idx != -1) {
-        Enemy* e = enemies[idx];
+        Enemy* e = enemies[idx].get();
         // halfling chance of evasion — takes priority
         if (e->evasionChance()) return true;
 
@@ -94,7 +84,9 @@ bool Game::playerAttack(constants::Direction d) {
 //  basically handles both enemy moves and enemy attacks internally at once, since enemy can only do one or the other per turn!
 void Game::enemyTurns() {
     if (frozen) return;
-    for (Enemy* e : enemies) {
+    for (auto& ptr : enemies) {
+        Enemy* e = ptr.get(); // unique ptr to raw ptr
+
         if (!e->isAlive()) continue;
         bool inRadius = std::abs(e->getX() - player->getX()) <= 1 && std::abs(e->getY() - player->getY()) <= 1;
         if (e->getRace() == constants::Enemy::Dragon) { // dragon stuff, if player near hoard then ATTACK
@@ -145,7 +137,7 @@ void Game::usePotion(constants::Direction dir) {
     if (tx < 0 || tx >= constants::board::WIDTH || ty < 0 || ty >= constants::board::HEIGHT) return; // out of bounds
     int idx = floor.potionsIndex[ty][tx];
     if (idx == -1) return; // no found :(
-    Potion* p = potions[idx];
+    Potion* p = potions[idx].get();
     p->becomeKnown();  // so cant be reused, check p->known == false when calling in game loop ig
     player->applyPotion(p->getHpMod(), p->getAtkMod(), p->getDefMod());
     floor.removePotion(tx, ty); // need to figure whether potion dissapears if used, or just becomes unusable
@@ -154,7 +146,7 @@ void Game::usePotion(constants::Direction dir) {
 void Game::spawnEnemies() {
     for (int i = 0; i < constants::NUM_ENEMIES; ++i) {
         // Pick cell
-        Chamber chamber = chambers.at(chooseChamber());
+        Chamber chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
         if (!cell) continue; // No available cells
         auto [x, y] = *cell;
@@ -163,8 +155,7 @@ void Game::spawnEnemies() {
         constants::Enemy race = randomEnemy();
 
         // Spawn
-        Enemy* enemy = newEnemy(race, floor);
-        enemies.emplace_back(enemy);
+        enemies.emplace_back(newEnemy(race, floor));
         int enemyIdx = enemies.size() - 1;
         floor.addEnemy(x, y, enemyIdx, race);
     }
@@ -173,7 +164,7 @@ void Game::spawnEnemies() {
 void Game::spawnPotions() {
     for (int i = 0; i < constants::NUM_POTIONS; ++i) {
         // Pick cell
-        Chamber chamber = chambers.at(chooseChamber());
+        Chamber chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
         if (!cell) continue; // No available cells
         auto [x, y] = *cell;
@@ -182,8 +173,7 @@ void Game::spawnPotions() {
         constants::PotionType type = randomPotion();
 
         // Spawn
-        Potion* potion = new Potion{type};
-        potions.emplace_back(potion);
+        potions.emplace_back(std::make_unique<Potion>(type));
         int potionIdx = potions.size() - 1;
         floor.addPotion(x, y, potionIdx);
     }
@@ -192,7 +182,7 @@ void Game::spawnPotions() {
 void Game::spawnGold() {
     for (int i = 0; i < constants::NUM_GOLD; ++i) {
         // Pick cell
-        Chamber chamber = chambers.at(chooseChamber());
+        Chamber chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
         if (!cell) continue; // No available cells
         auto [x, y] = *cell;
@@ -201,9 +191,20 @@ void Game::spawnGold() {
         int amount = randomGold();
 
         // Spawn
-        Gold* newGold = new Gold{amount};
-        gold.emplace_back(newGold);
+        gold.emplace_back(std::make_unique<Gold>(amount));
         int goldIdx = gold.size() - 1;
         floor.addGold(x, y, goldIdx);
     }
+}
+
+void Game::spawnAll() {
+    spawnEnemies();
+    spawnPotions();
+    spawnGold();
+}
+
+void Game::removeAll() {
+    enemies.clear();
+    potions.clear();
+    gold.clear();
 }

@@ -1,7 +1,10 @@
 module player;
 
 import constants;
+import floor;
 import <algorithm>;
+import <stdexcept>;
+import <memory>;
 
 void Player::changeGold(int amount) {
     gold += amount;
@@ -34,4 +37,21 @@ void Troll::endTurn() {
 
 void Goblin::onKill(constants::Enemy race) {
     gold += 5;
+}
+
+std::unique_ptr<Player> newPlayer(constants::Player race, Floor& f) {
+    switch (race) {
+        case constants::Player::Shade:
+            return std::make_unique<Shade>(f);
+        case constants::Player::Drow:
+            return std::make_unique<Drow>(f);
+        case constants::Player::Vampire:
+            return std::make_unique<Vampire>(f);
+        case constants::Player::Troll:
+            return std::make_unique<Troll>(f);
+        case constants::Player::Goblin:
+            return std::make_unique<Goblin>(f);
+        default:
+            throw std::invalid_argument("Invalid player type");
+    }
 }

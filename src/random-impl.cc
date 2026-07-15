@@ -1,6 +1,6 @@
 module random;
-
 import <random>;
+import <span>;
 
 // Seed Mersenne Twister algorithm to generate gen
 static std::random_device seed;
@@ -16,12 +16,14 @@ bool randomChance(double probability) {
     return dist(gen) == 1;
 }
 
-int randomWeightedIndex(const double probabilities[], const int size, const bool normalize) {
+int randomWeightedIndex(const std::span<const double> probabilities, const bool normalize) {
+    int len = static_cast<int>(probabilities.size());
+
     double total = 1.0;
     // Normalize probabilities 
     if (normalize) {
         total = 0.0;
-        for (int i = 0; i < size; ++i) {
+        for (int i = 0; i < len; ++i) {
             total += probabilities[i];
         }
     }
@@ -29,10 +31,10 @@ int randomWeightedIndex(const double probabilities[], const int size, const bool
     double r = dist(gen);
 
     double sum = 0.0;
-    for (int i = 0; i < size; ++i) {
+    for (int i = 0; i < len; ++i) {
         sum += probabilities[i];
         if (r < sum) return i;
     }
 
-    return size - 1;
+    return len - 1;
 }

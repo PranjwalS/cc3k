@@ -5,6 +5,8 @@ import random;
 import constants;
 import <vector>;
 import <stdexcept>;
+import <memory>;
+import <array>;
 
 void Enemy::onDeath(Player& player) {
     if (randomChance(constants::probability::GOLD_LUCK)) {
@@ -62,30 +64,30 @@ void Merchant::onDeath(Player& player) {
 
 constants::Enemy randomEnemy() {
     using namespace constants::probability::spawn;
-    double probabilities[NUM_WEIGHTED_ENEMIES];
+    std::array<double, NUM_WEIGHTED_ENEMIES> probabilities;
     for (int i = 0; i < NUM_WEIGHTED_ENEMIES; ++i) {
         probabilities[i] = ENEMIES[i].probability;
     }
-    int idx = randomWeightedIndex(probabilities, NUM_WEIGHTED_ENEMIES);
+    int idx = randomWeightedIndex(probabilities);
     return ENEMIES[idx].race;
 }
 
-Enemy* newEnemy(constants::Enemy race, Floor& f, int dragonHoardX, int dragonHoardY) {
+std::unique_ptr<Enemy> newEnemy(constants::Enemy race, Floor& f, int dragonHoardX, int dragonHoardY) {
     switch (race) {
         case constants::Enemy::Human:
-            return new Human(f);
+            return std::make_unique<Human>(f);
         case constants::Enemy::Dwarf:
-            return new Dwarf(f);
+            return std::make_unique<Dwarf>(f);
         case constants::Enemy::Elf:
-            return new Elf(f);
+            return std::make_unique<Elf>(f);
         case constants::Enemy::Orc:
-            return new Orc(f);
+            return std::make_unique<Orc>(f);
         case constants::Enemy::Merchant:
-            return new Merchant(f);
+            return std::make_unique<Merchant>(f);
         case constants::Enemy::Dragon:
-            return new Dragon(f, dragonHoardX, dragonHoardY);
+            return std::make_unique<Dragon>(f, dragonHoardX, dragonHoardY);
         case constants::Enemy::Halfling:
-            return new Halfling(f);
+            return std::make_unique<Halfling>(f);
         default:
             throw std::invalid_argument("Invalid enemy type");
     }

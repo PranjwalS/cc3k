@@ -6,6 +6,7 @@ import floor;
 import <string>;
 import <climits>;
 import <algorithm>;
+import <memory>;
 
 export class Player : public Character {
     protected:
@@ -67,3 +68,5 @@ export class Goblin : public Player {
     Goblin(Floor& f) : Player{110, 15, 20, constants::Player::Goblin, f} {}
     void onKill(constants::Enemy race);
 };
+
+export std::unique_ptr<Player> newPlayer(constants::Player race, Floor& f);

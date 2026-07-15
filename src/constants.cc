@@ -4,13 +4,14 @@ import <optional>;
 import <utility>;
 import <string>;
 import <string_view>;
+import <array>;
 
 export namespace constants {
     // Board features
     namespace board {
         // Board dimensions
-        constexpr int HEIGHT{25};
-        constexpr int WIDTH{79};
+        constexpr int HEIGHT = 25;
+        constexpr int WIDTH = 79;
 
         // Maximum x/y positions: DO NOT MODIFY
         constexpr int MAX_Y = HEIGHT - 1;
@@ -21,12 +22,18 @@ export namespace constants {
 
         bool isInBounds(const std::pair<int, int> pos);
     }
+
+    namespace colour {
+        constexpr std::string RESET     = "\033[0m";
+        constexpr std::string RED       = "\033[31m";
+        constexpr std::string GREEN     = "\033[32m";
+        constexpr std::string YELLOW    = "\033[33m";
+        constexpr std::string BLUE      = "\033[34m";
+    }
     
     constexpr int NUM_POTIONS = 10;
     constexpr int NUM_GOLD = 10;
     constexpr int NUM_ENEMIES = 20;
-
-    constexpr char PLAYER_CHAR = '@';
 
     enum class Player : char;
 
@@ -48,6 +55,8 @@ export namespace constants {
             constexpr std::string SOUTH_WEST = "sw";
         }
         bool isDirection(const std::string &s);
+
+        // Player commands stored in Player enum class
 
         std::optional<Player> toPlayerRace(const std::string &s);
         bool isPlayerRace(const std::string &s);
@@ -91,6 +100,18 @@ export namespace constants {
         Potion = 'P'
     };
 
+    namespace symbol {
+        constexpr char PLAYER = '@';
+        // Enemy symbols stored in Enemy enum class
+        // Item symbols stored in Item enum class
+        constexpr char VERTICAL_WALL = '|';
+        constexpr char HORIZONTAL_WALL = '-';
+        constexpr char DOORWAY = '+';
+        constexpr char PASSAGE = '#';
+
+        constexpr char EMPTY = '\0';
+    }
+
     // Amount of gold in each type of pile
     namespace goldPile {
         constexpr int SMALL = 1;
@@ -127,16 +148,17 @@ export namespace constants {
                 const double probability;
             };
 
-            constexpr WeightedEnemy ENEMIES[] = {
+            constexpr std::array ENEMIES = std::to_array<WeightedEnemy>({
                 { Enemy::Human, 2.0 / 9.0 },
                 { Enemy::Dwarf, 3.0 / 18.0 },
                 { Enemy::Halfling, 5.0 / 18.0 },
                 { Enemy::Elf, 1.0 / 9.0 },
                 { Enemy::Orc, 1.0 / 9.0 },
                 { Enemy::Merchant, 1.0 / 9.0 }
-            };
+            });
 
-            constexpr int NUM_WEIGHTED_ENEMIES = 6;
+            // Note: std::array::size() is determined at compile time -> this is valid
+            constexpr int NUM_WEIGHTED_ENEMIES = ENEMIES.size(); 
 
             // Gold rates
             struct WeightedGold {
@@ -144,13 +166,13 @@ export namespace constants {
                 const double probability;
             };
 
-            constexpr WeightedGold GOLD[] = {
+            constexpr std::array GOLD = std::to_array<WeightedGold>({
                 { goldPile::NORMAL, 5.0 / 8.0 },
                 { goldPile::DRAGON_HOARD, 1.0 / 8.0 },
-                { goldPile::SMALL, 1.0 / 4.0 },
-            };
+                { goldPile::SMALL, 1.0 / 4.0 }
+            });
 
-            constexpr int NUM_WEIGHTED_GOLD = 3;
+            constexpr int NUM_WEIGHTED_GOLD = GOLD.size(); // determined at compile time
         }
         constexpr double ENEMY_MISS = 0.5;
         constexpr double HALFLING_EVASION = 0.5;

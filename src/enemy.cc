@@ -6,6 +6,7 @@ import character;
 import player;
 import random;
 import <string>;
+import <memory>;
 
 export class Enemy : public Character {
     protected:
@@ -72,4 +73,4 @@ export class Halfling : public Enemy {
 };
 
 export constants::Enemy randomEnemy();
-export Enemy* newEnemy(constants::Enemy race, Floor& f, int dragonHoardX = 0, int dragonHoardY = 0);
+export std::unique_ptr<Enemy> newEnemy(constants::Enemy race, Floor& f, int dragonHoardX = 0, int dragonHoardY = 0);

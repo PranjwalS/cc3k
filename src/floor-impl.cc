@@ -1,9 +1,13 @@
 module floor;
 
+import random;
 import constants;
+import chamber;
+import generation;
 import <string>;
+import <utility>;
 
-Floor::Floor() {
+Floor::Floor(const int numChambers) : numChambers{numChambers}, chambers(numChambers) {
     for (int i = 0; i < constants::board::HEIGHT; i++) {
         for (int j = 0; j < constants::board::WIDTH; j++) {
             grid[i][j] = constants::EMPTY_FLOOR[i * constants::board::WIDTH + j];
@@ -14,6 +18,38 @@ Floor::Floor() {
     }
 
     initChambers();
+}
+
+Floor::Floor(Floor&& other) {
+    std::swap(numChambers, other.numChambers);
+    std::swap(chambers, other.chambers);
+
+    for (int i = 0; i < constants::board::HEIGHT; i++) {
+        for (int j = 0; j < constants::board::WIDTH; j++) {
+            std::swap(grid[i][j], other.grid[i][j]);
+            std::swap(enemiesIndex[i][j], other.enemiesIndex[i][j]);
+            std::swap(goldIndex[i][j], other.goldIndex[i][j]);
+            std::swap(potionsIndex[i][j], other.potionsIndex[i][j]);
+        }
+    }
+}
+
+Floor& Floor::operator=(const Floor& other) {
+    if (this == &other) return *this;
+
+    numChambers = other.numChambers;
+    chambers = other.chambers;
+
+    for (int i = 0; i < constants::board::HEIGHT; i++) {
+        for (int j = 0; j < constants::board::WIDTH; j++) {
+            grid[i][j] = other.grid[i][j];
+            enemiesIndex[i][j] = other.enemiesIndex[i][j];
+            goldIndex[i][j] = other.goldIndex[i][j];
+            potionsIndex[i][j] = other.potionsIndex[i][j];
+        }
+    }
+
+    return *this;
 }
 
 void expand(std::string &emptyBoard, int x, int y,
@@ -33,19 +69,14 @@ void expand(std::string &emptyBoard, int x, int y,
 }
 
 void Floor::initChambers() {
-    std::string emptyBoard(constants::EMPTY_FLOOR);
-    int currChamber = 0;
-
-    for (int y = 0; y < constants::board::HEIGHT; y++) {
-        for (int x = 0; x < constants::board::WIDTH; x++) {
-            if (grid[y][x] == '.') {
-                bool cells[constants::board::HEIGHT][constants::board::WIDTH] = {};
-                expand(emptyBoard, x, y, cells);
-                chambers[currChamber] = new Chamber(cells);
-                currChamber += 1;
-            }
-        }
+    Generation generation;
+    for (int i = 0; i < numChambers; ++i) {
+        chambers[i] = Chamber(i, generation);
     }
+}
+
+const Chamber& Floor::chooseChamber() const { 
+    return chambers.at(randomNum(0, numChambers - 1));
 }
 
 bool Floor::validSpawn(int x, int y) {
