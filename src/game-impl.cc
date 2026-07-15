@@ -199,10 +199,10 @@ void Game::spawnGold() {
             auto [p, d] = *pair;
             x = p.first; y = p.second;
             auto [dx, dy] = p + d; // dragon x and y
-
+            
             enemies.emplace_back(newEnemy(constants::Enemy::Dragon, floor));
             int enemyIdx = enemies.size() - 1;
-            floor.addEnemy(x, y, enemyIdx, constants::Enemy::Dragon);
+            floor.addEnemy(dx, dy, enemyIdx, constants::Enemy::Dragon);
             chamber.removeEmpty(dx, dy);
         } else {
             auto cell = chamber.randomEmptyCell();

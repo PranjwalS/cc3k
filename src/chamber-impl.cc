@@ -71,9 +71,11 @@ std::optional<std::pair<std::pair<int, int>, constants::Direction>> Chamber::ran
         
         it++;
     }
+    
     if (res.size() == 0) {
         return std::nullopt;
     }
+
 
     int rCell = randomNum(0, static_cast<int>(res.size()) - 1);
     int rDir = randomNum(0, static_cast<int>(res[rCell].second.size()) - 1);
