@@ -20,6 +20,7 @@ std::vector<const Enemy*> Game::getEnemies() const {
     }
     return result;
 }
+
 std::vector<const Gold*> Game::getGold() const {
     std::vector<const Gold*> result;
     result.reserve(gold.size());
@@ -29,6 +30,7 @@ std::vector<const Gold*> Game::getGold() const {
     }
     return result;
 }
+
 std::vector<const Potion*> Game::getPotions() const {
     std::vector<const Potion*> result;
     result.reserve(potions.size());
@@ -144,7 +146,7 @@ void Game::usePotion(constants::Direction dir) {
 }
 
 void Game::spawnEnemies() {
-    for (int i = 0; i < constants::NUM_ENEMIES; ) {
+    for (int i = 0; i < constants::NUM_ENEMIES; i++) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
         Chamber chamber = floor.chooseChamber();
@@ -159,13 +161,12 @@ void Game::spawnEnemies() {
         enemies.emplace_back(newEnemy(race, floor));
         int enemyIdx = enemies.size() - 1;
         floor.addEnemy(x, y, enemyIdx, race);
-
-        ++i;
+        chamber.removeEmpty(x, y);
     }
 }
 
 void Game::spawnPotions() {
-    for (int i = 0; i < constants::NUM_POTIONS; ) {
+    for (int i = 0; i < constants::NUM_POTIONS; i++) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
         Chamber chamber = floor.chooseChamber();
@@ -180,29 +181,40 @@ void Game::spawnPotions() {
         potions.emplace_back(std::make_unique<Potion>(type));
         int potionIdx = potions.size() - 1;
         floor.addPotion(x, y, potionIdx);
-
-        ++i;
+        chamber.removeEmpty(x, y);
     }
 }
 
 void Game::spawnGold() {
-    for (int i = 0; i < constants::NUM_GOLD; ) {
+    for (int i = 0; i < constants::NUM_GOLD; i++) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
-        // Pick cell
-        Chamber chamber = floor.chooseChamber();
-        auto cell = chamber.randomEmptyCell();
-        if (!cell) continue; // No available cells
-        auto [x, y] = *cell;
-
         // Determine amount of gold
         int amount = randomGold();
+        Chamber chamber = floor.chooseChamber();
+        int x, y;
+
+        if (amount == constants::goldPile::DRAGON_HOARD) {
+            auto pair = chamber.randomEmptyPair();
+            if (!pair) continue; // no pairs of cells to spawn hoard
+            auto [p, d] = *pair;
+            x = p.first; y = p.second;
+            auto [dx, dy] = p + d; // dragon x and y
+
+            enemies.emplace_back(newEnemy(constants::Enemy::Dragon, floor));
+            int enemyIdx = enemies.size() - 1;
+            floor.addEnemy(x, y, enemyIdx, constants::Enemy::Dragon);
+            chamber.removeEmpty(dx, dy);
+        } else {
+            auto cell = chamber.randomEmptyCell();
+            if (!cell) continue; // No available cells
+            x = cell->first; y = cell->second;
+        }
 
         // Spawn
         gold.emplace_back(std::make_unique<Gold>(amount));
         int goldIdx = gold.size() - 1;
         floor.addGold(x, y, goldIdx);
-
-        ++i;
+        chamber.removeEmpty(x, y);
     }
 }
 

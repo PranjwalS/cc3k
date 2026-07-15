@@ -82,7 +82,7 @@ void Floor::initChambers() {
     }
 }
 
-const Chamber& Floor::chooseChamber() const { 
+Chamber& Floor::chooseChamber() { 
     return chambers.at(randomNum(0, numChambers - 1));
 }
 

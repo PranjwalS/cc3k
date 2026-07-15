@@ -24,7 +24,6 @@ bool Enemy::isValidMove(Floor& f, const constants::Direction& dir) {
     return f.grid[ty][tx] == '.';
 }
 
-// risk of infinite loop if no valid move exists, deal with later ig
 void Enemy::move(Floor& f) {
     std::vector<constants::Direction> legal;
     for (int i = 0; i < constants::NUM_DIRECTIONS; i++) {

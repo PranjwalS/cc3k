@@ -27,7 +27,7 @@ export class Floor {
     bool isWalkable(int x, int y);
 
     void initChambers();
-    const Chamber& chooseChamber() const;
+    Chamber& chooseChamber();
 
     void addEnemy(int x, int y, int index, constants::Enemy e);
     void removeEnemy(int x, int y);
