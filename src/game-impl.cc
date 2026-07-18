@@ -87,10 +87,8 @@ bool Game::playerAttack(constants::Direction d) {
 //  basically handles both enemy moves and enemy attacks internally at once, since enemy can only do one or the other per turn!
 void Game::enemyTurns() {
     if (frozen) return;
-    std::cerr << "Total enemies: " << enemies.size() << std::endl;
     for (auto& ptr : enemies) {
         Enemy* e = ptr.get(); // unique ptr to raw ptr
-        std::cerr << "Enemy at " << e->getX() << "," << e->getY() << std::endl;
         if (!e->isAlive()) continue;
         bool inRadius = std::abs(e->getX() - player->getX()) <= 1 && std::abs(e->getY() - player->getY()) <= 1;
         if (e->getRace() == constants::Enemy::Dragon) { // dragon stuff, if player near hoard then ATTACK
@@ -276,7 +274,6 @@ void Game::displayScore(std::ostream& os) const {
 }
 
 void Game::display(std::ostream& os) const {
-    os << "\033[2J\033[H"; // clear terminal and move cursor to top
     os << floor;
     displayInfo(os);
 }
