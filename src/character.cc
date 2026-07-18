@@ -17,6 +17,7 @@ export class Character {
         }    
     virtual ~Character() = default;
 
+    void setPosition(int newX, int newY) { x = newX; y = newY; }
     int getX() const { return x; }
     int getY() const { return y; }
     int getHp() const { return hp; }

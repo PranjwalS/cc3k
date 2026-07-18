@@ -87,9 +87,10 @@ bool Game::playerAttack(constants::Direction d) {
 //  basically handles both enemy moves and enemy attacks internally at once, since enemy can only do one or the other per turn!
 void Game::enemyTurns() {
     if (frozen) return;
+    std::cerr << "Total enemies: " << enemies.size() << std::endl;
     for (auto& ptr : enemies) {
         Enemy* e = ptr.get(); // unique ptr to raw ptr
-
+        std::cerr << "Enemy at " << e->getX() << "," << e->getY() << std::endl;
         if (!e->isAlive()) continue;
         bool inRadius = std::abs(e->getX() - player->getX()) <= 1 && std::abs(e->getY() - player->getY()) <= 1;
         if (e->getRace() == constants::Enemy::Dragon) { // dragon stuff, if player near hoard then ATTACK
@@ -130,7 +131,13 @@ bool Game::isOver() const { return !player->isAlive() || isWon() || forceQuit; }
 
 bool Game::isWon() const { return floorNum > numFloors; }
 
-bool Game::playerMove(constants::Direction dir) { return player->move(floor, dir); }
+bool Game::playerMove(constants::Direction dir) { 
+    int px = player->getX();
+    int py = player->getY();
+    if (!player->move(floor, dir)) return false;
+    floor.movePlayer(px, py, player->getX(), player->getY());
+    return true;
+}
 
 
 
@@ -147,11 +154,19 @@ void Game::usePotion(constants::Direction dir) {
     floor.removePotion(tx, ty); // need to figure whether potion dissapears if used, or just becomes unusable
 }
 
+void Game::spawnPlayer() {
+    Chamber& c = floor.chooseChamber();
+    auto [x, y] = *c.randomEmptyCell();
+    player->setPosition(x, y);
+    floor.grid[y][x] = '@';
+    c.removeEmpty(x, y);
+}
+
 void Game::spawnEnemies() {
     for (int i = 0; i < constants::NUM_ENEMIES; ) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
-        Chamber chamber = floor.chooseChamber();
+        Chamber& chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
         if (!cell) continue; // chamber is full
         auto [x, y] = *cell;
@@ -163,6 +178,7 @@ void Game::spawnEnemies() {
         enemies.emplace_back(newEnemy(race, floor));
         int enemyIdx = enemies.size() - 1;
         floor.addEnemy(x, y, enemyIdx, race);
+        enemies[enemyIdx]->setPosition(x, y);
         chamber.removeEmpty(x, y);
 
         ++i;
@@ -173,7 +189,7 @@ void Game::spawnPotions() {
     for (int i = 0; i < constants::NUM_POTIONS; ) {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Pick cell
-        Chamber chamber = floor.chooseChamber();
+        Chamber& chamber = floor.chooseChamber();
         auto cell = chamber.randomEmptyCell();
         if (!cell) continue; // chamber is full
         auto [x, y] = *cell;
@@ -196,7 +212,7 @@ void Game::spawnGold() {
         if (floor.spawnCapacityReached()) break; // Chambers are full
         // Determine amount of gold
         int amount = randomGold();
-        Chamber chamber = floor.chooseChamber();
+        Chamber& chamber = floor.chooseChamber();
         int x, y;
 
         if (amount == constants::goldPile::DRAGON_HOARD) {
@@ -209,6 +225,7 @@ void Game::spawnGold() {
             enemies.emplace_back(newEnemy(constants::Enemy::Dragon, floor));
             int enemyIdx = enemies.size() - 1;
             floor.addEnemy(dx, dy, enemyIdx, constants::Enemy::Dragon);
+            enemies[enemyIdx]->setPosition(dx, dy);
             chamber.removeEmpty(dx, dy);
         } else {
             auto cell = chamber.randomEmptyCell();
@@ -227,6 +244,7 @@ void Game::spawnGold() {
 }
 
 void Game::spawnAll() {
+    spawnPlayer();  
     spawnEnemies();
     spawnPotions();
     spawnGold();
@@ -258,6 +276,7 @@ void Game::displayScore(std::ostream& os) const {
 }
 
 void Game::display(std::ostream& os) const {
+    os << "\033[2J\033[H"; // clear terminal and move cursor to top
     os << floor;
     displayInfo(os);
 }

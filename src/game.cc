@@ -53,6 +53,7 @@ export class Game {
 
     void nextFloor();
 
+    void spawnPlayer();
     void spawnEnemies();
     void spawnPotions();
     void spawnGold();

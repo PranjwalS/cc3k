@@ -29,26 +29,29 @@ int main(int argv, char* argc[]) {
 
     while (!game.isOver()) {
         game.display(std::cout);
-        // basically first do playerAttack and then do enemyTurns, which loops through all alive enemies
         std::cin >> cmd1;
-        std::cin >> cmd2;
-        if (cmd1 == constants::command::ATTACK) { // "a"
+        // basically first do playerAttack and then do enemyTurns, which loops through all alive enemies
+        if (cmd1 == constants::command::ATTACK || 
+            cmd1 == constants::command::USE_POTION) {
+            std::cin >> cmd2;  // only read second token for a and u
             constants::Direction dir = strToDir(cmd2);
-            game.playerAttack(dir);
-        } else if (isDirection(cmd1)) { // no,so,ea,...
-            constants::Direction dir = strToDir(cmd2);
+            if (cmd1 == constants::command::ATTACK) {
+                game.playerAttack(dir);
+            } else {
+                game.usePotion(dir);
+            }
+        } else if (isDirection(cmd1)) {
+            constants::Direction dir = strToDir(cmd1);
             game.playerMove(dir);
-        } else if (cmd1 == constants::command::USE_POTION) { // "u"
-            constants::Direction dir = strToDir(cmd2);
-            game.usePotion(dir);
-        } else if (cmd1 == constants::command::QUIT) { // "q"
+        } else if (cmd1 == constants::command::FREEZE) {
+            // toggle frozen
+        } else if (cmd1 == constants::command::QUIT) {
             game.quitGame();
-            std::cout << "Closing game" << std::endl;
-            quit = true;
             break;
         }
         game.enemyTurns();
-    } if (game.isWon()) {
+    }
+    if (game.isWon()) {
         std::cout << "you win!!" << std::endl;
         game.displayScore(std::cout);
     } else if (quit) {
@@ -56,4 +59,7 @@ int main(int argv, char* argc[]) {
     } else {
         std::cout << "you lose... Try again?" << std::endl;
     }
+
+
+    
 }
