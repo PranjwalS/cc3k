@@ -180,6 +180,7 @@ export namespace constants {
         SELF
     };
 
+
     constexpr int NUM_DIRECTIONS = static_cast<int>(Direction::Count);
 
     constexpr std::string_view EMPTY_FLOOR = 
@@ -223,3 +224,5 @@ export constants::Direction strToDir(const std::string& s);
 export std::pair<int, int> dirToPair(const constants::Direction& dir);
 export std::pair<int, int> strToPair(const std::string& s);
 export std::pair<int, int> operator+(const std::pair<int, int> pos, const constants::Direction dir);
+export std::string dirToStr(constants::Direction dir);
+export std::string potionTypeToStr(constants::PotionType t);

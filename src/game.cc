@@ -45,6 +45,11 @@ export class Game {
     std::vector<const Gold*> getGold() const;
     std::vector<const Potion*> getPotions() const;
     
+    std::string currentAction = "";
+    
+    void setAction(const std::string& action) { currentAction = action; }
+    void appendAction(const std::string& action) { currentAction += action; }
+
     int getFloorNum() const { return floorNum; }
     int getNumFloors() const { return numFloors; }
     

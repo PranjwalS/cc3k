@@ -29,6 +29,7 @@ int main(int argv, char* argc[]) {
 
     while (!game.isOver()) {
         game.display(std::cout);
+        game.setAction("");  // clear each turn
         std::cin >> cmd1;
         // basically first do playerAttack and then do enemyTurns, which loops through all alive enemies
         if (cmd1 == constants::command::ATTACK || 

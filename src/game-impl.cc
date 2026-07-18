@@ -50,16 +50,12 @@ void Game::nextFloor() {
 }
 
 bool Game::playerAttack(constants::Direction d) {
-    if (!player->isValidMove(floor, d)) {
-        return false;
-    }
-
     auto [dx, dy] = dirToPair(d);
 
     int tx = player->getX() + dx;
     int ty = player->getY() + dy;
 
-    int idx = floor.enemiesIndex[ty][tx];
+    int idx = floor.enemiesIndex[ty][tx];  // checks if enemy even exists
 
     if (idx != -1) {
         Enemy* e = enemies[idx].get();
@@ -72,6 +68,17 @@ bool Game::playerAttack(constants::Direction d) {
 
         e->takeDamage(dmg);
         player->onHit(e->getRace());
+        std::string enemyChar(1, enemyToChar(e->getRace()));
+        currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemyChar + " (" + std::to_string(e->getHp()) + " HP).";
+
+        if (e->getRace() == constants::Enemy::Merchant) {
+            merchantsHostile = true;
+            for (auto& ptr : enemies) {
+                if (ptr->getRace() == constants::Enemy::Merchant) {
+                    static_cast<Merchant*>(ptr.get())->becomeHostile();
+                }
+            }
+        }
 
         if (!e->isAlive()) {
             floor.removeEnemy(tx, ty);
@@ -110,11 +117,13 @@ void Game::enemyTurns() {
 void Game::enemyAttack(Enemy& e) {      
     // elf double attack unless drow
     int attacks = (e.getRace() == constants::Enemy::Elf && player->getRace() != constants::Player::Drow) ? 2 : 1;
+    std::string enemyChar(1, enemyToChar(e.getRace()));
 
     for (int i = 0; i < attacks; i++) {
         if (randomChance(constants::probability::ENEMY_MISS)) {
             int dmg = calcDamage(e.getAtk(), player->getDef());
             player->takeDamage(dmg);
+            currentAction += " " + enemyChar + " deals " + std::to_string(dmg) + " damage to PC (" + std::to_string(player->getHp()) + " HP).";
         }
     }
 }
@@ -134,6 +143,7 @@ bool Game::playerMove(constants::Direction dir) {
     int py = player->getY();
     if (!player->move(floor, dir)) return false;
     floor.movePlayer(px, py, player->getX(), player->getY());
+    currentAction = "PC moves " + dirToStr(dir) + ".";
     return true;
 }
 
@@ -149,6 +159,8 @@ void Game::usePotion(constants::Direction dir) {
     Potion* p = potions[idx].get();
     p->becomeKnown();  // so cant be reused, check p->known == false when calling in game loop ig
     player->applyPotion(p->getHpMod(), p->getAtkMod(), p->getDefMod());
+    std::string potionName = p->isKnown() ? potionTypeToStr(p->getType()) : "unknown potion";
+    currentAction = "PC uses " + potionName + ".";
     floor.removePotion(tx, ty); // need to figure whether potion dissapears if used, or just becomes unusable
 }
 
@@ -255,8 +267,9 @@ void Game::removeAll() {
 }
 
 void Game::displayAction(std::ostream& os) const {
-    // Missing implementation
+    os << "Action: " << currentAction << "\n";
 }
+
 
 void Game::displayInfo(std::ostream& os) const {
     std::string playerRaceStr = playerToStr(player->getRace()).value();

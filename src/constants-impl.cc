@@ -81,6 +81,32 @@ std::pair<int, int> dirToPair(const Direction& dir) {
     return {0, 0};
 }
 
+std::string dirToStr(constants::Direction dir) {
+    switch(dir) {
+        case Direction::NO: return "North";
+        case Direction::SO: return "South";
+        case Direction::EA: return "East";
+        case Direction::WE: return "West";
+        case Direction::NE: return "North East";
+        case Direction::NW: return "North West";
+        case Direction::SE: return "South East";
+        case Direction::SW: return "South West";
+        default: return "";
+    }
+}
+
+std::string potionTypeToStr(constants::PotionType t) {
+    switch(t) {
+        case PotionType::RH: return "RH";
+        case PotionType::BA: return "BA";
+        case PotionType::BD: return "BD";
+        case PotionType::PH: return "PH";
+        case PotionType::WA: return "WA";
+        case PotionType::WD: return "WD";
+        default: return "unknown";
+    }
+}
+
 std::pair<int, int> strToPair(const std::string& s) {
     return dirToPair(strToDir(s));
 }
