@@ -40,7 +40,7 @@ std::optional<std::string> playerToStr(constants::Player race) {
     }
 }
 
-std::optional<Enemy> charToEnemy(const char& c) {
+std::optional<Enemy> symbolToEnemy(const char& c) {
     const Enemy race = static_cast<Enemy>(c);
     
     switch (race) {
@@ -55,6 +55,25 @@ std::optional<Enemy> charToEnemy(const char& c) {
         default:
             return std::nullopt; // Invalid enemy character
     }
+}
+
+std::string symbolToColour(const char symbol) {
+    if (symbol == symbol::PLAYER) return colour::PLAYER;
+    else if (symbol == symbol::VERTICAL_WALL || 
+            symbol == symbol::HORIZONTAL_WALL) return colour::WALL;
+    else if (symbol == symbol::DOORWAY) return colour::DOORWAY;
+    else if (symbol == symbol::PASSAGE) return colour::PASSAGE;
+    else if (symbol == symbol::FLOOR) return colour::FLOOR;
+    else if (symbol == itemToSymbol(Item::Gold)) return colour::GOLD;
+    else if (symbol == itemToSymbol(Item::Potion)) return colour::POTION;
+    else if (symbol == enemyToSymbol(Enemy::Human)) return colour::HUMAN;
+    else if (symbol == enemyToSymbol(Enemy::Dwarf)) return colour::DWARF;
+    else if (symbol == enemyToSymbol(Enemy::Elf)) return colour::ELF;
+    else if (symbol == enemyToSymbol(Enemy::Orc)) return colour::ORC;
+    else if (symbol == enemyToSymbol(Enemy::Merchant)) return colour::MERCHANT;
+    else if (symbol == enemyToSymbol(Enemy::Halfling)) return colour::HALFLING;
+    else if (symbol == enemyToSymbol(Enemy::Dragon)) return colour::DRAGON;
+    else return colour::EMPTY;
 }
 
 Direction strToDir(const std::string& s) {

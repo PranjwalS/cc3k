@@ -138,3 +138,15 @@ void Floor::movePlayer(int px, int py, int nx, int ny) {
     underPlayer = grid[ny][nx];
     grid[ny][nx] = '@';
 }
+
+std::ostream& operator<<(std::ostream& os, const Floor& f) {
+    for (int i = 0; i < constants::board::HEIGHT; i++) {
+        for (int j = 0; j < constants::board::WIDTH; j++) {
+            // Reset after colour change not necessary; just for safety
+            os << symbolToColour(f.grid[i][j]) << f.grid[i][j] << constants::colour::RESET;
+        }
+        os << "\n";
+    }
+
+    return os;
+}

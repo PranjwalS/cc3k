@@ -20,15 +20,62 @@ export namespace constants {
         constexpr int NUM_FLOORS = 5;
         constexpr int NUM_CHAMBERS = 5;
 
+        // How far from right to display right alligned entries
+        constexpr int OFFSET = 3; 
+
         bool isInBounds(const std::pair<int, int> pos);
     }
 
     namespace colour {
-        constexpr std::string RESET     = "\033[0m";
-        constexpr std::string RED       = "\033[31m";
-        constexpr std::string GREEN     = "\033[32m";
-        constexpr std::string YELLOW    = "\033[33m";
-        constexpr std::string BLUE      = "\033[34m";
+        // Note that colours automatically reset to RESET upon use
+        // Base ANSI colours
+        constexpr std::string RESET         = "\033[0;0m"; // default text colour
+        constexpr std::string BLACK         = "\033[0;30m";
+        constexpr std::string RED           = "\033[0;31m";
+        constexpr std::string GREEN         = "\033[0;32m";
+        constexpr std::string YELLOW        = "\033[0;33m";
+        constexpr std::string BLUE          = "\033[0;34m";
+        constexpr std::string PURPLE        = "\033[0;35m";
+        constexpr std::string CYAN          = "\033[0;36m";
+        constexpr std::string WHITE         = "\033[0;37m";
+
+        // Variations
+        constexpr std::string DIM_BLACK     = "\033[2;30m";
+        constexpr std::string BRIGHT_RED    = "\033[1;31m";
+        constexpr std::string DIM_RED       = "\033[2;31m";
+        constexpr std::string BRIGHT_GREEN  = "\033[1;32m";
+        constexpr std::string DIM_GREEN     = "\033[2;32m";
+        constexpr std::string BRIGHT_YELLOW = "\033[1;33m";
+        constexpr std::string DIM_YELLOW    = "\033[2;33m";
+        constexpr std::string BRIGHT_BLUE   = "\033[1;34m";
+        constexpr std::string DIM_BLUE      = "\033[2;34m";
+        constexpr std::string DIM_PURPLE    = "\033[0;35m";
+        constexpr std::string DIM_WHITE     = "\033[2;37m";
+
+
+        // Game symbol colours:
+        // Player
+        constexpr std::string PLAYER = RESET;
+
+        // Items
+        constexpr std::string GOLD = YELLOW;
+        constexpr std::string POTION = PURPLE;
+
+        // Environment
+        constexpr std::string WALL = RESET;
+        constexpr std::string FLOOR = DIM_GREEN;
+        constexpr std::string PASSAGE = DIM_WHITE;
+        constexpr std::string DOORWAY = DIM_BLACK;
+        constexpr std::string EMPTY = RESET;
+
+        // Enemies
+        constexpr std::string HUMAN = RED;
+        constexpr std::string DWARF = RED;
+        constexpr std::string ELF = CYAN;
+        constexpr std::string ORC = GREEN;
+        constexpr std::string MERCHANT = BLUE;
+        constexpr std::string HALFLING = RED;
+        constexpr std::string DRAGON = BRIGHT_RED;
     }
     
     constexpr int NUM_POTIONS = 10;
@@ -99,6 +146,7 @@ export namespace constants {
         constexpr char HORIZONTAL_WALL = '-';
         constexpr char DOORWAY = '+';
         constexpr char PASSAGE = '#';
+        constexpr char FLOOR = '.';
 
         constexpr char EMPTY = '\0';
     }
@@ -217,8 +265,12 @@ export std::optional<constants::Player> cmdToPlayer(const std::string &s);
 export bool isPlayerCmd(const std::string &s) { return cmdToPlayer(s) != std::nullopt; }
 export std::optional<std::string> playerToStr(constants::Player race);
 
-export char enemyToChar(const constants::Enemy& e) { return static_cast<char>(e); }
-export std::optional<constants::Enemy> charToEnemy(const char& c);
+export char itemToSymbol(const constants::Item& i) { return static_cast<char>(i); }
+
+export char enemyToSymbol(const constants::Enemy& e) { return static_cast<char>(e); }
+export std::optional<constants::Enemy> symbolToEnemy(const char& c);
+
+export std::string symbolToColour(const char symbol);
 
 export constants::Direction strToDir(const std::string& s);
 export std::pair<int, int> dirToPair(const constants::Direction& dir);

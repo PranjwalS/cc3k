@@ -77,7 +77,7 @@ export class Game {
     bool isOver() const;
     bool isWon() const;
     
-    void displayAction(std::ostream& os) const; // MISSING IMPLEMENTATION: NEED TO FIGURE OUT
+    void displayAction(std::ostream& os) const;
     void displayInfo(std::ostream& os) const;
     void displayScore(std::ostream& os) const;
     void display(std::ostream& os) const;

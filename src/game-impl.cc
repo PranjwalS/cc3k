@@ -68,8 +68,8 @@ bool Game::playerAttack(constants::Direction d) {
 
         e->takeDamage(dmg);
         player->onHit(e->getRace());
-        std::string enemyChar(1, enemyToChar(e->getRace()));
-        currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemyChar + " (" + std::to_string(e->getHp()) + " HP).";
+        std::string enemySymbol(1, enemyToSymbol(e->getRace()));
+        currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemySymbol + " (" + std::to_string(e->getHp()) + " HP).";
 
         if (e->getRace() == constants::Enemy::Merchant) {
             merchantsHostile = true;
@@ -117,13 +117,13 @@ void Game::enemyTurns() {
 void Game::enemyAttack(Enemy& e) {      
     // elf double attack unless drow
     int attacks = (e.getRace() == constants::Enemy::Elf && player->getRace() != constants::Player::Drow) ? 2 : 1;
-    std::string enemyChar(1, enemyToChar(e.getRace()));
+    std::string enemySymbol(1, enemyToSymbol(e.getRace()));
 
     for (int i = 0; i < attacks; i++) {
         if (randomChance(constants::probability::ENEMY_MISS)) {
             int dmg = calcDamage(e.getAtk(), player->getDef());
             player->takeDamage(dmg);
-            currentAction += " " + enemyChar + " deals " + std::to_string(dmg) + " damage to PC (" + std::to_string(player->getHp()) + " HP).";
+            currentAction += " " + enemySymbol + " deals " + std::to_string(dmg) + " damage to PC (" + std::to_string(player->getHp()) + " HP).";
         }
     }
 }
@@ -272,10 +272,22 @@ void Game::displayAction(std::ostream& os) const {
 
 
 void Game::displayInfo(std::ostream& os) const {
+    int lineWidth = constants::board::WIDTH - constants::board::OFFSET;
+
+    // Outputting the first line of info output
     std::string playerRaceStr = playerToStr(player->getRace()).value();
-    os << "Race: " << playerRaceStr << " ";
-    os << "Gold: " << player->getGold();
-    os << std::right << std::setw(15) << "Floor " << floorNum << "\n";
+    std::string leftSide = "Race " + playerRaceStr + " ";
+    leftSide += "Gold: " + std::to_string(player->getGold());
+
+    std::string rightSide = "Floor " + std::to_string(floorNum);
+    
+    int remainingPadding = lineWidth - leftSide.length();
+    if (remainingPadding < 0) remainingPadding = 0;
+    
+    os << leftSide
+       << std::right << std::setw(remainingPadding) << rightSide << "\n";
+
+    // Displaying rest of info
     os << "HP: " << player->getHp() << "\n";
     os << "Atk: " << player->getAtk() << "\n";
     os << "Def: " << player->getDef() << "\n";
