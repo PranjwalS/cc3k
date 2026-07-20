@@ -46,15 +46,14 @@ void Dragon::move(Floor& f) {
     // dragon does not move
 }
 
+void Dragon::onDeath(Player& player) {
+    // hoard already placed on floor during spawn, nothing to drop
+}
+
 void Human::onDeath(Player& player) {
     player.gainGold(2 * constants::goldPile::NORMAL);
 }
 
-void Dwarf::onDeath(Player& player) {
-    if (player.getRace() == constants::Player::Vampire) {
-        player.loseGold(constants::VAMPIRE_ALLERGY_GOLD_LOSS);
-    }
-}
 
 void Merchant::onDeath(Player& player) {
     player.gainGold(constants::goldPile::MERCHANT_HOARD);

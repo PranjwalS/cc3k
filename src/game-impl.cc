@@ -253,6 +253,9 @@ void Game::spawnGold() {
     }
 }
 
+
+
+// JUST HAVE TO FIX THE ORDERING IN HERE, AND THEN ALSO MAKE SPAWNSTAIRS
 void Game::spawnAll() {
     spawnPlayer();  
     spawnEnemies();

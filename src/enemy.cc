@@ -37,7 +37,6 @@ export class Human : public Enemy {
 export class Dwarf : public Enemy {
     public:
     Dwarf(Floor& f) : Enemy{100, 20, 30, constants::Enemy::Dwarf, f} {}
-    void onDeath(Player& player);
 };
 
 export class Elf : public Enemy {
@@ -64,6 +63,7 @@ export class Dragon : public Enemy {
     int getHoardY() const { return hoardY; }
     Dragon(Floor& f, int hx, int hy) : Enemy{150, 20, 20, constants::Enemy::Dragon, f}, hoardX{hx}, hoardY{hy} {}
     void move(Floor& f);
+    void onDeath(Player& player);
 };
 
 export class Halfling : public Enemy {

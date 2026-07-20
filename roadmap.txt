@@ -19,13 +19,25 @@
     X. Implement spawnEnemies(): spawn exactly 20 enemies with correct probabilities, random chamber/tile, no overlap.
     X. Ensure generation order follows spec: player -> stairs -> potions -> gold -> enemies.
    
-    15. Finish display logic: render board, colors, player/enemies/gold/potions priority.
-    16. Finish command loop: race selection, movement commands, attack commands, potion commands, quitting/restarting.
-    17. Add game state checks IMPORTANT: player death, floor completion, moving to next floor, game restart.
-    18. for #17 create an outer class FullGame ig, and it just handles switching between floors and recalling all the init and takes care of the state,
-         the game-loop iterates (while loop) thru this outer class which is initialized with all floors (IDK ABT THIS, WHETHER ALL AT INIT OR ONLY IF PLAYER PROGRESSES)
-   
-    18. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.
-    19. Final memory cleanup: ensure all dynamically allocated Player/Enemy/Item objects are deleted correctly.
-    20. Final compile + gameplay testing before submission.
+    X. Finish display logic: render board, colors, player/enemies/gold/potions priority.
+    X. Finish command loop: race selection, movement commands, attack commands, potion commands, quitting/restarting.
+
+
+remaining; so lwky just do any of this one by one
+    reorder spawnAll()
+    make spawnStairs 
+    Floor transition in playerMove, detect when player steps on \, call nextFloor() + spawnAll()
+    Temp potion effect reset on floor transition
+    Freeze toggle in command loop (f command)
+    Restart in command loop (r command)
+    Merchant hostility propagation, when one merchant dies all become hostile
+    Gold pickup on player walk-over in playerMove
+    Dragon hoard pickup restriction, can't pick up while dragon alive
+    Win/lose screen polish + play again prompt
+    Score calculation (Shade gets 1.5x)
+
+
+    1. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.
+    2. Final memory cleanup: ensure all dynamically allocated Player/Enemy/Item objects are deleted correctly.
+    3. Final compile + gameplay testing before submission.
 
