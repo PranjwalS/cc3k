@@ -35,21 +35,21 @@ bool Game::playerAttack(constants::Direction d) {
 
         // player hits
         int dmg = calcDamage(player->getAtk(), e->getDef());
-        if (e->getRace() == constants::Enemy::Orc && 
-            player->getRace() == constants::Player::Goblin) {
+        if (e->getRace() == constants::EnemyRace::Orc && 
+            player->getRace() == constants::PlayerRace::Goblin) {
             // orc bonus vs goblin
             dmg = static_cast<int>(dmg * constants::multiplier::ORC_ATTACK_GOBLIN);
         }
 
         e->takeDamage(dmg);
         player->onHit(e->getRace());
-        std::string enemySymbol(1, enemyToSymbol(e->getRace()));
+        std::string enemySymbol(1, enemyRaceToSymbol(e->getRace()));
         currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemySymbol + " (" + std::to_string(e->getHp()) + " HP).";
 
-        if (e->getRace() == constants::Enemy::Merchant) {
+        if (e->getRace() == constants::EnemyRace::Merchant) {
             merchantsHostile = true;
             for (auto& ptr : enemies) {
-                if (ptr->getRace() == constants::Enemy::Merchant) {
+                if (ptr->getRace() == constants::EnemyRace::Merchant) {
                     static_cast<Merchant*>(ptr.get())->becomeHostile();
                 }
             }
@@ -57,7 +57,7 @@ bool Game::playerAttack(constants::Direction d) {
 
         if (!e->isAlive()) {
             floor.removeEnemy(tx, ty);
-            if (e->getRace() == constants::Enemy::Dragon) {
+            if (e->getRace() == constants::EnemyRace::Dragon) {
                 int nx = static_cast<Dragon*>(e)->getHoardX();
                 int ny = static_cast<Dragon*>(e)->getHoardY();
                 int gld_idx = floor.goldIndex[ny][nx];
@@ -79,13 +79,13 @@ void Game::enemyTurns() {
         Enemy* e = ptr.get(); // unique ptr to raw ptr
         if (!e->isAlive()) continue;
         bool inRadius = std::abs(e->getX() - player->getX()) <= 1 && std::abs(e->getY() - player->getY()) <= 1;
-        if (e->getRace() == constants::Enemy::Dragon) { // dragon stuff, if player near hoard then ATTACK
+        if (e->getRace() == constants::EnemyRace::Dragon) { // dragon stuff, if player near hoard then ATTACK
             Dragon* d = static_cast<Dragon*>(e);
             bool nearHoard = std::abs(d->getHoardX() - player->getX()) <= 1 && std::abs(d->getHoardY() - player->getY()) <= 1;
             inRadius = inRadius || nearHoard;
         }
 
-        if (inRadius && (e->isHostile() || e->getRace() != constants::Enemy::Merchant)) {    
+        if (inRadius && (e->isHostile() || e->getRace() != constants::EnemyRace::Merchant)) {    
             enemyAttack(*e);
         } else {
             e->move(floor);
@@ -97,8 +97,8 @@ void Game::enemyTurns() {
 // called by enemyTurns
 void Game::enemyAttack(Enemy& e) {      
     // elf double attack unless drow
-    int attacks = (e.getRace() == constants::Enemy::Elf && player->getRace() != constants::Player::Drow) ? 2 : 1;
-    std::string enemySymbol(1, enemyToSymbol(e.getRace()));
+    int attacks = (e.getRace() == constants::EnemyRace::Elf && player->getRace() != constants::PlayerRace::Drow) ? 2 : 1;
+    std::string enemySymbol(1, enemyRaceToSymbol(e.getRace()));
 
     for (int i = 0; i < attacks; i++) {
         if (randomChance(constants::probability::ENEMY_MISS)) {
@@ -210,7 +210,7 @@ void Game::spawnEnemies() {
         auto [x, y] = *cell;
 
         // Pick race
-        constants::Enemy race = randomEnemy();
+        constants::EnemyRace race = randomEnemy();
 
         // Spawn
         enemies.emplace_back(newEnemy(race, floor));
@@ -260,9 +260,9 @@ void Game::spawnGold() {
             x = p.first; y = p.second;
             auto [dx, dy] = p + d; // dragon x and y
             
-            enemies.emplace_back(newEnemy(constants::Enemy::Dragon, floor, x, y));
+            enemies.emplace_back(newEnemy(constants::EnemyRace::Dragon, floor, x, y));
             int enemyIdx = enemies.size() - 1;
-            floor.addEnemy(dx, dy, enemyIdx, constants::Enemy::Dragon);
+            floor.addEnemy(dx, dy, enemyIdx, constants::EnemyRace::Dragon);
             enemies[enemyIdx]->setPosition(dx, dy);
             chamber.removeEmpty(dx, dy);
             gold.emplace_back(std::make_unique<Gold>(amount, true));
@@ -307,7 +307,7 @@ void Game::displayInfo(std::ostream& os) const {
     int lineWidth = constants::board::WIDTH - constants::board::OFFSET;
 
     // Outputting the first line of info output
-    std::string playerRaceStr = playerToStr(player->getRace()).value();
+    std::string playerRaceStr = playerRaceToStr(player->getRace()).value();
     std::string leftSide = "Race " + playerRaceStr + " ";
     leftSide += "Gold: " + std::to_string(player->getGold());
 
@@ -327,7 +327,7 @@ void Game::displayInfo(std::ostream& os) const {
 }
 void Game::displayScore(std::ostream& os) const {
     int score = player->getScore();
-    if (player->getRace() == constants::Player::Shade) {
+    if (player->getRace() == constants::PlayerRace::Shade) {
         score = static_cast<int>(score * constants::multiplier::SHADE_SCORE);
     }
     os << "Score: " << score;

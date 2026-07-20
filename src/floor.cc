@@ -31,7 +31,7 @@ export class Floor {
     void initChambers();
     Chamber& chooseChamber();
 
-    void addEnemy(int x, int y, int index, constants::Enemy e);
+    void addEnemy(int x, int y, int index, constants::EnemyRace e);
     void removeEnemy(int x, int y);
     void moveEnemy(int px, int py, int nx, int ny); // move from prevx, prevy to newx, newy.
 

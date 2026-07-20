@@ -33,7 +33,7 @@ export class Game {
 
     public:
 
-    Game(const constants::Player race,
+    Game(const constants::PlayerRace race,
          const int numFloors = constants::board::NUM_FLOORS, 
          const int numChambers = constants::board::NUM_CHAMBERS):
             floor(numChambers), 

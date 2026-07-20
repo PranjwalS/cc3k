@@ -14,47 +14,47 @@ bool isDirection(const std::string &s) {
     return strToDir(s) != Direction::SELF;
 }
 
-std::optional<Player> cmdToPlayer(const std::string &s) {
+std::optional<PlayerRace> cmdToPlayerRace(const std::string &s) {
     if (s.size() != 1) return std::nullopt;
-    const Player race = static_cast<Player>(s.at(0));
+    const PlayerRace race = static_cast<PlayerRace>(s.at(0));
 
     switch (race) {
-        case Player::Shade:
-        case Player::Drow:
-        case Player::Vampire:
-        case Player::Troll:
-        case Player::Goblin:
+        case PlayerRace::Shade:
+        case PlayerRace::Drow:
+        case PlayerRace::Vampire:
+        case PlayerRace::Troll:
+        case PlayerRace::Goblin:
             return race;
         default:
             return std::nullopt; // Invalid player race command
     }
 }
 
-std::optional<std::string> playerToStr(constants::Player race) {
+std::optional<std::string> playerRaceToStr(constants::PlayerRace race) {
     switch (race) {
-        case Player::Shade: return "Shade";
-        case Player::Drow: return "Drow";
-        case Player::Vampire: return "Vampire";
-        case Player::Troll: return "Troll";
-        case Player::Goblin: return "Goblin";
+        case PlayerRace::Shade: return "Shade";
+        case PlayerRace::Drow: return "Drow";
+        case PlayerRace::Vampire: return "Vampire";
+        case PlayerRace::Troll: return "Troll";
+        case PlayerRace::Goblin: return "Goblin";
         default: return std::nullopt; // Invalid player race
     }
 }
 
-std::optional<Enemy> symbolToEnemy(const char& c) {
-    const Enemy race = static_cast<Enemy>(c);
+std::optional<EnemyRace> symbolToEnemyRace(const char& c) {
+    const EnemyRace race = static_cast<EnemyRace>(c);
     
     switch (race) {
-        case Enemy::Human:
-        case Enemy::Dwarf:
-        case Enemy::Elf: 
-        case Enemy::Orc: 
-        case Enemy::Merchant: 
-        case Enemy::Dragon: 
-        case Enemy::Halfling:
+        case EnemyRace::Human:
+        case EnemyRace::Dwarf:
+        case EnemyRace::Elf: 
+        case EnemyRace::Orc: 
+        case EnemyRace::Merchant: 
+        case EnemyRace::Dragon: 
+        case EnemyRace::Halfling:
             return race;
         default:
-            return std::nullopt; // Invalid enemy character
+            return std::nullopt; // Invalid enemy race
     }
 }
 
@@ -68,13 +68,13 @@ std::string symbolToColour(const char symbol) {
     else if (symbol == symbol::STAIRS) return colour::STAIRS;
     else if (symbol == itemToSymbol(Item::Gold)) return colour::GOLD;
     else if (symbol == itemToSymbol(Item::Potion)) return colour::POTION;
-    else if (symbol == enemyToSymbol(Enemy::Human)) return colour::HUMAN;
-    else if (symbol == enemyToSymbol(Enemy::Dwarf)) return colour::DWARF;
-    else if (symbol == enemyToSymbol(Enemy::Elf)) return colour::ELF;
-    else if (symbol == enemyToSymbol(Enemy::Orc)) return colour::ORC;
-    else if (symbol == enemyToSymbol(Enemy::Merchant)) return colour::MERCHANT;
-    else if (symbol == enemyToSymbol(Enemy::Halfling)) return colour::HALFLING;
-    else if (symbol == enemyToSymbol(Enemy::Dragon)) return colour::DRAGON;
+    else if (symbol == enemyRaceToSymbol(EnemyRace::Human)) return colour::HUMAN;
+    else if (symbol == enemyRaceToSymbol(EnemyRace::Dwarf)) return colour::DWARF;
+    else if (symbol == enemyRaceToSymbol(EnemyRace::Elf)) return colour::ELF;
+    else if (symbol == enemyRaceToSymbol(EnemyRace::Orc)) return colour::ORC;
+    else if (symbol == enemyRaceToSymbol(EnemyRace::Merchant)) return colour::MERCHANT;
+    else if (symbol == enemyRaceToSymbol(EnemyRace::Halfling)) return colour::HALFLING;
+    else if (symbol == enemyRaceToSymbol(EnemyRace::Dragon)) return colour::DRAGON;
     else return colour::EMPTY;
 }
 

@@ -27,8 +27,8 @@ void Drow::applyPotion(int hpMod, int atkMod, int defMod) {
     def += (int)(defMod * modifier);
 }
 
-void Vampire::onHit(constants::Enemy race) {
-    if (race == constants::Enemy::Dwarf) hp -= 5;
+void Vampire::onHit(constants::EnemyRace race) {
+    if (race == constants::EnemyRace::Dwarf) hp -= 5;
     else hp = std::min(maxHp, hp + 5);
 }
 
@@ -36,21 +36,21 @@ void Troll::endTurn() {
     hp = std::min(120, hp + 5);
 }
 
-void Goblin::onKill(constants::Enemy race) {
+void Goblin::onKill(constants::EnemyRace race) {
     gold += 5;
 }
 
-std::unique_ptr<Player> newPlayer(constants::Player race, Floor& f) {
+std::unique_ptr<Player> newPlayer(constants::PlayerRace race, Floor& f) {
     switch (race) {
-        case constants::Player::Shade:
+        case constants::PlayerRace::Shade:
             return std::make_unique<Shade>(f);
-        case constants::Player::Drow:
+        case constants::PlayerRace::Drow:
             return std::make_unique<Drow>(f);
-        case constants::Player::Vampire:
+        case constants::PlayerRace::Vampire:
             return std::make_unique<Vampire>(f);
-        case constants::Player::Troll:
+        case constants::PlayerRace::Troll:
             return std::make_unique<Troll>(f);
-        case constants::Player::Goblin:
+        case constants::PlayerRace::Goblin:
             return std::make_unique<Goblin>(f);
         default:
             throw std::invalid_argument("Invalid player type");

@@ -97,7 +97,7 @@ bool Floor::spawnCapacityReached() const {
     return true;
 }
 
-void Floor::addEnemy(int x, int y, int index, constants::Enemy race) {
+void Floor::addEnemy(int x, int y, int index, constants::EnemyRace race) {
     enemiesIndex[y][x] = index;
     grid[y][x] = static_cast<char>(race);
 }

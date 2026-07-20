@@ -84,8 +84,6 @@ export namespace constants {
     constexpr int NUM_GOLD = 10;
     constexpr int NUM_ENEMIES = 20;
 
-    enum class Player : char;
-
     namespace command {
         constexpr std::string FREEZE = "f";
         constexpr std::string RESTART = "r";
@@ -107,7 +105,7 @@ export namespace constants {
     }
 
     // Player Races : Command
-    enum class Player : char {
+    enum class PlayerRace : char {
         Shade='s',
         Drow='d',
         Vampire='v',
@@ -118,7 +116,7 @@ export namespace constants {
     constexpr int NUM_PLAYER_RACES = 5;
 
     // Enemy Races : Symbol
-    enum class Enemy : char {
+    enum class EnemyRace : char {
         Human = 'H',
         Dwarf = 'W',
         Elf = 'E',
@@ -182,17 +180,17 @@ export namespace constants {
         namespace spawn {
             // Enemy rates
             struct WeightedEnemy {
-                const Enemy race;
+                const EnemyRace race;
                 const double probability;
             };
 
             constexpr std::array ENEMIES = std::to_array<WeightedEnemy>({
-                { Enemy::Human, 2.0 / 9.0 },
-                { Enemy::Dwarf, 3.0 / 18.0 },
-                { Enemy::Halfling, 5.0 / 18.0 },
-                { Enemy::Elf, 1.0 / 9.0 },
-                { Enemy::Orc, 1.0 / 9.0 },
-                { Enemy::Merchant, 1.0 / 9.0 }
+                { EnemyRace::Human, 2.0 / 9.0 },
+                { EnemyRace::Dwarf, 3.0 / 18.0 },
+                { EnemyRace::Halfling, 5.0 / 18.0 },
+                { EnemyRace::Elf, 1.0 / 9.0 },
+                { EnemyRace::Orc, 1.0 / 9.0 },
+                { EnemyRace::Merchant, 1.0 / 9.0 }
             });
 
             // Note: std::array::size() is determined at compile time -> this is valid
@@ -266,14 +264,14 @@ export namespace constants {
 
 export bool isDirection(const std::string &s);
 
-export std::optional<constants::Player> cmdToPlayer(const std::string &s);
-export bool isPlayerCmd(const std::string &s) { return cmdToPlayer(s) != std::nullopt; }
-export std::optional<std::string> playerToStr(constants::Player race);
+export std::optional<constants::PlayerRace> cmdToPlayerRace(const std::string &s);
+export bool isPlayerRaceCmd(const std::string &s) { return cmdToPlayerRace(s) != std::nullopt; }
+export std::optional<std::string> playerRaceToStr(constants::PlayerRace race);
 
 export char itemToSymbol(const constants::Item& i) { return static_cast<char>(i); }
 
-export char enemyToSymbol(const constants::Enemy& e) { return static_cast<char>(e); }
-export std::optional<constants::Enemy> symbolToEnemy(const char& c);
+export char enemyRaceToSymbol(const constants::EnemyRace& e) { return static_cast<char>(e); }
+export std::optional<constants::EnemyRace> symbolToEnemyRace(const char& c);
 
 export std::string symbolToColour(const char symbol);
 

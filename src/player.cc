@@ -12,12 +12,12 @@ export class Player : public Character {
     protected:
     int gold = 0;
     int score = 0;
-    constants::Player race;
+    constants::PlayerRace race;
     // Potion potion;
     
     public:
 
-    Player(int hp, int atk, int def, constants::Player race, Floor& f) :
+    Player(int hp, int atk, int def, constants::PlayerRace race, Floor& f) :
         Character{hp, atk, def, f}, race{race} {}
 
     int getGold() const { return gold; }
@@ -27,9 +27,9 @@ export class Player : public Character {
     // gainGold and loseGold must take in positive integers
     void gainGold(int amount);
     void loseGold(int amount);
-    constants::Player getRace() const { return race; }
-    virtual void onHit(constants::Enemy race) {}
-    virtual void onKill(constants::Enemy race) {}
+    constants::PlayerRace getRace() const { return race; }
+    virtual void onHit(constants::EnemyRace race) {}
+    virtual void onKill(constants::EnemyRace race) {}
     virtual void endTurn() {}
     virtual void applyPotion(int hpMod, int atkMod, int defMod) {
         hp = std::min(maxHp, hp + hpMod);
@@ -41,33 +41,33 @@ export class Player : public Character {
 
 export class Shade : public Player {
     public:
-    Shade(Floor& f) : Player{125, 25, 25, constants::Player::Shade, f} {}
+    Shade(Floor& f) : Player{125, 25, 25, constants::PlayerRace::Shade, f} {}
 };
 
 export class Drow : public Player {
     public:
-    Drow(Floor& f) : Player{150, 25, 15, constants::Player::Drow, f} {}
+    Drow(Floor& f) : Player{150, 25, 15, constants::PlayerRace::Drow, f} {}
     void applyPotion(int hpMod, int atkMod, int defMod);
 };
 
 export class Vampire : public Player {
     public:
-    Vampire(Floor& f) : Player{50, 25, 25, constants::Player::Vampire, f} {
+    Vampire(Floor& f) : Player{50, 25, 25, constants::PlayerRace::Vampire, f} {
         maxHp = INT_MAX;
     }
-    void onHit(constants::Enemy race);
+    void onHit(constants::EnemyRace race);
 };
 
 export class Troll : public Player {
     public:
-    Troll(Floor& f) : Player{120, 25, 15, constants::Player::Troll, f} {}
+    Troll(Floor& f) : Player{120, 25, 15, constants::PlayerRace::Troll, f} {}
     void endTurn();
 };
 
 export class Goblin : public Player {
     public:
-    Goblin(Floor& f) : Player{110, 15, 20, constants::Player::Goblin, f} {}
-    void onKill(constants::Enemy race);
+    Goblin(Floor& f) : Player{110, 15, 20, constants::PlayerRace::Goblin, f} {}
+    void onKill(constants::EnemyRace race);
 };
 
-export std::unique_ptr<Player> newPlayer(constants::Player race, Floor& f);
+export std::unique_ptr<Player> newPlayer(constants::PlayerRace race, Floor& f);

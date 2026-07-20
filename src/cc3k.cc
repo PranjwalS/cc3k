@@ -4,12 +4,12 @@ import <iostream>;
 import <string>;
 import <optional>;
 
-std::optional<constants::Player> selectRace() {
+std::optional<constants::PlayerRace> selectRace() {
     std::string cmd;
     std::cout << "Choose player race: " << std::endl;
     while (std::cin >> cmd) {
-        if (isPlayerCmd(cmd)) {
-            return cmdToPlayer(cmd).value();
+        if (isPlayerRaceCmd(cmd)) {
+            return cmdToPlayerRace(cmd).value();
         } else if (cmd == constants::command::QUIT) {
             return std::nullopt;
         } else {
