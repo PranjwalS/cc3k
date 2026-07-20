@@ -16,19 +16,19 @@ void Enemy::onDeath(Player& player) {
     }
 }
 
-bool Enemy::isValidMove(Floor& f, const constants::Direction& dir) {
+bool Enemy::isValidMove(const constants::Direction& dir) {
     auto [dx, dy] = dirToPair(dir);
     int tx = x + dx;
     int ty = y + dy;
     if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
-    return f.grid[ty][tx] == constants::symbol::FLOOR;
+    return floor.grid[ty][tx] == constants::symbol::FLOOR;
 }
 
-void Enemy::move(Floor& f) {
+void Enemy::move() {
     std::vector<constants::Direction> legal;
     for (int i = 0; i < constants::NUM_DIRECTIONS; i++) {
         constants::Direction n = static_cast<constants::Direction>(i);
-        if (isValidMove(f, n)) {
+        if (isValidMove(n)) {
             legal.push_back(n);
         }
     }
@@ -37,12 +37,12 @@ void Enemy::move(Floor& f) {
 
     auto [dx, dy] = dirToPair(legal[randomNum(0, legal.size() - 1)]);
 
-    f.moveEnemy(x, y, x + dx, y + dy);
+    floor.moveEnemy(x, y, x + dx, y + dy);
     y += dy;
     x += dx;
 }
 
-void Dragon::move(Floor& f) {
+void Dragon::move() {
     // dragon does not move
 }
 

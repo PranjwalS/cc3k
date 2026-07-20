@@ -24,8 +24,8 @@ export class Enemy : public Character {
 
     virtual bool evasionChance() { return false; }
     virtual void onDeath(Player& player);
-    virtual void move(Floor& f);
-    bool isValidMove(Floor& f, const constants::Direction& dir) override;  
+    virtual void move();
+    virtual bool isValidMove(const constants::Direction& dir) override;  
 };
 
 export class Human : public Enemy {
@@ -62,7 +62,7 @@ export class Dragon : public Enemy {
     int getHoardX() const { return hoardX; }
     int getHoardY() const { return hoardY; }
     Dragon(Floor& f, int hx, int hy) : Enemy{150, 20, 20, constants::EnemyRace::Dragon, f}, hoardX{hx}, hoardY{hy} {}
-    void move(Floor& f);
+    virtual void move();
     void onDeath(Player& player);
 };
 
@@ -73,4 +73,4 @@ export class Halfling : public Enemy {
 };
 
 export constants::EnemyRace randomEnemy();
-export std::unique_ptr<Enemy> newEnemy(constants::EnemyRace race, Floor& f, int dragonHoardX = 0, int dragonHoardY = 0);
+export std::unique_ptr<Enemy> newEnemy(constants::EnemyRace race, Floor& floor, int dragonHoardX = 0, int dragonHoardY = 0);

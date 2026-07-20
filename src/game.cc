@@ -38,7 +38,9 @@ export class Game {
          const int numChambers = constants::board::NUM_CHAMBERS):
             floor(numChambers), 
             player{newPlayer(race, floor)}, 
-            numFloors{numFloors} {}
+            numFloors{numFloors} {
+        spawnAll();
+    }
     ~Game() = default;
 
     const Floor& getFloor() const { return floor; }
@@ -58,8 +60,8 @@ export class Game {
 
     void nextFloor();
 
-    Chamber& spawnPlayer();
-    void spawnStairs(Chamber& playerChamber);
+    void spawnPlayer();
+    void spawnStairs();
     void spawnEnemies();
     void spawnPotions();
     void spawnGold();

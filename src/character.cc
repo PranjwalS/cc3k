@@ -8,13 +8,12 @@ export class Character {
     protected:
     int x, y;
     int hp, maxHp, atk, def;
+    Floor& floor;
 
     public:
 
     Character(int hp, int atk, int def, Floor& f) :
-        x{0}, y{0}, hp{hp}, maxHp{hp}, atk{atk}, def{def} {
-            spawn(f);
-        }    
+        x{0}, y{0}, hp{hp}, maxHp{hp}, atk{atk}, def{def}, floor{f} {}
     virtual ~Character() = default;
 
     void setPosition(int newX, int newY) { x = newX; y = newY; }
@@ -30,8 +29,8 @@ export class Character {
     void heal(int amount);
     void takeDamage(int amount);
 
+    void changeFloor(Floor& newFloor);
+
     bool isAlive() { return hp > 0; }
-    void spawn(Floor& f);
-    virtual bool isValidMove(Floor& f, const constants::Direction& dir);
-    bool move(Floor& f, const constants::Direction& dir);
+    virtual bool isValidMove(const constants::Direction& dir);
 };

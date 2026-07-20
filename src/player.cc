@@ -37,6 +37,7 @@ export class Player : public Character {
         atk = std::max(0, atk + atkMod);
         def = std::max(0, def + defMod);
     }
+    bool move(const constants::Direction& dir);
 };
 
 export class Shade : public Player {

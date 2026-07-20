@@ -27,7 +27,6 @@ int main(int argc, char* argv[]) {
         auto playerRace = selectRace();
         if (!playerRace) return 0;
         Game game(playerRace.value());
-        game.spawnAll();
 
         while (!game.isOver()) {
             game.display(std::cout);

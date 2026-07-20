@@ -19,6 +19,13 @@ void Player::loseGold(int amount) {
     changeGold(-amount);
 }
 
+bool Player::move(const constants::Direction& dir) {
+    if (!isValidMove(dir)) return false;
+    auto [dx, dy] = dirToPair(dir);
+    x += dx;
+    y += dy;
+    return true;
+}
 
 void Drow::applyPotion(int hpMod, int atkMod, int defMod) {
     double modifier = constants::multiplier::DROW_POTION;

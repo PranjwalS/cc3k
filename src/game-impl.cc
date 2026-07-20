@@ -18,6 +18,9 @@ void Game::nextFloor() {
     int numChambers = floor.numChambers;
     ++floorNum;
     floor = Floor(numChambers);
+    removeAll();
+    player->changeFloor(floor);
+    spawnAll();
 }
 
 bool Game::playerAttack(constants::Direction d) {
@@ -88,7 +91,7 @@ void Game::enemyTurns() {
         if (inRadius && (e->isHostile() || e->getRace() != constants::EnemyRace::Merchant)) {    
             enemyAttack(*e);
         } else {
-            e->move(floor);
+            e->move();
         }
     }
     if (player->isAlive()) player->endTurn();
@@ -123,7 +126,7 @@ bool Game::isWon() const { return floorNum > numFloors; }
 bool Game::playerMove(constants::Direction dir) {
     int px = player->getX();
     int py = player->getY();
-    if (!player->move(floor, dir)) return false;
+    if (!player->move(dir)) return false;
     int nx = player->getX();
     int ny = player->getY();
     currentAction = "PC moves " + dirToStr(dir) + ".";
@@ -140,13 +143,12 @@ bool Game::playerMove(constants::Direction dir) {
         }
     }
 
-    if (floor.grid[ny][nx] == '\\') {
-        player->applyPotion(0, -tempAtk, -tempDef);
-        tempAtk = 0;
-        tempDef = 0;
-        removeAll();
+    if (floor.grid[ny][nx] == constants::symbol::STAIRS) {
+        // uhh idk if we need this stuff
+        // player->applyPotion(0, -tempAtk, -tempDef); 
+        // tempAtk = 0;
+        // tempDef = 0;
         nextFloor();
-        spawnAll();
         currentAction = " PC descends to floor " + std::to_string(floorNum) + ".";
         return true;
     }
@@ -179,25 +181,20 @@ void Game::usePotion(constants::Direction dir) {
     currentAction = " PC uses " + potionName + ".";
 }
 
-Chamber& Game::spawnPlayer() {
+void Game::spawnPlayer() {
     Chamber& c = floor.chooseChamber();
     auto [x, y] = *c.randomEmptyCell();
     player->setPosition(x, y);
     floor.grid[y][x] = constants::symbol::PLAYER;
     c.removeEmpty(x, y);
     currentAction = "Player character has spawned.";
-    return c;
 }
 
-void Game::spawnStairs(Chamber& playerChamber) {
-    Chamber* c = nullptr;
-    do {
-        c = &floor.chooseChamber();
-    } while (c == &playerChamber);
-    
-    auto [x, y] = *c->randomEmptyCell();
-    floor.grid[y][x] = '\\';
-    c->removeEmpty(x, y);
+void Game::spawnStairs() {
+    Chamber& c = floor.chooseChamber();
+    auto [x, y] = *c.randomEmptyCell();
+    floor.grid[y][x] = constants::symbol::STAIRS;
+    c.removeEmpty(x, y);
 }
 
 void Game::spawnEnemies() {
@@ -285,8 +282,8 @@ void Game::spawnGold() {
 
 
 void Game::spawnAll() {
-    Chamber& playerChamber = spawnPlayer();
-    spawnStairs(playerChamber);
+    spawnPlayer();
+    spawnStairs();
     spawnPotions();
     spawnGold();
     spawnEnemies();
