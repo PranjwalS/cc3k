@@ -148,7 +148,38 @@ bool Game::playerMove(constants::Direction dir) {
 }
 
 
+bool Game::playerMove(constants::Direction dir) {
+    int px = player->getX();
+    int py = player->getY();
+    if (!player->move(floor, dir)) return false;
+    int nx = player->getX();
+    int ny = player->getY();
 
+    int gIdx = floor.goldIndex[ny][nx];
+    if (gIdx != -1) {
+        Gold* g = gold[gIdx].get();
+        if (!g->isDragonGuarded()) {
+            player->gainGold(g->getValue());
+            floor.removeGold(nx, ny); // grid[ny][nx] is now '.'
+            currentAction = "PC picks up " + std::to_string(g->getValue()) + " gold.";
+        }
+    }
+
+    if (nx == stairsX && ny == stairsY) {
+        player->applyPotion(0, -tempAtk, -tempDef);
+        tempAtk = 0;
+        tempDef = 0;
+        removeAll();
+        nextFloor();
+        spawnAll();
+        currentAction = "PC descends to floor " + std::to_string(floorNum) + ".";
+        return true;
+    }
+
+    floor.movePlayer(px, py, nx, ny);
+    if (currentAction.empty()) currentAction = "PC moves " + dirToStr(dir) + ".";
+    return true;
+}
 
 
 
