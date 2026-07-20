@@ -64,7 +64,11 @@ bool Game::playerAttack(constants::Direction d) {
 
         // player hits
         int dmg = calcDamage(player->getAtk(), e->getDef());
-        if (e->getRace() == constants::Enemy::Orc && player->getRace() == constants::Player::Goblin) dmg = (int)(dmg * 1.5); // orc bonus vs goblin
+        if (e->getRace() == constants::Enemy::Orc && 
+            player->getRace() == constants::Player::Goblin) {
+            // orc bonus vs goblin
+            dmg = static_cast<int>(dmg * constants::multiplier::ORC_ATTACK_GOBLIN);
+        }
 
         e->takeDamage(dmg);
         player->onHit(e->getRace());
@@ -339,7 +343,9 @@ void Game::displayInfo(std::ostream& os) const {
 }
 void Game::displayScore(std::ostream& os) const {
     int score = player->getScore();
-    if (player->getRace() == constants::Player::Shade) score = (int)(score * 1.5);
+    if (player->getRace() == constants::Player::Shade) {
+        score = static_cast<int>(score * constants::multiplier::SHADE_SCORE);
+    }
     os << "Score: " << score;
 }
 

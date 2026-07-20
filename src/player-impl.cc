@@ -21,9 +21,10 @@ void Player::loseGold(int amount) {
 
 
 void Drow::applyPotion(int hpMod, int atkMod, int defMod) {
-    hp = std::min(maxHp, hp + (int)(hpMod * 1.5));
-    atk += (int)(atkMod * 1.5);
-    def += (int)(defMod * 1.5);
+    double modifier = constants::multiplier::DROW_POTION;
+    hp = std::min(maxHp, hp + (int)(hpMod * modifier));
+    atk += (int)(atkMod * modifier);
+    def += (int)(defMod * modifier);
 }
 
 void Vampire::onHit(constants::Enemy race) {

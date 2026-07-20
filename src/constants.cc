@@ -218,6 +218,12 @@ export namespace constants {
         constexpr double GOLD_LUCK = 0.5;
     }
 
+    namespace multiplier {
+        constexpr double ORC_ATTACK_GOBLIN = 1.5;
+        constexpr double SHADE_SCORE = 1.5;
+        constexpr double DROW_POTION = 1.5;
+    }
+
     // Direction : int value
     enum class Direction : int { 
         NO, NE, EA, SE, SO, SW, WE, NW, // Cardinal directions
