@@ -58,7 +58,8 @@ export class Game {
 
     void nextFloor();
 
-    void spawnPlayer();
+    Chamber& spawnPlayer();
+    void spawnStairs(Chamber& playerChamber);
     void spawnEnemies();
     void spawnPotions();
     void spawnGold();

@@ -149,6 +149,9 @@ bool Game::playerMove(constants::Direction dir) {
 
 
 
+
+
+
 void Game::usePotion(constants::Direction dir) {
     auto [dx, dy] = dirToPair(dir);
     int tx = player->getX() + dx;
@@ -164,12 +167,28 @@ void Game::usePotion(constants::Direction dir) {
     floor.removePotion(tx, ty); // need to figure whether potion dissapears if used, or just becomes unusable
 }
 
-void Game::spawnPlayer() {
+
+
+Chamber& Game::spawnPlayer() {
     Chamber& c = floor.chooseChamber();
     auto [x, y] = *c.randomEmptyCell();
     player->setPosition(x, y);
     floor.grid[y][x] = '@';
     c.removeEmpty(x, y);
+    return c;
+}
+
+void Game::spawnStairs(Chamber& playerChamber) {
+    Chamber* c = nullptr;
+    do {
+        c = &floor.chooseChamber();
+    } while (c == &playerChamber);
+    
+    auto [x, y] = *c->randomEmptyCell();
+    floor.grid[y][x] = '\\';
+    stairsX = x;
+    stairsY = y;
+    c->removeEmpty(x, y);
 }
 
 void Game::spawnEnemies() {
@@ -255,12 +274,12 @@ void Game::spawnGold() {
 
 
 
-// JUST HAVE TO FIX THE ORDERING IN HERE, AND THEN ALSO MAKE SPAWNSTAIRS
 void Game::spawnAll() {
-    spawnPlayer();  
-    spawnEnemies();
+    Chamber& playerChamber = spawnPlayer();
+    spawnStairs(playerChamber);
     spawnPotions();
     spawnGold();
+    spawnEnemies();
 }
 
 void Game::removeAll() {
