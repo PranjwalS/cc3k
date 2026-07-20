@@ -44,8 +44,16 @@ remaining;
     1. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.
     2. Final memory cleanup: ensure all dynamically allocated Player/Enemy/Item objects are deleted correctly.
     3. Final compile + gameplay testing before submission.
+    4. Dragon should attack if player is in range of hoard.
 
 questions:
 1. after using a potion, does player move to that position automatically
 2. does freeze info persist across floors
 3. 
+
+DLC:
+1. fog of war
+2. make merchants sell potions
+3. random chamber gen
+4. controller
+5. gui 

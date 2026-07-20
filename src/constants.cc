@@ -56,27 +56,28 @@ export namespace constants {
 
         // Game symbol colours:
         // Player
-        constexpr std::string PLAYER = RESET;
+        constexpr std::string PLAYER = BLUE;
 
         // Items
         constexpr std::string GOLD = YELLOW;
-        constexpr std::string POTION = PURPLE;
+        constexpr std::string POTION = GREEN;
 
         // Environment
         constexpr std::string WALL = RESET;
-        constexpr std::string FLOOR = DIM_GREEN;
-        constexpr std::string PASSAGE = DIM_WHITE;
-        constexpr std::string DOORWAY = DIM_BLACK;
+        constexpr std::string FLOOR = RESET;
+        constexpr std::string PASSAGE = RESET;
+        constexpr std::string DOORWAY = RESET;
         constexpr std::string EMPTY = RESET;
+        constexpr std::string STAIRS = BLUE;
 
         // Enemies
         constexpr std::string HUMAN = RED;
         constexpr std::string DWARF = RED;
-        constexpr std::string ELF = CYAN;
-        constexpr std::string ORC = GREEN;
-        constexpr std::string MERCHANT = BLUE;
+        constexpr std::string ELF = RED;
+        constexpr std::string ORC = RED;
+        constexpr std::string MERCHANT = RED;
         constexpr std::string HALFLING = RED;
-        constexpr std::string DRAGON = BRIGHT_RED;
+        constexpr std::string DRAGON = RED;
     }
 
     constexpr int NUM_POTIONS = 10;
@@ -144,6 +145,7 @@ export namespace constants {
         constexpr char DOORWAY = '+';
         constexpr char PASSAGE = '#';
         constexpr char FLOOR = '.';
+        constexpr char STAIRS = '\\';
 
         constexpr char EMPTY = '\0';
     }

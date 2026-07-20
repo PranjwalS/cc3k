@@ -65,6 +65,7 @@ std::string symbolToColour(const char symbol) {
     else if (symbol == symbol::DOORWAY) return colour::DOORWAY;
     else if (symbol == symbol::PASSAGE) return colour::PASSAGE;
     else if (symbol == symbol::FLOOR) return colour::FLOOR;
+    else if (symbol == symbol::STAIRS) return colour::STAIRS;
     else if (symbol == itemToSymbol(Item::Gold)) return colour::GOLD;
     else if (symbol == itemToSymbol(Item::Potion)) return colour::POTION;
     else if (symbol == enemyToSymbol(Enemy::Human)) return colour::HUMAN;
