@@ -339,6 +339,7 @@ void Game::displayInfo(std::ostream& os) const {
 }
 void Game::displayScore(std::ostream& os) const {
     int score = player->getScore();
+    if (player->getRace() == constants::Player::Shade) score = (int)(score * 1.5);
     os << "Score: " << score;
 }
 
