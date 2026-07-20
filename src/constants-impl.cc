@@ -2,6 +2,7 @@ module constants;
 import <optional>;
 import <utility>;
 import <string>;
+import <map>;
 
 bool constants::board::isInBounds(const std::pair<int, int> pos) {
     return pos.first >= 0 && pos.first <= MAX_X && pos.second >= 0 && pos.second <= MAX_Y;

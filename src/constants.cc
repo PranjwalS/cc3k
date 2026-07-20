@@ -5,6 +5,7 @@ import <utility>;
 import <string>;
 import <string_view>;
 import <array>;
+import <set>;
 
 export namespace constants {
     // Board features
@@ -77,7 +78,7 @@ export namespace constants {
         constexpr std::string HALFLING = RED;
         constexpr std::string DRAGON = BRIGHT_RED;
     }
-    
+
     constexpr int NUM_POTIONS = 10;
     constexpr int NUM_GOLD = 10;
     constexpr int NUM_ENEMIES = 20;
@@ -110,12 +111,10 @@ export namespace constants {
         Drow='d',
         Vampire='v',
         Troll='t',
-        Goblin='g',
-
-        Count
+        Goblin='g'
     };
 
-    constexpr int NUM_PLAYER_RACES = static_cast<int>(Player::Count);
+    constexpr int NUM_PLAYER_RACES = 5;
 
     // Enemy Races : Symbol
     enum class Enemy : char {
@@ -125,12 +124,10 @@ export namespace constants {
         Orc = 'O',
         Merchant = 'M',
         Dragon = 'D',
-        Halfling = 'L',
-
-        Count
+        Halfling = 'L'
     };
 
-    constexpr int NUM_ENEMY_RACES = static_cast<int>(Enemy::Count);
+    constexpr int NUM_ENEMY_RACES = 7;
 
     // Item : Symbol
     enum class Item : char {
