@@ -6,6 +6,7 @@ import <string>;
 import <string_view>;
 import <array>;
 import <set>;
+import <unordered_map>;
 
 export namespace constants {
     // Board features
@@ -127,6 +128,29 @@ export namespace constants {
     };
 
     constexpr int NUM_ENEMY_RACES = 7;
+
+    struct CharacterInfo {
+        std::string name;
+        int hp, atk, def;
+    };
+
+    const std::unordered_map<PlayerRace, CharacterInfo> PLAYER_DATA = {
+        { PlayerRace::Shade, {"Shade", 125, 25, 25} },
+        { PlayerRace::Drow, {"Drow", 150, 25, 15} },
+        { PlayerRace::Vampire, {"Vampire", 50, 25, 25} },
+        { PlayerRace::Troll, {"Troll", 120, 25, 15} },
+        { PlayerRace::Goblin, {"Goblin", 110, 15, 20} }
+    };
+
+    const std::unordered_map<EnemyRace, CharacterInfo> ENEMY_DATA = {
+        { EnemyRace::Human, {"Human", 140, 20, 20} },
+        { EnemyRace::Dwarf, {"Dwarf", 100, 20, 30} },
+        { EnemyRace::Elf, {"Elf", 140, 30, 10} },
+        { EnemyRace::Orc, {"Orc", 180, 30, 25} },
+        { EnemyRace::Merchant, {"Merchant", 30, 70, 5} },
+        { EnemyRace::Halfling, {"Halfling", 100, 15, 20} },
+        { EnemyRace::Dragon, {"Dragon", 150, 20, 20} }
+    };
 
     // Item : Symbol
     enum class Item : char {

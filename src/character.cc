@@ -12,8 +12,8 @@ export class Character {
 
     public:
 
-    Character(int hp, int atk, int def, Floor& f) :
-        x{0}, y{0}, hp{hp}, maxHp{hp}, atk{atk}, def{def}, floor{f} {}
+    Character(const constants::CharacterInfo& info, Floor& f) : 
+        hp{info.hp}, atk{info.atk}, def{info.def}, floor{f} {}
     virtual ~Character() = default;
 
     void setPosition(int newX, int newY) { x = newX; y = newY; }

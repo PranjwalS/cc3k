@@ -14,8 +14,8 @@ export class Enemy : public Character {
     bool hostile;
     public:
 
-    Enemy(int hp, int atk, int def, constants::EnemyRace race, Floor& f, bool hostile = true) :
-        Character{hp, atk, def, f}, race{race}, hostile{hostile} {}
+    Enemy(constants::EnemyRace race, Floor& f, bool hostile = true) :
+        Character{constants::ENEMY_DATA.at(race), f}, race{race}, hostile{hostile} {}
 
     virtual ~Enemy() = default;
 
@@ -30,28 +30,28 @@ export class Enemy : public Character {
 
 export class Human : public Enemy {
     public:
-    Human(Floor& f) : Enemy{140, 20, 20, constants::EnemyRace::Human, f} {}
+    Human(Floor& f) : Enemy{constants::EnemyRace::Human, f} {}
     void onDeath(Player& player);
 };
 
 export class Dwarf : public Enemy {
     public:
-    Dwarf(Floor& f) : Enemy{100, 20, 30, constants::EnemyRace::Dwarf, f} {}
+    Dwarf(Floor& f) : Enemy{constants::EnemyRace::Dwarf, f} {}
 };
 
 export class Elf : public Enemy {
     public:
-    Elf(Floor& f) : Enemy{140, 30, 10, constants::EnemyRace::Elf, f} {}
+    Elf(Floor& f) : Enemy{constants::EnemyRace::Elf, f} {}
 };
 
 export class Orc : public Enemy {
     public:
-    Orc(Floor& f) : Enemy{180, 30, 25, constants::EnemyRace::Orc, f} {}
+    Orc(Floor& f) : Enemy{constants::EnemyRace::Orc, f} {}
 };
 
 export class Merchant : public Enemy {
     public:
-    Merchant(Floor& f) : Enemy{30, 70, 5, constants::EnemyRace::Merchant, f, false} {}
+    Merchant(Floor& f) : Enemy{constants::EnemyRace::Merchant, f, false} {}
     void becomeHostile() { hostile = true; }
     void onDeath(Player& player);
 };
@@ -61,14 +61,14 @@ export class Dragon : public Enemy {
     public:
     int getHoardX() const { return hoardX; }
     int getHoardY() const { return hoardY; }
-    Dragon(Floor& f, int hx, int hy) : Enemy{150, 20, 20, constants::EnemyRace::Dragon, f}, hoardX{hx}, hoardY{hy} {}
+    Dragon(Floor& f, int hx, int hy) : Enemy{constants::EnemyRace::Dragon, f}, hoardX{hx}, hoardY{hy} {}
     virtual void move();
     void onDeath(Player& player);
 };
 
 export class Halfling : public Enemy {
     public:
-    Halfling(Floor& f) : Enemy{100, 15, 20, constants::EnemyRace::Halfling, f} {}
+    Halfling(Floor& f) : Enemy{constants::EnemyRace::Halfling, f} {}
     bool evasionChance() { return randomChance(constants::probability::HALFLING_EVASION); }
 };
 
