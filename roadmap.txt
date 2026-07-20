@@ -23,18 +23,21 @@
     X. Finish command loop: race selection, movement commands, attack commands, potion commands, quitting/restarting.
 
 
-remaining; so lwky just do any of this one by one
     X. reorder spawnAll()
     X. make spawnStairs 
     X. Floor transition in playerMove, detect when player steps on \, call nextFloor() + spawnAll()
     X. Temp potion effect reset on floor transition
-    Freeze toggle in command loop (f command)
-    Restart in command loop (r command)
+    X. reeze toggle in command loop (f command)
+    X. Restart in command loop (r command)
     X. Merchant hostility propagation, when one merchant dies all become hostile
     X. Gold pickup on player walk-over in playerMove
     X. Dragon hoard pickup restriction, can't pick up while dragon alive
-    Win/lose screen polish + play again prompt
-    Score calculation (Shade gets 1.5x)
+    X. Win/lose screen polish + play again prompt
+    X. Score calculation (Shade gets 1.5x)
+
+
+remaining; 
+    read argv[1] if provided, pass filename to Game for file-based floor loading
 
 
     1. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.

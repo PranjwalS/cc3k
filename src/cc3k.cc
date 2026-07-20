@@ -3,38 +3,37 @@ import game;
 import <iostream>;
 import <string>;
 
-int main(int argv, char* argc[]) {
-    std::string cmd1; 
-    std::string cmd2; 
-    constants::Player playerRace;
-    bool quit = false;
+constants::Player selectRace() {
+    std::string cmd;
     std::cout << "Choose player race: " << std::endl;
-    while (std::cin >> cmd1) {
-        if (isPlayerCmd(cmd1)) {
-            playerRace = cmdToPlayer(cmd1).value();
-            break;
-        } else if (cmd1 == constants::command::QUIT) {
-            quit = true;
-            break;
+    while (std::cin >> cmd) {
+        if (isPlayerCmd(cmd)) {
+            return cmdToPlayer(cmd).value();
+        } else if (cmd == constants::command::QUIT) {
+            exit(0);
         } else {
             std::cout << "Please choose valid player race" << std::endl;
         }
     }
-    if (quit) {
-        std::cout << "Closing game" << std::endl;
-        return 0;
-    }
+    exit(0);
+}
+
+int main(int argc, char* argv[]) {
+    std::string cmd1, cmd2;
+
+    constants::Player playerRace = selectRace();
     Game game(playerRace);
     game.spawnAll();
 
     while (!game.isOver()) {
         game.display(std::cout);
-        game.setAction("");  // clear each turn
+        game.setAction("");
+
         std::cin >> cmd1;
-        // basically first do playerAttack and then do enemyTurns, which loops through all alive enemies
-        if (cmd1 == constants::command::ATTACK || 
+
+        if (cmd1 == constants::command::ATTACK ||
             cmd1 == constants::command::USE_POTION) {
-            std::cin >> cmd2;  // only read second token for a and u
+            std::cin >> cmd2;
             constants::Direction dir = strToDir(cmd2);
             if (cmd1 == constants::command::ATTACK) {
                 game.playerAttack(dir);
@@ -42,40 +41,27 @@ int main(int argv, char* argc[]) {
                 game.usePotion(dir);
             }
         } else if (isDirection(cmd1)) {
-            constants::Direction dir = strToDir(cmd1);
-            game.playerMove(dir);
+            game.playerMove(strToDir(cmd1));
         } else if (cmd1 == constants::command::FREEZE) {
             game.toggleFreeze();
         } else if (cmd1 == constants::command::RESTART) {
-            std::cout << "Choose player race: " << std::endl;
-            while (std::cin >> cmd1) {
-                if (isPlayerCmd(cmd1)) {
-                    playerRace = cmdToPlayer(cmd1).value();
-                    game = Game(playerRace);
-                    game.spawnAll();
-                    break;
-                } else if (cmd1 == constants::command::QUIT) {
-                    return 0;
-                } else {
-                    std::cout << "Please choose valid player race" << std::endl;
-                }
-            }
-        }
+            playerRace = selectRace();
+            game = Game(playerRace);
+            game.spawnAll();
         } else if (cmd1 == constants::command::QUIT) {
             game.quitGame();
             break;
         }
+
         game.enemyTurns();
     }
+
     if (game.isWon()) {
-        std::cout << "you win!!" << std::endl;
+        std::cout << "You win!" << std::endl;
         game.displayScore(std::cout);
-    } else if (quit) {
+    } else if (!game.isOver()) {
         std::cout << "Closing game" << std::endl;
     } else {
-        std::cout << "you lose... Try again?" << std::endl;
+        std::cout << "You lose... Try again?" << std::endl;
     }
-
-
-    
 }
