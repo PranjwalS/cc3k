@@ -45,7 +45,22 @@ int main(int argv, char* argc[]) {
             constants::Direction dir = strToDir(cmd1);
             game.playerMove(dir);
         } else if (cmd1 == constants::command::FREEZE) {
-            // toggle frozen
+            game.toggleFreeze();
+        } else if (cmd1 == constants::command::RESTART) {
+            std::cout << "Choose player race: " << std::endl;
+            while (std::cin >> cmd1) {
+                if (isPlayerCmd(cmd1)) {
+                    playerRace = cmdToPlayer(cmd1).value();
+                    game = Game(playerRace);
+                    game.spawnAll();
+                    break;
+                } else if (cmd1 == constants::command::QUIT) {
+                    return 0;
+                } else {
+                    std::cout << "Please choose valid player race" << std::endl;
+                }
+            }
+        }
         } else if (cmd1 == constants::command::QUIT) {
             game.quitGame();
             break;

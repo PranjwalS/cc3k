@@ -78,6 +78,7 @@ export class Game {
 
     int calcDamage(int atkVal, int defVal) const;
 
+    void toggleFreeze() { frozen = !frozen; }
     void quitGame();
     bool isOver() const;
     bool isWon() const;

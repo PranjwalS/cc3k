@@ -24,15 +24,15 @@
 
 
 remaining; so lwky just do any of this one by one
-    reorder spawnAll()
-    make spawnStairs 
-    Floor transition in playerMove, detect when player steps on \, call nextFloor() + spawnAll()
-    Temp potion effect reset on floor transition
+    X. reorder spawnAll()
+    X. make spawnStairs 
+    X. Floor transition in playerMove, detect when player steps on \, call nextFloor() + spawnAll()
+    X. Temp potion effect reset on floor transition
     Freeze toggle in command loop (f command)
     Restart in command loop (r command)
-    Merchant hostility propagation, when one merchant dies all become hostile
-    Gold pickup on player walk-over in playerMove
-    Dragon hoard pickup restriction, can't pick up while dragon alive
+    X. Merchant hostility propagation, when one merchant dies all become hostile
+    X. Gold pickup on player walk-over in playerMove
+    X. Dragon hoard pickup restriction, can't pick up while dragon alive
     Win/lose screen polish + play again prompt
     Score calculation (Shade gets 1.5x)
 
