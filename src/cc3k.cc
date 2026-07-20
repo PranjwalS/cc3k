@@ -2,20 +2,21 @@ import constants;
 import game;
 import <iostream>;
 import <string>;
+import <optional>;
 
-constants::Player selectRace() {
+std::optional<constants::Player> selectRace() {
     std::string cmd;
     std::cout << "Choose player race: " << std::endl;
     while (std::cin >> cmd) {
         if (isPlayerCmd(cmd)) {
             return cmdToPlayer(cmd).value();
         } else if (cmd == constants::command::QUIT) {
-            exit(0);
+            return std::nullopt;
         } else {
             std::cout << "Please choose valid player race" << std::endl;
         }
     }
-    exit(0);
+    return std::nullopt;
 }
 
 
@@ -23,8 +24,9 @@ int main(int argc, char* argv[]) {
     std::string cmd1, cmd2;
 
     while (true) {
-        constants::Player playerRace = selectRace();
-        Game game(playerRace);
+        auto playerRace = selectRace();
+        if (!playerRace) return 0;
+        Game game(playerRace.value());
         game.spawnAll();
 
         while (!game.isOver()) {

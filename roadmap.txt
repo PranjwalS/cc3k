@@ -27,7 +27,7 @@
     X. make spawnStairs 
     X. Floor transition in playerMove, detect when player steps on \, call nextFloor() + spawnAll()
     X. Temp potion effect reset on floor transition
-    X. reeze toggle in command loop (f command)
+    X. freeze toggle in command loop (f command)
     X. Restart in command loop (r command)
     X. Merchant hostility propagation, when one merchant dies all become hostile
     X. Gold pickup on player walk-over in playerMove
@@ -38,9 +38,14 @@
 
 remaining; 
     read argv[1] if provided, pass filename to Game for file-based floor loading
+    add a few more display actions for usability like: "enemy::name slain", "enemy::dropped ## gold", etc
 
 
     1. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.
     2. Final memory cleanup: ensure all dynamically allocated Player/Enemy/Item objects are deleted correctly.
     3. Final compile + gameplay testing before submission.
 
+questions:
+1. after using a potion, does player move to that position automatically
+2. does freeze info persist across floors
+3. 

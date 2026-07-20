@@ -190,9 +190,9 @@ void Game::usePotion(constants::Direction dir) {
         tempDef += p->getDefMod();
     }
 
-    knownPotions.insert(p->getType());
     player->applyPotion(p->getHpMod(), p->getAtkMod(), p->getDefMod());
     std::string potionName = knownPotions.count(p->getType()) ? potionTypeToStr(p->getType()) : "unknown potion";
+    knownPotions.insert(p->getType());
     currentAction = "PC uses " + potionName + ".";
     floor.removePotion(tx, ty);
 }
