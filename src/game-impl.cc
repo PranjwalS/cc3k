@@ -201,7 +201,7 @@ Chamber& Game::spawnPlayer() {
     Chamber& c = floor.chooseChamber();
     auto [x, y] = *c.randomEmptyCell();
     player->setPosition(x, y);
-    floor.grid[y][x] = '@';
+    floor.grid[y][x] = constants::symbol::PLAYER;
     c.removeEmpty(x, y);
     return c;
 }

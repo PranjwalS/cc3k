@@ -18,7 +18,7 @@ export class Floor {
     
 
     int stairX, stairY;
-    char underPlayer = '.';   // previous char before @ moved on it
+    char underPlayer = constants::symbol::FLOOR;   // previous char before @ moved on it
 
     Floor(const int numChambers);
     Floor(Floor&& other);
