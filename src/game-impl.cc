@@ -138,15 +138,6 @@ bool Game::isOver() const { return !player->isAlive() || isWon() || forceQuit; }
 
 bool Game::isWon() const { return floorNum > numFloors; }
 
-bool Game::playerMove(constants::Direction dir) { 
-    int px = player->getX();
-    int py = player->getY();
-    if (!player->move(floor, dir)) return false;
-    floor.movePlayer(px, py, player->getX(), player->getY());
-    currentAction = "PC moves " + dirToStr(dir) + ".";
-    return true;
-}
-
 
 bool Game::playerMove(constants::Direction dir) {
     int px = player->getX();
@@ -165,7 +156,7 @@ bool Game::playerMove(constants::Direction dir) {
         }
     }
 
-    if (nx == stairsX && ny == stairsY) {
+    if (floor.grid[ny][nx] == '\\') {
         player->applyPotion(0, -tempAtk, -tempDef);
         tempAtk = 0;
         tempDef = 0;
@@ -182,23 +173,25 @@ bool Game::playerMove(constants::Direction dir) {
 }
 
 
-
 void Game::usePotion(constants::Direction dir) {
     auto [dx, dy] = dirToPair(dir);
     int tx = player->getX() + dx;
     int ty = player->getY() + dy;
-    if (tx < 0 || tx >= constants::board::WIDTH || ty < 0 || ty >= constants::board::HEIGHT) return; // out of bounds
+    if (tx < 0 || tx >= constants::board::WIDTH || ty < 0 || ty >= constants::board::HEIGHT) return;
     int idx = floor.potionsIndex[ty][tx];
-    if (idx == -1) return; // no found :(
+    if (idx == -1) return;
     Potion* p = potions[idx].get();
-    p->becomeKnown();  // so cant be reused, check p->known == false when calling in game loop ig
+    if (!p->isPermanent()) {
+        tempAtk += p->getAtkMod();
+        tempDef += p->getDefMod();
+    }
+
+    knownPotions.insert(p->getType());
     player->applyPotion(p->getHpMod(), p->getAtkMod(), p->getDefMod());
-    std::string potionName = p->isKnown() ? potionTypeToStr(p->getType()) : "unknown potion";
+    std::string potionName = knownPotions.count(p->getType()) ? potionTypeToStr(p->getType()) : "unknown potion";
     currentAction = "PC uses " + potionName + ".";
-    floor.removePotion(tx, ty); // need to figure whether potion dissapears if used, or just becomes unusable
+    floor.removePotion(tx, ty);
 }
-
-
 
 Chamber& Game::spawnPlayer() {
     Chamber& c = floor.chooseChamber();
@@ -217,8 +210,6 @@ void Game::spawnStairs(Chamber& playerChamber) {
     
     auto [x, y] = *c->randomEmptyCell();
     floor.grid[y][x] = '\\';
-    stairsX = x;
-    stairsY = y;
     c->removeEmpty(x, y);
 }
 

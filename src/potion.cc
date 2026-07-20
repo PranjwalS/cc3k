@@ -5,7 +5,6 @@ import random;
 
 export class Potion {
     constants::PotionType type;
-    bool known = false;
     int hpMod, atkMod, defMod;
     bool permanent;
 
@@ -21,8 +20,6 @@ export class Potion {
     }
 
     constants::PotionType getType() const { return type; }
-    bool isKnown() const { return known; }
-    void becomeKnown() { known = true; }
     int getHpMod() const { return hpMod; }
     int getAtkMod() const { return atkMod; }
     int getDefMod() const { return defMod; }

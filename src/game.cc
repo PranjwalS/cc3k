@@ -13,6 +13,7 @@ import <string>;
 import <vector>;
 import <algorithm>;
 import <memory>;
+import <set>;
 
 export class Game {
     Floor floor;
@@ -21,11 +22,14 @@ export class Game {
     std::vector<std::unique_ptr<Enemy>> enemies;
     std::vector<std::unique_ptr<Gold>> gold;
     std::vector<std::unique_ptr<Potion>> potions;
+    std::set<constants::PotionType> knownPotions;
     const int numFloors;
     int floorNum = 1;
     bool merchantsHostile = false;
     bool frozen = false;
     bool forceQuit = false;
+    int tempAtk = 0;
+    int tempDef = 0;
 
     public:
 
