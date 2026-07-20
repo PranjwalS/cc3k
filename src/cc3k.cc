@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
             std::cout << "You lose..." << std::endl;
         }
 
-        std::cout << "Play again? (y/n): ";
+        std::cout << "Play again huh? (y/n): ";
         std::cin >> cmd1;
         if (cmd1 != "y") {
             std::cout << "Closing game" << std::endl;

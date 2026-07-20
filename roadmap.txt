@@ -38,16 +38,22 @@
 
 remaining; 
     read argv[1] if provided, pass filename to Game for file-based floor loading
-    add a few more display actions for usability like: "enemy::name slain", "enemy::dropped ## gold", etc
 
+    add a few more display actions for usability like: "enemy::name slain", "enemy::dropped ## gold", etc
+    PC moves East and sees an unknown potion. (need to implement the seeing mechanism)
+    PC uses BA. (move into the spot whre the potion was)
+    remove periods, do "and"
+
+    X. Dragon should attack if player is in range of hoard.
+    X. hoard protected status changes onDeath of dragon.
+    X. troll not dying
+    X. after using a potion, does player move to that position automatically
 
     1. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.
     2. Final memory cleanup: ensure all dynamically allocated Player/Enemy/Item objects are deleted correctly.
     3. Final compile + gameplay testing before submission.
-    4. Dragon should attack if player is in range of hoard.
 
 questions:
-1. after using a potion, does player move to that position automatically
 2. does freeze info persist across floors
 3. 
 
@@ -57,3 +63,4 @@ DLC:
 3. random chamber gen
 4. controller
 5. gui 
+

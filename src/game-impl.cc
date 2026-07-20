@@ -12,35 +12,6 @@ import <cmath>;
 import <memory>;
 import <iomanip>;
 
-std::vector<const Enemy*> Game::getEnemies() const {
-    std::vector<const Enemy*> result;
-    result.reserve(enemies.size());
-    
-    for (const auto& enemy : enemies) {
-        result.push_back(enemy.get());
-    }
-    return result;
-}
-
-std::vector<const Gold*> Game::getGold() const {
-    std::vector<const Gold*> result;
-    result.reserve(gold.size());
-    
-    for (const auto& curGold : gold) {
-        result.push_back(curGold.get());
-    }
-    return result;
-}
-
-std::vector<const Potion*> Game::getPotions() const {
-    std::vector<const Potion*> result;
-    result.reserve(potions.size());
-    
-    for (const auto& potion : potions) {
-        result.push_back(potion.get());
-    }
-    return result;
-}
 
 void Game::nextFloor() {
     if (floorNum > numFloors) return;
@@ -86,7 +57,13 @@ bool Game::playerAttack(constants::Direction d) {
 
         if (!e->isAlive()) {
             floor.removeEnemy(tx, ty);
-            e->onDeath(*player);
+            if (e->getRace() == constants::Enemy::Dragon) {
+                int nx = static_cast<Dragon*>(e)->getHoardX();
+                int ny = static_cast<Dragon*>(e)->getHoardY();
+                int gld_idx = floor.goldIndex[ny][nx];
+                Gold* gld = gold[gld_idx].get();
+                gld->toggleDragonGuarded();
+            } else { e->onDeath(*player); }
             player->onKill(e->getRace());
         }
         return true;
@@ -114,7 +91,7 @@ void Game::enemyTurns() {
             e->move(floor);
         }
     }
-    player->endTurn();
+    if (player->isAlive()) player->endTurn();
 }
 
 // called by enemyTurns
@@ -149,6 +126,7 @@ bool Game::playerMove(constants::Direction dir) {
     if (!player->move(floor, dir)) return false;
     int nx = player->getX();
     int ny = player->getY();
+    currentAction = "PC moves " + dirToStr(dir) + ".";
 
     int gIdx = floor.goldIndex[ny][nx];
     if (gIdx != -1) {
@@ -156,7 +134,9 @@ bool Game::playerMove(constants::Direction dir) {
         if (!g->isDragonGuarded()) {
             player->gainGold(g->getValue());
             floor.removeGold(nx, ny); // grid[ny][nx] is now '.'
-            currentAction = "PC picks up " + std::to_string(g->getValue()) + " gold.";
+            currentAction += " PC picks up " + std::to_string(g->getValue()) + " gold.";
+        } else {
+            currentAction += " Gold is guarded.";
         }
     }
 
@@ -167,12 +147,13 @@ bool Game::playerMove(constants::Direction dir) {
         removeAll();
         nextFloor();
         spawnAll();
-        currentAction = "PC descends to floor " + std::to_string(floorNum) + ".";
+        currentAction = " PC descends to floor " + std::to_string(floorNum) + ".";
         return true;
     }
 
+    // add sees potion logic here!
+
     floor.movePlayer(px, py, nx, ny);
-    if (currentAction.empty()) currentAction = "PC moves " + dirToStr(dir) + ".";
     return true;
 }
 
@@ -193,8 +174,9 @@ void Game::usePotion(constants::Direction dir) {
     player->applyPotion(p->getHpMod(), p->getAtkMod(), p->getDefMod());
     std::string potionName = knownPotions.count(p->getType()) ? potionTypeToStr(p->getType()) : "unknown potion";
     knownPotions.insert(p->getType());
-    currentAction = "PC uses " + potionName + ".";
     floor.removePotion(tx, ty);
+    playerMove(dir);
+    currentAction = " PC uses " + potionName + ".";
 }
 
 Chamber& Game::spawnPlayer() {
@@ -203,6 +185,7 @@ Chamber& Game::spawnPlayer() {
     player->setPosition(x, y);
     floor.grid[y][x] = constants::symbol::PLAYER;
     c.removeEmpty(x, y);
+    currentAction = "Player character has spawned.";
     return c;
 }
 
@@ -277,19 +260,20 @@ void Game::spawnGold() {
             x = p.first; y = p.second;
             auto [dx, dy] = p + d; // dragon x and y
             
-            enemies.emplace_back(newEnemy(constants::Enemy::Dragon, floor));
+            enemies.emplace_back(newEnemy(constants::Enemy::Dragon, floor, x, y));
             int enemyIdx = enemies.size() - 1;
             floor.addEnemy(dx, dy, enemyIdx, constants::Enemy::Dragon);
             enemies[enemyIdx]->setPosition(dx, dy);
             chamber.removeEmpty(dx, dy);
+            gold.emplace_back(std::make_unique<Gold>(amount, true));
         } else {
             auto cell = chamber.randomEmptyCell();
             if (!cell) continue; // No available cells
             x = cell->first; y = cell->second;
+            gold.emplace_back(std::make_unique<Gold>(amount));
         }
 
         // Spawn
-        gold.emplace_back(std::make_unique<Gold>(amount));
         int goldIdx = gold.size() - 1;
         floor.addGold(x, y, goldIdx);
         chamber.removeEmpty(x, y);

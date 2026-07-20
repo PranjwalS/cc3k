@@ -44,10 +44,6 @@ export class Game {
     const Floor& getFloor() const { return floor; }
     const std::unique_ptr<Player>& getPlayer() const { return player; }
     const std::vector<Chamber>& getChambers() const { return chambers; }
-
-    std::vector<const Enemy*> getEnemies() const;
-    std::vector<const Gold*> getGold() const;
-    std::vector<const Potion*> getPotions() const;
     
     std::string currentAction = "";
     
