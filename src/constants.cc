@@ -330,9 +330,8 @@ export std::optional<EnemyRace> symbolToEnemyRace(const char c);
 
 export std::string symbolToColour(const char symbol);
 
-export Direction strToDir(const std::string& s);
+export Direction cmdToDir(const std::string& s);
 export std::pair<int, int> dirToPair(const Direction dir);
-export std::pair<int, int> strToPair(const std::string& s);
 export std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir);
 export std::string dirToStr(const Direction dir);
 export std::string potionTypeToStr(const PotionType t);

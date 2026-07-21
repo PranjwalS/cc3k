@@ -11,7 +11,7 @@ bool constants::board::isInBounds(const std::pair<int, int> pos) {
 using namespace constants;
 
 bool isDirection(const std::string &s) {
-    return strToDir(s) != Direction::SELF;
+    return cmdToDir(s) != Direction::SELF;
 }
 
 std::optional<PlayerRace> cmdToPlayerRace(const std::string &s) {
@@ -59,7 +59,7 @@ std::string symbolToColour(const char symbol) {
     }
 }
 
-Direction strToDir(const std::string& s) {
+Direction cmdToDir(const std::string& s) {
     if (s == command::direction::NORTH)      return Direction::NO;
     if (s == command::direction::SOUTH)      return Direction::SO;
     if (s == command::direction::EAST)       return Direction::EA;
@@ -102,10 +102,6 @@ std::string dirToStr(const constants::Direction dir) {
 std::string potionTypeToStr(const constants::PotionType t) {
     if (POTION_DATA.contains(t)) return POTION_DATA.at(t).name;
     return "unkown"; // Invalid potion
-}
-
-std::pair<int, int> strToPair(const std::string& s) {
-    return dirToPair(strToDir(s));
 }
 
 std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir) {

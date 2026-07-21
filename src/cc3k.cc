@@ -37,14 +37,14 @@ int main(int argc, char* argv[]) {
             if (cmd1 == constants::command::ATTACK ||
                 cmd1 == constants::command::USE_POTION) {
                 std::cin >> cmd2;
-                constants::Direction dir = strToDir(cmd2);
+                constants::Direction dir = cmdToDir(cmd2);
                 if (cmd1 == constants::command::ATTACK) {
                     game.playerAttack(dir);
                 } else {
                     game.usePotion(dir);
                 }
             } else if (isDirection(cmd1)) {
-                game.playerMove(strToDir(cmd1));
+                game.playerMove(cmdToDir(cmd1));
             } else if (cmd1 == constants::command::FREEZE) {
                 game.toggleFreeze();
             } else if (cmd1 == constants::command::RESTART) {
