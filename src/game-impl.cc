@@ -186,7 +186,7 @@ void Game::usePotion(constants::Direction dir) {
     }
 
     player->applyPotion(p->getHpMod(), p->getAtkMod(), p->getDefMod());
-    std::string potionName = knownPotions.count(p->getType()) ? potionTypeToStr(p->getType()) : "unknown potion";
+    std::string potionName = potionTypeToStr(p->getType());
     knownPotions.insert(p->getType());
     floor.removePotion(tx, ty);
     playerMove(dir);
