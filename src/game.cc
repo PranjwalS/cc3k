@@ -30,6 +30,7 @@ export class Game {
     bool forceQuit = false;
     int tempAtk = 0;
     int tempDef = 0;
+    Chamber* playerChamber = nullptr;
 
     public:
 

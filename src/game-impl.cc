@@ -107,7 +107,7 @@ void Game::enemyAttack(Enemy& e) {
         if (randomChance(constants::probability::ENEMY_MISS)) {
             int dmg = calcDamage(e.getAtk(), player->getDef());
             player->takeDamage(dmg);
-            currentAction += " " + enemySymbol + " deals " + std::to_string(dmg) + " damage to PC (" + std::to_string(player->getHp()) + " HP).";
+            currentAction += " " + enemySymbol + " deals " + std::to_string(dmg) + " damage to PC.";
         }
     }
 }
@@ -131,6 +131,21 @@ bool Game::playerMove(constants::Direction dir) {
     int ny = player->getY();
     currentAction = "PC moves " + dirToStr(dir) + ".";
 
+    std::string seenPotions = "";
+    for (int dy = -1; dy <= 1; dy++) {
+        for (int dx = -1; dx <= 1; dx++) {
+            if (dx == 0 && dy == 0) continue;
+            int cx = nx + dx;
+            int cy = ny + dy;
+            if (cx < 0 || cx >= constants::board::WIDTH || cy < 0 || cy >= constants::board::HEIGHT) continue;
+            int potionIdx = floor.potionsIndex[cy][cx];
+            if (potionIdx == -1) continue;
+            std::string name = knownPotions.count(potions[potionIdx]->getType()) ? potionTypeToStr(potions[potionIdx]->getType()) : "an unknown potion";
+            seenPotions += (seenPotions.empty() ? "" : ", ") + name;
+        }
+    }
+    if (!seenPotions.empty()) currentAction += " PC sees " + seenPotions + ".";
+
     int gIdx = floor.goldIndex[ny][nx];
     if (gIdx != -1) {
         Gold* g = gold[gIdx].get();
@@ -144,16 +159,13 @@ bool Game::playerMove(constants::Direction dir) {
     }
 
     if (floor.grid[ny][nx] == constants::symbol::STAIRS) {
-        // uhh idk if we need this stuff
-        // player->applyPotion(0, -tempAtk, -tempDef); 
-        // tempAtk = 0;
-        // tempDef = 0;
+        player->applyPotion(0, -tempAtk, -tempDef); 
+        tempAtk = 0;
+        tempDef = 0;
         nextFloor();
         currentAction = " PC descends to floor " + std::to_string(floorNum) + ".";
         return true;
     }
-
-    // add sees potion logic here!
 
     floor.movePlayer(px, py, nx, ny);
     return true;
@@ -187,14 +199,18 @@ void Game::spawnPlayer() {
     player->setPosition(x, y);
     floor.grid[y][x] = constants::symbol::PLAYER;
     c.removeEmpty(x, y);
+    playerChamber = &c;
     currentAction = "Player character has spawned.";
 }
 
 void Game::spawnStairs() {
-    Chamber& c = floor.chooseChamber();
-    auto [x, y] = *c.randomEmptyCell();
+    Chamber* c = nullptr;
+    do {
+        c = &floor.chooseChamber();
+    } while (c == playerChamber);
+    auto [x, y] = *c->randomEmptyCell();
     floor.grid[y][x] = constants::symbol::STAIRS;
-    c.removeEmpty(x, y);
+    c->removeEmpty(x, y);
 }
 
 void Game::spawnEnemies() {
