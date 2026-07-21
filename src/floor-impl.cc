@@ -63,7 +63,8 @@ void expand(std::string &emptyBoard, int x, int y,
     auto w = std::pair{x, y} + constants::Direction::WE;
     
     for (auto [nx, ny] : {n, e, s, w}) {
-        if (constants::board::isInBounds({nx, ny}) && emptyBoard[ny * constants::board::WIDTH + nx] == '.') {
+        if (constants::board::isInBounds({nx, ny}) && 
+            emptyBoard[ny * constants::board::WIDTH + nx] == constants::symbol::FLOOR) {
             expand(emptyBoard, nx, ny, cells);
         }
     }
@@ -73,7 +74,7 @@ void Floor::initChambers() {
     std::string emptyBoard(constants::EMPTY_FLOOR);
     for (int y = 0; y < constants::board::HEIGHT; y++) {
         for (int x = 0; x < constants::board::WIDTH; x++) {
-            if (emptyBoard[y * constants::board::WIDTH + x] == '.') {
+            if (emptyBoard[y * constants::board::WIDTH + x] == constants::symbol::FLOOR) {
                 bool cells[constants::board::HEIGHT][constants::board::WIDTH] = {};
                 expand(emptyBoard, x, y, cells);
                 chambers.emplace_back(cells);
@@ -120,7 +121,7 @@ void Floor::addPotion(int x, int y, int index) {
 
 void Floor::removePotion(int x, int y) {
     potionsIndex[y][x] = -1;
-    grid[y][x] = '.';
+    grid[y][x] = constants::symbol::FLOOR;
 }
 
 void Floor::addGold(int x, int y, int index) {

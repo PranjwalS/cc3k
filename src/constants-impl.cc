@@ -100,15 +100,8 @@ std::string dirToStr(const constants::Direction dir) {
 }
 
 std::string potionTypeToStr(const constants::PotionType t) {
-    switch(t) {
-        case PotionType::RH: return "RH";
-        case PotionType::BA: return "BA";
-        case PotionType::BD: return "BD";
-        case PotionType::PH: return "PH";
-        case PotionType::WA: return "WA";
-        case PotionType::WD: return "WD";
-        default:             return "unknown";
-    }
+    if (POTION_DATA.contains(t)) return POTION_DATA.at(t).name;
+    return "unkown"; // Invalid potion
 }
 
 std::pair<int, int> strToPair(const std::string& s) {

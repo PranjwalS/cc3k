@@ -2,7 +2,6 @@ module player;
 
 import constants;
 import floor;
-import <algorithm>;
 import <stdexcept>;
 import <memory>;
 
@@ -29,22 +28,22 @@ bool Player::move(const constants::Direction& dir) {
 
 void Drow::applyPotion(int hpMod, int atkMod, int defMod) {
     double modifier = constants::multiplier::DROW_POTION;
-    hp = std::min(maxHp, hp + (int)(hpMod * modifier));
-    atk += (int)(atkMod * modifier);
-    def += (int)(defMod * modifier);
+    heal(static_cast<int>(hpMod * modifier));
+    atk += static_cast<int>(atkMod * modifier);
+    def += static_cast<int>(defMod * modifier);
 }
 
 void Vampire::onHit(constants::EnemyRace race) {
-    if (race == constants::EnemyRace::Dwarf) hp -= 5;
-    else hp = std::min(maxHp, hp + 5);
+    if (race == constants::EnemyRace::Dwarf) takeDamage(constants::VAMPIRE_ALLERGY_HP_LOSS);
+    else heal(constants::VAMPIRE_LIFESTEAL);
 }
 
 void Troll::endTurn() {
-    hp = std::min(120, hp + 5);
+    heal(constants::TROLL_REGEN);
 }
 
 void Goblin::onKill(constants::EnemyRace race) {
-    gold += 5;
+    gainGold(constants::GOBLIN_STEAL);
 }
 
 std::unique_ptr<Player> newPlayer(constants::PlayerRace race, Floor& f) {
