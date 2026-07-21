@@ -30,7 +30,7 @@ export class Game {
     bool forceQuit = false;
     int tempAtk = 0;
     int tempDef = 0;
-    Chamber* playerChamber = nullptr;
+    std::string currentAction = "";
 
     public:
 
@@ -47,9 +47,7 @@ export class Game {
     const Floor& getFloor() const { return floor; }
     const std::unique_ptr<Player>& getPlayer() const { return player; }
     const std::vector<Chamber>& getChambers() const { return chambers; }
-    
-    std::string currentAction = "";
-    
+        
     void setAction(const std::string& action) { currentAction = action; }
     void appendAction(const std::string& action) { currentAction += action; }
 
@@ -61,8 +59,8 @@ export class Game {
 
     void nextFloor();
 
-    void spawnPlayer();
-    void spawnStairs();
+    Chamber& spawnPlayer();
+    void spawnStairs(const Chamber& playerChamber);
     void spawnEnemies();
     void spawnPotions();
     void spawnGold();

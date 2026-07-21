@@ -54,7 +54,6 @@ export namespace constants {
         constexpr std::string DIM_PURPLE    = "\033[0;35m";
         constexpr std::string DIM_WHITE     = "\033[2;37m";
 
-
         // Game symbol colours:
         // Player
         constexpr std::string PLAYER = BLUE;
@@ -102,7 +101,7 @@ export namespace constants {
             constexpr std::string SOUTH_EAST = "se";
             constexpr std::string SOUTH_WEST = "sw";
         }
-        // Player commands stored in Player enum class
+        // Player commands stored in PlayerRace enum class
     }
 
     // Player Races : Command
@@ -126,6 +125,7 @@ export namespace constants {
         Dragon = 'D',
         Halfling = 'L'
     };
+    constexpr char enemyRaceToSymbol(const EnemyRace e) { return static_cast<char>(e); }
 
     constexpr int NUM_ENEMY_RACES = 7;
 
@@ -135,21 +135,21 @@ export namespace constants {
     };
 
     const std::unordered_map<PlayerRace, CharacterInfo> PLAYER_DATA = {
-        { PlayerRace::Shade, {"Shade", 125, 25, 25} },
-        { PlayerRace::Drow, {"Drow", 150, 25, 15} },
-        { PlayerRace::Vampire, {"Vampire", 50, 25, 25} },
-        { PlayerRace::Troll, {"Troll", 120, 25, 15} },
-        { PlayerRace::Goblin, {"Goblin", 110, 15, 20} }
+        { PlayerRace::Shade,    {"Shade", 125, 25, 25} },
+        { PlayerRace::Drow,     {"Drow", 150, 25, 15} },
+        { PlayerRace::Vampire,  {"Vampire", 50, 25, 25} },
+        { PlayerRace::Troll,    {"Troll", 120, 25, 15} },
+        { PlayerRace::Goblin,   {"Goblin", 110, 15, 20} }
     };
 
     const std::unordered_map<EnemyRace, CharacterInfo> ENEMY_DATA = {
-        { EnemyRace::Human, {"Human", 140, 20, 20} },
-        { EnemyRace::Dwarf, {"Dwarf", 100, 20, 30} },
-        { EnemyRace::Elf, {"Elf", 140, 30, 10} },
-        { EnemyRace::Orc, {"Orc", 180, 30, 25} },
-        { EnemyRace::Merchant, {"Merchant", 30, 70, 5} },
-        { EnemyRace::Halfling, {"Halfling", 100, 15, 20} },
-        { EnemyRace::Dragon, {"Dragon", 150, 20, 20} }
+        { EnemyRace::Human,     {"Human", 140, 20, 20} },
+        { EnemyRace::Dwarf,     {"Dwarf", 100, 20, 30} },
+        { EnemyRace::Elf,       {"Elf", 140, 30, 10} },
+        { EnemyRace::Orc,       {"Orc", 180, 30, 25} },
+        { EnemyRace::Merchant,  {"Merchant", 30, 70, 5} },
+        { EnemyRace::Halfling,  {"Halfling", 100, 15, 20} },
+        { EnemyRace::Dragon,    {"Dragon", 150, 20, 20} }
     };
 
     // Item : Symbol
@@ -157,11 +157,25 @@ export namespace constants {
         Gold = 'G',
         Potion = 'P'
     };
+    constexpr char itemToSymbol(const Item i) { return static_cast<char>(i); }
 
     namespace symbol {
         constexpr char PLAYER = '@';
-        // Enemy symbols stored in Enemy enum class
-        // Item symbols stored in Item enum class
+
+        // Enemies
+        constexpr char HUMAN = enemyRaceToSymbol(EnemyRace::Human);
+        constexpr char DWARF = enemyRaceToSymbol(EnemyRace::Dwarf);
+        constexpr char ELF = enemyRaceToSymbol(EnemyRace::Elf);
+        constexpr char ORC = enemyRaceToSymbol(EnemyRace::Orc);
+        constexpr char MERCHANT = enemyRaceToSymbol(EnemyRace::Merchant);
+        constexpr char HALFLING = enemyRaceToSymbol(EnemyRace::Halfling);
+        constexpr char DRAGON = enemyRaceToSymbol(EnemyRace::Dragon);
+
+        // Items
+        constexpr char GOLD = itemToSymbol(Item::Gold);
+        constexpr char POTION = itemToSymbol(Item::Potion);
+
+        // Environment
         constexpr char VERTICAL_WALL = '|';
         constexpr char HORIZONTAL_WALL = '-';
         constexpr char DOORWAY = '+';
@@ -286,22 +300,21 @@ export namespace constants {
     "|-----------------------------------------------------------------------------|";
 }
 
+using namespace constants;
+
 export bool isDirection(const std::string &s);
 
-export std::optional<constants::PlayerRace> cmdToPlayerRace(const std::string &s);
-export bool isPlayerRaceCmd(const std::string &s) { return cmdToPlayerRace(s) != std::nullopt; }
-export std::optional<std::string> playerRaceToStr(constants::PlayerRace race);
+export std::optional<PlayerRace> cmdToPlayerRace(const std::string &s);
+export bool isPlayerRaceCmd(const std::string &s);
+export std::optional<std::string> playerRaceToStr(const PlayerRace race);
 
-export char itemToSymbol(const constants::Item& i) { return static_cast<char>(i); }
-
-export char enemyRaceToSymbol(const constants::EnemyRace& e) { return static_cast<char>(e); }
-export std::optional<constants::EnemyRace> symbolToEnemyRace(const char& c);
+export std::optional<EnemyRace> symbolToEnemyRace(const char c);
 
 export std::string symbolToColour(const char symbol);
 
-export constants::Direction strToDir(const std::string& s);
-export std::pair<int, int> dirToPair(const constants::Direction& dir);
+export Direction strToDir(const std::string& s);
+export std::pair<int, int> dirToPair(const Direction dir);
 export std::pair<int, int> strToPair(const std::string& s);
-export std::pair<int, int> operator+(const std::pair<int, int> pos, const constants::Direction dir);
-export std::string dirToStr(constants::Direction dir);
-export std::string potionTypeToStr(constants::PotionType t);
+export std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir);
+export std::string dirToStr(const Direction dir);
+export std::string potionTypeToStr(const PotionType t);

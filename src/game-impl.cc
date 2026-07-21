@@ -193,21 +193,21 @@ void Game::usePotion(constants::Direction dir) {
     currentAction = " PC uses " + potionName + ".";
 }
 
-void Game::spawnPlayer() {
+Chamber& Game::spawnPlayer() {
     Chamber& c = floor.chooseChamber();
     auto [x, y] = *c.randomEmptyCell();
     player->setPosition(x, y);
     floor.grid[y][x] = constants::symbol::PLAYER;
     c.removeEmpty(x, y);
-    playerChamber = &c;
     currentAction = "Player character has spawned.";
+    return c;
 }
 
-void Game::spawnStairs() {
+void Game::spawnStairs(const Chamber& playerChamber) {
     Chamber* c = nullptr;
     do {
         c = &floor.chooseChamber();
-    } while (c == playerChamber);
+    } while (c == &playerChamber);
     auto [x, y] = *c->randomEmptyCell();
     floor.grid[y][x] = constants::symbol::STAIRS;
     c->removeEmpty(x, y);
@@ -298,8 +298,8 @@ void Game::spawnGold() {
 
 
 void Game::spawnAll() {
-    spawnPlayer();
-    spawnStairs();
+    Chamber playerChamber = spawnPlayer();
+    spawnStairs(playerChamber);
     spawnPotions();
     spawnGold();
     spawnEnemies();
