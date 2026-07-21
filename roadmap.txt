@@ -34,19 +34,21 @@
     X. Dragon hoard pickup restriction, can't pick up while dragon alive
     X. Win/lose screen polish + play again prompt
     X. Score calculation (Shade gets 1.5x)
-
-
-remaining; 
-    read argv[1] if provided, pass filename to Game for file-based floor loading
-
-    add a few more display actions for usability like: "enemy::name slain", "enemy::dropped ## gold", etc
-    PC moves East and sees an unknown potion. (need to implement the seeing mechanism)
+    
+    X. PC moves East and sees an unknown potion. (need to implement the seeing mechanism)
     X. PC uses BA. (move into the spot whre the potion was)
-    remove periods, do "and"
 
     X. Dragon should attack if player is in range of hoard.
     X. hoard protected status changes onDeath of dragon.
     X. troll not dying
+
+
+remaining; 
+    remove periods, do "and"
+    add a few more display actions for usability like: "enemy::name slain", "enemy::dropped ## gold", etc
+    read argv[1] if provided, pass filename to Game for file-based floor loading
+    THERE'S A BUNCH OF CASES REGARDING ACTIONS, SO JUST KEEP PLAYING THE GAME AND FIGURE EM OUT, like
+    what if player spawns on nextfloor and has a potion nearby, it should say sees unknown potion on top of the new floor stuff, etc...
 
     1. Test individual mechanics: races, enemy abilities, combat, potions, gold, movement, spawning, floor transitions.
     2. Final memory cleanup: ensure all dynamically allocated Player/Enemy/Item objects are deleted correctly.
