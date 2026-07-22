@@ -12,7 +12,6 @@ src/enemy.cc
 src/game.cc
 
 src/random-impl.cc
-src/constants-impl.cc
 src/gold-impl.cc
 src/shapes-impl.cc
 src/chamber-impl.cc

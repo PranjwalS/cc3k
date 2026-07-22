@@ -122,7 +122,7 @@ void Floor::moveEnemy(int px, int py, int nx, int ny) {
 
 void Floor::addPotion(int x, int y, int index) {
     potionsIndex[y][x] = index;
-    grid[y][x] = itemToSymbol(constants::Item::Potion);
+    grid[y][x] = constants::symbol::POTION;
 }
 
 void Floor::removePotion(int x, int y) {
@@ -132,7 +132,7 @@ void Floor::removePotion(int x, int y) {
 
 void Floor::addGold(int x, int y, int index) {
     goldIndex[y][x] = index;
-    grid[y][x] = itemToSymbol(constants::Item::Gold);
+    grid[y][x] = constants::symbol::GOLD;
 }
 
 void Floor::removeGold(int x, int y) {

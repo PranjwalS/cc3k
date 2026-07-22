@@ -144,11 +144,7 @@ void Game::useNextMap() {
             int idx = y * constants::board::WIDTH + x;
             char ch = map[idx];
 
-            bool isEnemy = std::any_of(std::begin(constants::ENEMY_RACES), 
-                           std::end(constants::ENEMY_RACES),
-                           [c = ch](constants::EnemyRace e) {
-                               return constants::enemyRaceToSymbol(e) == c;
-                           });
+            bool isEnemy = isEnemySymbol(ch);
 
             if (ch == static_cast<char>(constants::EnemyRace::Dragon)) {
                 auto opt = hoardFromDragonPos(map, x, y);

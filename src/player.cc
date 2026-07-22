@@ -17,7 +17,7 @@ export class Player : public Character {
     
     public:
     Player(constants::PlayerRace race, Floor& f) :
-        Character{constants::PLAYER_DATA.at(race), f}, race{race} {}
+        Character{constants::info(race).value(), f}, race{race} {}
 
     int getGold() const { return gold; }
     int getScore() const { return score; }

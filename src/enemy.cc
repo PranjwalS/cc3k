@@ -15,7 +15,7 @@ export class Enemy : public Character {
     public:
 
     Enemy(constants::EnemyRace race, Floor& f, bool hostile = true) :
-        Character{constants::ENEMY_DATA.at(race), f}, race{race}, hostile{hostile} {}
+        Character{constants::info(race).value(), f}, race{race}, hostile{hostile} {}
 
     virtual ~Enemy() = default;
 
