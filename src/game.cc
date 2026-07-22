@@ -61,6 +61,9 @@ export class Game {
 
     Chamber& spawnPlayer();
     void spawnStairs(const Chamber& playerChamber);
+    void addGold(int amount, bool isHoard, Chamber& chamber, int x, int y);
+    void addEnemy(constants::EnemyRace race, Chamber& chamber, int x, int y);
+    void addPotion(constants::PotionType type, Chamber& chamber, int x, int y);
     void spawnEnemies();
     void spawnPotions();
     void spawnGold();

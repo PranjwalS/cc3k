@@ -49,6 +49,7 @@ void Game::displayInfo(std::ostream& os) const {
     os << "Def: " << player->getDef() << "\n";
     displayAction(os);
 }
+
 void Game::displayScore(std::ostream& os) const {
     int score = player->getScore();
     if (player->getRace() == constants::PlayerRace::Shade) {
