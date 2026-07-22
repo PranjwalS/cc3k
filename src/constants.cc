@@ -42,19 +42,6 @@ export namespace constants {
         constexpr std::string_view CYAN          = "\033[0;36m";
         constexpr std::string_view WHITE         = "\033[0;37m";
 
-        // Variations
-        constexpr std::string_view DIM_BLACK     = "\033[2;30m";
-        constexpr std::string_view BRIGHT_RED    = "\033[1;31m";
-        constexpr std::string_view DIM_RED       = "\033[2;31m";
-        constexpr std::string_view BRIGHT_GREEN  = "\033[1;32m";
-        constexpr std::string_view DIM_GREEN     = "\033[2;32m";
-        constexpr std::string_view BRIGHT_YELLOW = "\033[1;33m";
-        constexpr std::string_view DIM_YELLOW    = "\033[2;33m";
-        constexpr std::string_view BRIGHT_BLUE   = "\033[1;34m";
-        constexpr std::string_view DIM_BLUE      = "\033[2;34m";
-        constexpr std::string_view DIM_PURPLE    = "\033[0;35m";
-        constexpr std::string_view DIM_WHITE     = "\033[2;37m";
-
         // Game symbol colours:
         // Player
         constexpr std::string_view PLAYER = BLUE;
