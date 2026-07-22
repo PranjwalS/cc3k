@@ -20,5 +20,5 @@ src/floor-impl.cc
 src/character-impl.cc
 src/enemy-impl.cc
 src/player-impl.cc
-src/game-impl.cc
+src/game-*.cc
 src/cc3k.cc
