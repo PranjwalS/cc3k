@@ -109,7 +109,7 @@ void Game::spawnGold() {
 }
 
 void Game::spawnAll() {
-    Chamber playerChamber = spawnPlayer();
+    Chamber& playerChamber = spawnPlayer();
     spawnStairs(playerChamber);
     spawnPotions();
     spawnGold();
