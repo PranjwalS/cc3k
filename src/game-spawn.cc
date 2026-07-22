@@ -154,6 +154,7 @@ void Game::useNextMap() {
                 }
                 auto [hx, hy] = *opt;
                 addEnemy(constants::EnemyRace::Dragon, x, y, hx, hy);
+                addGold(constants::goldPile::DRAGON_HOARD, true, hx, hy);
             } else if (isEnemy) { // non dragon enemies
                 auto race = static_cast<constants::EnemyRace>(ch);
                 addEnemy(race, x, y);

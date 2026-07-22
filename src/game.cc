@@ -27,7 +27,7 @@ export class Game {
     std::set<constants::PotionType> knownPotions;
 
     const int numFloors;
-    int floorNum = 1;
+    int floorNum = 0;
     bool merchantsHostile = false;
     bool frozen = false;
     bool forceQuit = false;
@@ -47,7 +47,7 @@ export class Game {
             player{newPlayer(race, floor)}, 
             numFloors{numFloors},
             maps{maps} {
-                spawnAll();
+                nextFloor();
             }
     ~Game() = default;
 
