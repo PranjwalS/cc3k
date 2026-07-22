@@ -17,8 +17,8 @@ void Game::addGold(int amount, bool isHoard, Chamber &chamber, int x, int y) {
     chamber.removeEmpty(x, y);
 }
 
-void Game::addEnemy(constants::EnemyRace race, Chamber &chamber, int x, int y) {
-    enemies.emplace_back(newEnemy(race, floor));
+void Game::addEnemy(constants::EnemyRace race, Chamber &chamber, int x, int y, int hx=0, int hy=0) {
+    enemies.emplace_back(newEnemy(race, floor, hx, hy));
     int enemyIdx = enemies.size() - 1;
     floor.addEnemy(x, y, enemyIdx, race);
     chamber.removeEmpty(x, y);
@@ -95,7 +95,7 @@ void Game::spawnGold() {
             auto [dx, dy] = p + d; // dragon x and y
             x = p.first; y = p.second; // potion x and y
 
-            addEnemy(constants::EnemyRace::Dragon, chamber, dx, dy);
+            addEnemy(constants::EnemyRace::Dragon, chamber, dx, dy, x, y);
         } else {
             auto cell = chamber.randomEmptyCell();
             if (!cell) continue; // No available cells
