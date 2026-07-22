@@ -5,7 +5,6 @@ import <utility>;
 import <string>;
 import <string_view>;
 import <array>;
-import <set>;
 import <unordered_map>;
 
 export namespace constants {
@@ -25,59 +24,61 @@ export namespace constants {
         // How far from right to display right alligned entries
         constexpr int OFFSET = 3; 
 
-        bool isInBounds(const std::pair<int, int> pos);
+        constexpr bool isInBounds(int x, int y) {
+            return x >= 0 && x <= MAX_X && y >= 0 && y <= MAX_Y;
+        }
     }
 
     namespace colour {
         // Note that colours automatically reset to RESET upon use
         // Base ANSI colours
-        constexpr std::string RESET         = "\033[0;0m"; // default text colour
-        constexpr std::string BLACK         = "\033[0;30m";
-        constexpr std::string RED           = "\033[0;31m";
-        constexpr std::string GREEN         = "\033[0;32m";
-        constexpr std::string YELLOW        = "\033[0;33m";
-        constexpr std::string BLUE          = "\033[0;34m";
-        constexpr std::string PURPLE        = "\033[0;35m";
-        constexpr std::string CYAN          = "\033[0;36m";
-        constexpr std::string WHITE         = "\033[0;37m";
+        constexpr std::string_view RESET         = "\033[0;0m"; // default text colour
+        constexpr std::string_view BLACK         = "\033[0;30m";
+        constexpr std::string_view RED           = "\033[0;31m";
+        constexpr std::string_view GREEN         = "\033[0;32m";
+        constexpr std::string_view YELLOW        = "\033[0;33m";
+        constexpr std::string_view BLUE          = "\033[0;34m";
+        constexpr std::string_view PURPLE        = "\033[0;35m";
+        constexpr std::string_view CYAN          = "\033[0;36m";
+        constexpr std::string_view WHITE         = "\033[0;37m";
 
         // Variations
-        constexpr std::string DIM_BLACK     = "\033[2;30m";
-        constexpr std::string BRIGHT_RED    = "\033[1;31m";
-        constexpr std::string DIM_RED       = "\033[2;31m";
-        constexpr std::string BRIGHT_GREEN  = "\033[1;32m";
-        constexpr std::string DIM_GREEN     = "\033[2;32m";
-        constexpr std::string BRIGHT_YELLOW = "\033[1;33m";
-        constexpr std::string DIM_YELLOW    = "\033[2;33m";
-        constexpr std::string BRIGHT_BLUE   = "\033[1;34m";
-        constexpr std::string DIM_BLUE      = "\033[2;34m";
-        constexpr std::string DIM_PURPLE    = "\033[0;35m";
-        constexpr std::string DIM_WHITE     = "\033[2;37m";
+        constexpr std::string_view DIM_BLACK     = "\033[2;30m";
+        constexpr std::string_view BRIGHT_RED    = "\033[1;31m";
+        constexpr std::string_view DIM_RED       = "\033[2;31m";
+        constexpr std::string_view BRIGHT_GREEN  = "\033[1;32m";
+        constexpr std::string_view DIM_GREEN     = "\033[2;32m";
+        constexpr std::string_view BRIGHT_YELLOW = "\033[1;33m";
+        constexpr std::string_view DIM_YELLOW    = "\033[2;33m";
+        constexpr std::string_view BRIGHT_BLUE   = "\033[1;34m";
+        constexpr std::string_view DIM_BLUE      = "\033[2;34m";
+        constexpr std::string_view DIM_PURPLE    = "\033[0;35m";
+        constexpr std::string_view DIM_WHITE     = "\033[2;37m";
 
         // Game symbol colours:
         // Player
-        constexpr std::string PLAYER = BLUE;
+        constexpr std::string_view PLAYER = BLUE;
 
         // Items
-        constexpr std::string GOLD = YELLOW;
-        constexpr std::string POTION = GREEN;
+        constexpr std::string_view GOLD = YELLOW;
+        constexpr std::string_view POTION = GREEN;
 
         // Environment
-        constexpr std::string WALL = RESET;
-        constexpr std::string FLOOR = RESET;
-        constexpr std::string PASSAGE = RESET;
-        constexpr std::string DOORWAY = RESET;
-        constexpr std::string EMPTY = RESET;
-        constexpr std::string STAIRS = BLUE;
+        constexpr std::string_view WALL = RESET;
+        constexpr std::string_view FLOOR = RESET;
+        constexpr std::string_view PASSAGE = RESET;
+        constexpr std::string_view DOORWAY = RESET;
+        constexpr std::string_view EMPTY = RESET;
+        constexpr std::string_view STAIRS = BLUE;
 
         // Enemies
-        constexpr std::string HUMAN = RED;
-        constexpr std::string DWARF = RED;
-        constexpr std::string ELF = RED;
-        constexpr std::string ORC = RED;
-        constexpr std::string MERCHANT = RED;
-        constexpr std::string HALFLING = RED;
-        constexpr std::string DRAGON = RED;
+        constexpr std::string_view HUMAN = RED;
+        constexpr std::string_view DWARF = RED;
+        constexpr std::string_view ELF = RED;
+        constexpr std::string_view ORC = RED;
+        constexpr std::string_view MERCHANT = RED;
+        constexpr std::string_view HALFLING = RED;
+        constexpr std::string_view DRAGON = RED;
     }
 
     constexpr int NUM_POTIONS = 10;
@@ -85,21 +86,21 @@ export namespace constants {
     constexpr int NUM_ENEMIES = 20;
 
     namespace command {
-        constexpr std::string FREEZE = "f";
-        constexpr std::string RESTART = "r";
-        constexpr std::string QUIT = "q";
-        constexpr std::string USE_POTION = "u";
-        constexpr std::string ATTACK = "a";
+        constexpr std::string_view FREEZE = "f";
+        constexpr std::string_view RESTART = "r";
+        constexpr std::string_view QUIT = "q";
+        constexpr std::string_view USE_POTION = "u";
+        constexpr std::string_view ATTACK = "a";
 
         namespace direction {
-            constexpr std::string NORTH = "no";
-            constexpr std::string SOUTH = "so";
-            constexpr std::string EAST = "ea";
-            constexpr std::string WEST = "we";
-            constexpr std::string NORTH_EAST = "ne";
-            constexpr std::string NORTH_WEST = "nw";
-            constexpr std::string SOUTH_EAST = "se";
-            constexpr std::string SOUTH_WEST = "sw";
+            constexpr std::string_view NORTH = "no";
+            constexpr std::string_view SOUTH = "so";
+            constexpr std::string_view EAST = "ea";
+            constexpr std::string_view WEST = "we";
+            constexpr std::string_view NORTH_EAST = "ne";
+            constexpr std::string_view NORTH_WEST = "nw";
+            constexpr std::string_view SOUTH_EAST = "se";
+            constexpr std::string_view SOUTH_WEST = "sw";
         }
         // Player commands stored in PlayerRace enum class
     }
@@ -130,7 +131,7 @@ export namespace constants {
     constexpr int NUM_ENEMY_RACES = 7;
 
     struct CharacterInfo {
-        std::string name;
+        std::string_view name;
         int hp, atk, def;
     };
 
@@ -220,7 +221,7 @@ export namespace constants {
     constexpr int NUM_POTION_TYPES = 6;
 
     struct PotionInfo {
-        std::string name;
+        std::string_view name;
         int hpMod, atkMod, defMod;
         bool permanent;
     };
@@ -320,17 +321,17 @@ export namespace constants {
 
 using namespace constants;
 
-export bool isDirection(const std::string &s);
+export bool isDirection(std::string_view s);
 
-export std::optional<PlayerRace> cmdToPlayerRace(const std::string &s);
-export bool isPlayerRaceCmd(const std::string &s);
+export std::optional<PlayerRace> cmdToPlayerRace(std::string_view s);
+export bool isPlayerRaceCmd(std::string_view s);
 export std::optional<std::string> playerRaceToStr(const PlayerRace race);
 
 export std::optional<EnemyRace> symbolToEnemyRace(const char c);
 
-export std::string symbolToColour(const char symbol);
+export std::string symbolToColour(const char sym);
 
-export Direction cmdToDir(const std::string& s);
+export Direction cmdToDir(std::string_view s);
 export std::pair<int, int> dirToPair(const Direction dir);
 export std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir);
 export std::string dirToStr(const Direction dir);

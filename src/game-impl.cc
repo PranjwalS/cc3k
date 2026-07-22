@@ -27,7 +27,7 @@ bool Game::playerAttack(constants::Direction d) {
 
     int tx = player->getX() + dx;
     int ty = player->getY() + dy;
-    if (!constants::board::isInBounds({tx, ty})) return false;
+    if (!constants::board::isInBounds(tx, ty)) return false;
 
     int idx = floor.getEnemiesIndex()[ty][tx];
 
@@ -137,7 +137,7 @@ bool Game::playerMove(constants::Direction dir) {
             if (dx == 0 && dy == 0) continue;
             int cx = nx + dx;
             int cy = ny + dy;
-            if (!constants::board::isInBounds({cx, cy})) continue;
+            if (!constants::board::isInBounds(cx, cy)) continue;
             int potionIdx = floor.getPotionsIndex()[cy][cx];
             if (potionIdx == -1) continue;
             std::string name = knownPotions.count(potions[potionIdx]->getType()) ? potionTypeToStr(potions[potionIdx]->getType()) : "an unknown potion";
@@ -176,7 +176,7 @@ void Game::usePotion(constants::Direction dir) {
     auto [dx, dy] = dirToPair(dir);
     int tx = player->getX() + dx;
     int ty = player->getY() + dy;
-    if (!constants::board::isInBounds({tx, ty})) return;
+    if (!constants::board::isInBounds(tx, ty)) return;
     int idx = floor.getPotionsIndex()[ty][tx];
     if (idx == -1) return;
     Potion* p = potions[idx].get();

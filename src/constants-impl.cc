@@ -2,19 +2,15 @@ module constants;
 import <optional>;
 import <utility>;
 import <string>;
-import <map>;
-
-bool constants::board::isInBounds(const std::pair<int, int> pos) {
-    return pos.first >= 0 && pos.first <= MAX_X && pos.second >= 0 && pos.second <= MAX_Y;
-}
+import <string_view>;
 
 using namespace constants;
 
-bool isDirection(const std::string &s) {
+bool isDirection(std::string_view s) {
     return cmdToDir(s) != Direction::SELF;
 }
 
-std::optional<PlayerRace> cmdToPlayerRace(const std::string &s) {
+std::optional<PlayerRace> cmdToPlayerRace(std::string_view s) {
     if (s.size() != 1) return std::nullopt;
     const PlayerRace race = static_cast<PlayerRace>(s.at(0));
 
@@ -22,12 +18,12 @@ std::optional<PlayerRace> cmdToPlayerRace(const std::string &s) {
     return std::nullopt; // Invalid player race command
 }
 
-bool isPlayerRaceCmd(const std::string &s) { 
+bool isPlayerRaceCmd(std::string_view s) { 
     return cmdToPlayerRace(s) != std::nullopt; 
 }
 
 std::optional<std::string> playerRaceToStr(const constants::PlayerRace race) {
-    if (PLAYER_DATA.contains(race)) return PLAYER_DATA.at(race).name;
+    if (PLAYER_DATA.contains(race)) return std::string(PLAYER_DATA.at(race).name);
     return std::nullopt; // Invalid player race
 }
 
@@ -37,29 +33,31 @@ std::optional<EnemyRace> symbolToEnemyRace(const char c) {
     return std::nullopt; // Invalid enemy race
 }
 
-std::string symbolToColour(const char symbol) {
-    switch (symbol) {
-        case symbol::PLAYER:            return colour::PLAYER;
+std::string symbolToColour(const char sym) {
+    std::string_view col = colour::EMPTY;
+    switch (sym) {
+        case symbol::PLAYER:            col = colour::PLAYER; break;
         case symbol::VERTICAL_WALL:
-        case symbol::HORIZONTAL_WALL:   return colour::WALL;
-        case symbol::DOORWAY:           return colour::DOORWAY;
-        case symbol::PASSAGE:           return colour::PASSAGE;
-        case symbol::FLOOR:             return colour::FLOOR;
-        case symbol::STAIRS:            return colour::STAIRS;
-        case symbol::GOLD:              return colour::GOLD;
-        case symbol::POTION:            return colour::POTION;
-        case symbol::HUMAN:             return colour::HUMAN;
-        case symbol::DWARF:             return colour::DWARF;
-        case symbol::ELF:               return colour::ELF;
-        case symbol::ORC:               return colour::ORC;
-        case symbol::MERCHANT:          return colour::MERCHANT;
-        case symbol::HALFLING:          return colour::HALFLING;
-        case symbol::DRAGON:            return colour::DRAGON;
-        default:                        return colour::EMPTY;
+        case symbol::HORIZONTAL_WALL:   col =  colour::WALL; break;
+        case symbol::DOORWAY:           col =  colour::DOORWAY; break;
+        case symbol::PASSAGE:           col =  colour::PASSAGE; break;
+        case symbol::FLOOR:             col =  colour::FLOOR; break;
+        case symbol::STAIRS:            col =  colour::STAIRS; break;
+        case symbol::GOLD:              col =  colour::GOLD; break;
+        case symbol::POTION:            col =  colour::POTION; break;
+        case symbol::HUMAN:             col =  colour::HUMAN; break;
+        case symbol::DWARF:             col =  colour::DWARF; break;
+        case symbol::ELF:               col =  colour::ELF; break;
+        case symbol::ORC:               col =  colour::ORC; break;
+        case symbol::MERCHANT:          col =  colour::MERCHANT; break;
+        case symbol::HALFLING:          col =  colour::HALFLING; break;
+        case symbol::DRAGON:            col =  colour::DRAGON; break;
+        default:                        break;
     }
+    return std::string(col);
 }
 
-Direction cmdToDir(const std::string& s) {
+Direction cmdToDir(std::string_view s) {
     if (s == command::direction::NORTH)      return Direction::NO;
     if (s == command::direction::SOUTH)      return Direction::SO;
     if (s == command::direction::EAST)       return Direction::EA;
@@ -100,8 +98,8 @@ std::string dirToStr(const constants::Direction dir) {
 }
 
 std::string potionTypeToStr(const constants::PotionType t) {
-    if (POTION_DATA.contains(t)) return POTION_DATA.at(t).name;
-    return "unkown"; // Invalid potion
+    if (POTION_DATA.contains(t)) return std::string(POTION_DATA.at(t).name);
+    return "unknown"; // Invalid potion
 }
 
 std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir) {

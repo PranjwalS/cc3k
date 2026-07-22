@@ -53,7 +53,7 @@ Floor& Floor::operator=(const Floor& other) {
 }
 
 bool Floor::setGrid(int x, int y, char c) {
-    if (!constants::board::isInBounds({x, y})) return false;
+    if (!constants::board::isInBounds(x, y)) return false;
     grid[y][x] = c;
     return true;
 }
@@ -69,7 +69,7 @@ void expand(std::string &emptyBoard, int x, int y,
     auto w = std::pair{x, y} + constants::Direction::WE;
     
     for (auto [nx, ny] : {n, e, s, w}) {
-        if (constants::board::isInBounds({nx, ny}) && 
+        if (constants::board::isInBounds(nx, ny) && 
             emptyBoard[ny * constants::board::WIDTH + nx] == constants::symbol::FLOOR) {
             expand(emptyBoard, nx, ny, cells);
         }
