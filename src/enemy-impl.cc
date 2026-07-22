@@ -21,7 +21,7 @@ bool Enemy::isValidMove(const constants::Direction& dir) {
     int tx = x + dx;
     int ty = y + dy;
     if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
-    return floor.grid[ty][tx] == constants::symbol::FLOOR;
+    return floor.getGrid()[ty][tx] == constants::symbol::FLOOR;
 }
 
 void Enemy::move() {

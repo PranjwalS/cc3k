@@ -12,10 +12,9 @@ import <cmath>;
 import <memory>;
 import <iomanip>;
 
-
 void Game::nextFloor() {
     if (floorNum > numFloors) return;
-    int numChambers = floor.numChambers;
+    int numChambers = floor.getNumChambers();
     ++floorNum;
     floor = Floor(numChambers);
     removeAll();
@@ -28,8 +27,9 @@ bool Game::playerAttack(constants::Direction d) {
 
     int tx = player->getX() + dx;
     int ty = player->getY() + dy;
+    if (!constants::board::isInBounds({tx, ty})) return false;
 
-    int idx = floor.enemiesIndex[ty][tx];  // checks if enemy even exists
+    int idx = floor.getEnemiesIndex()[ty][tx];
 
     if (idx != -1) {
         Enemy* e = enemies[idx].get();
@@ -63,7 +63,7 @@ bool Game::playerAttack(constants::Direction d) {
             if (e->getRace() == constants::EnemyRace::Dragon) {
                 int nx = static_cast<Dragon*>(e)->getHoardX();
                 int ny = static_cast<Dragon*>(e)->getHoardY();
-                int gld_idx = floor.goldIndex[ny][nx];
+                int gld_idx = floor.getGoldIndex()[ny][nx];
                 Gold* gld = gold[gld_idx].get();
                 gld->toggleDragonGuarded();
             } else { e->onDeath(*player); }
@@ -137,8 +137,8 @@ bool Game::playerMove(constants::Direction dir) {
             if (dx == 0 && dy == 0) continue;
             int cx = nx + dx;
             int cy = ny + dy;
-            if (cx < 0 || cx >= constants::board::WIDTH || cy < 0 || cy >= constants::board::HEIGHT) continue;
-            int potionIdx = floor.potionsIndex[cy][cx];
+            if (!constants::board::isInBounds({cx, cy})) continue;
+            int potionIdx = floor.getPotionsIndex()[cy][cx];
             if (potionIdx == -1) continue;
             std::string name = knownPotions.count(potions[potionIdx]->getType()) ? potionTypeToStr(potions[potionIdx]->getType()) : "an unknown potion";
             seenPotions += (seenPotions.empty() ? "" : ", ") + name;
@@ -146,7 +146,7 @@ bool Game::playerMove(constants::Direction dir) {
     }
     if (!seenPotions.empty()) currentAction += " PC sees " + seenPotions + ".";
 
-    int gIdx = floor.goldIndex[ny][nx];
+    int gIdx = floor.getGoldIndex()[ny][nx];
     if (gIdx != -1) {
         Gold* g = gold[gIdx].get();
         if (!g->isDragonGuarded()) {
@@ -158,7 +158,7 @@ bool Game::playerMove(constants::Direction dir) {
         }
     }
 
-    if (floor.grid[ny][nx] == constants::symbol::STAIRS) {
+    if (floor.getGrid()[ny][nx] == constants::symbol::STAIRS) {
         player->applyPotion(0, -tempAtk, -tempDef); 
         tempAtk = 0;
         tempDef = 0;
@@ -176,8 +176,8 @@ void Game::usePotion(constants::Direction dir) {
     auto [dx, dy] = dirToPair(dir);
     int tx = player->getX() + dx;
     int ty = player->getY() + dy;
-    if (tx < 0 || tx >= constants::board::WIDTH || ty < 0 || ty >= constants::board::HEIGHT) return;
-    int idx = floor.potionsIndex[ty][tx];
+    if (!constants::board::isInBounds({tx, ty})) return;
+    int idx = floor.getPotionsIndex()[ty][tx];
     if (idx == -1) return;
     Potion* p = potions[idx].get();
     if (!p->isPermanent()) {
@@ -197,7 +197,7 @@ Chamber& Game::spawnPlayer() {
     Chamber& c = floor.chooseChamber();
     auto [x, y] = *c.randomEmptyCell();
     player->setPosition(x, y);
-    floor.grid[y][x] = constants::symbol::PLAYER;
+    floor.setGrid(x, y, constants::symbol::PLAYER);
     c.removeEmpty(x, y);
     currentAction = "Player character has spawned.";
     return c;
@@ -209,7 +209,7 @@ void Game::spawnStairs(const Chamber& playerChamber) {
         c = &floor.chooseChamber();
     } while (c == &playerChamber);
     auto [x, y] = *c->randomEmptyCell();
-    floor.grid[y][x] = constants::symbol::STAIRS;
+    floor.setGrid(x, y, constants::symbol::STAIRS);
     c->removeEmpty(x, y);
 }
 

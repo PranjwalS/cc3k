@@ -4,29 +4,41 @@ import constants;
 import chamber;
 import <vector>;
 import <iostream>;
+import <array>;
 
 using namespace constants;
 
 export class Floor {
-    public:
     int numChambers;
     std::vector<Chamber> chambers;
-    char grid[board::HEIGHT][board::WIDTH];
-    int enemiesIndex[board::HEIGHT][board::WIDTH];
-    int goldIndex[board::HEIGHT][board::WIDTH];
-    int potionsIndex[board::HEIGHT][board::WIDTH];
-    
+    std::array<std::array<char, board::WIDTH>, board::HEIGHT> grid;
+    std::array<std::array<int, board::WIDTH>, board::HEIGHT> enemiesIndex;
+    std::array<std::array<int, board::WIDTH>, board::HEIGHT> goldIndex;
+    std::array<std::array<int, board::WIDTH>, board::HEIGHT> potionsIndex;
 
     int stairX, stairY;
     char underPlayer = constants::symbol::FLOOR;   // previous char before @ moved on it
+    public:
 
     Floor(const int numChambers);
     Floor(Floor&& other);
     Floor& operator=(const Floor& other);
 
-    bool validSpawn(int x, int y);
+    int getNumChambers() const { return numChambers; }
+    const auto& getChambers() const { return chambers; }
+    const auto& getGrid() const { return grid; }
+    const auto& getEnemiesIndex() const { return enemiesIndex; }
+    const auto& getGoldIndex() const { return goldIndex; }
+    const auto& getPotionsIndex() const { return potionsIndex; }
+    int getStairX() const { return stairX; }
+    int getStairY() const { return stairY; }
+    int getUnderPlayer() const { return underPlayer; }
+
+    bool setGrid(int x, int y, char c);
+
+    bool validSpawn(int x, int y) const ;
     bool spawnCapacityReached() const;
-    bool isWalkable(int x, int y);
+    // bool isWalkable(int x, int y); unused
 
     void initChambers();
     Chamber& chooseChamber();

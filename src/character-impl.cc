@@ -10,11 +10,11 @@ bool Character::isValidMove(const constants::Direction& dir) {
     int tx = x + dx;
     int ty = y + dy;
     if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
-    return floor.grid[ty][tx] == constants::symbol::FLOOR || 
-           floor.grid[ty][tx] == constants::symbol::DOORWAY || 
-           floor.grid[ty][tx] == constants::symbol::PASSAGE || 
-           floor.grid[ty][tx] == itemToSymbol(constants::Item::Gold) || 
-           floor.grid[ty][tx] == constants::symbol::STAIRS ;
+    return floor.getGrid()[ty][tx] == constants::symbol::FLOOR || 
+           floor.getGrid()[ty][tx] == constants::symbol::DOORWAY || 
+           floor.getGrid()[ty][tx] == constants::symbol::PASSAGE || 
+           floor.getGrid()[ty][tx] == constants::symbol::GOLD || 
+           floor.getGrid()[ty][tx] == constants::symbol::STAIRS ;
 }
 
 void Character::changeHp(int amount) {

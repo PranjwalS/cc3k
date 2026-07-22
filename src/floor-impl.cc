@@ -52,6 +52,12 @@ Floor& Floor::operator=(const Floor& other) {
     return *this;
 }
 
+bool Floor::setGrid(int x, int y, char c) {
+    if (!constants::board::isInBounds({x, y})) return false;
+    grid[y][x] = c;
+    return true;
+}
+
 void expand(std::string &emptyBoard, int x, int y,
             bool (&cells)[constants::board::HEIGHT][constants::board::WIDTH]) {
     emptyBoard[y * constants::board::WIDTH + x] = 'x';
@@ -87,7 +93,7 @@ Chamber& Floor::chooseChamber() {
     return chambers.at(randomNum(0, numChambers - 1));
 }
 
-bool Floor::validSpawn(int x, int y) {
+bool Floor::validSpawn(int x, int y) const {
     return grid[y][x] == constants::symbol::FLOOR && goldIndex[y][x] == -1 && potionsIndex[y][x] == -1;
 }
 
