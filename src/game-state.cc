@@ -10,7 +10,12 @@ void Game::nextFloor() {
     floor = Floor(numChambers);
     removeAll();
     player->changeFloor(floor);
-    spawnAll();
+
+    if (maps.empty()) {
+        spawnAll();
+    } else {
+        useNextMap();
+    }
 }
 
 int Game::calcDamage(int atkVal, int defVal) const {

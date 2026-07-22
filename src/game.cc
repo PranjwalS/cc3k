@@ -14,6 +14,8 @@ import <vector>;
 import <algorithm>;
 import <memory>;
 import <set>;
+import <iostream>;
+import <optional>;
 
 export class Game {
     Floor floor;
@@ -23,6 +25,7 @@ export class Game {
     std::vector<std::unique_ptr<Gold>> gold;
     std::vector<std::unique_ptr<Potion>> potions;
     std::set<constants::PotionType> knownPotions;
+
     const int numFloors;
     int floorNum = 1;
     bool merchantsHostile = false;
@@ -32,16 +35,20 @@ export class Game {
     int tempDef = 0;
     std::string currentAction = "";
 
+    std::vector<std::string> maps;
+
     public:
 
     Game(const constants::PlayerRace race,
          const int numFloors = constants::board::NUM_FLOORS, 
-         const int numChambers = constants::board::NUM_CHAMBERS):
+         const int numChambers = constants::board::NUM_CHAMBERS,
+         std::vector<std::string> maps = {}):
             floor(numChambers), 
             player{newPlayer(race, floor)}, 
-            numFloors{numFloors} {
-        spawnAll();
-    }
+            numFloors{numFloors},
+            maps{maps} {
+                spawnAll();
+            }
     ~Game() = default;
 
     const Floor& getFloor() const { return floor; }
@@ -61,14 +68,15 @@ export class Game {
 
     Chamber& spawnPlayer();
     void spawnStairs(const Chamber& playerChamber);
-    void addGold(int amount, bool isHoard, Chamber& chamber, int x, int y);
-    void addEnemy(constants::EnemyRace race, Chamber& chamber, int x, int y);
-    void addPotion(constants::PotionType type, Chamber& chamber, int x, int y);
+    void addGold(int amount, bool isHoard, int x, int y, Chamber* chamber);
+    void addEnemy(constants::EnemyRace race, int x, int y, int hx, int hy, Chamber* chamber);
+    void addPotion(constants::PotionType type, int x, int y, Chamber* chamber);
     void spawnEnemies();
     void spawnPotions();
     void spawnGold();
     void spawnAll();
     void removeAll();
+    void useNextMap();
 
     bool playerMove(constants::Direction dir);
     bool playerAttack(constants::Direction dir);

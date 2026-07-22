@@ -114,7 +114,15 @@ export namespace constants {
         Halfling = 'L'
     };
     constexpr char enemyRaceToSymbol(const EnemyRace e) { return static_cast<char>(e); }
-
+    constexpr EnemyRace ENEMY_RACES[] = {
+        EnemyRace::Human,
+        EnemyRace::Dwarf,
+        EnemyRace::Elf,
+        EnemyRace::Orc,
+        EnemyRace::Merchant,
+        EnemyRace::Dragon,
+        EnemyRace::Halfling
+    };
     constexpr int NUM_ENEMY_RACES = 7;
 
     struct CharacterInfo {

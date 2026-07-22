@@ -3,6 +3,9 @@ import game;
 import <iostream>;
 import <string>;
 import <optional>;
+import <algorithm>;
+import <fstream>;
+import <vector>;
 
 std::optional<constants::PlayerRace> selectRace() {
     std::string cmd;
@@ -19,14 +22,38 @@ std::optional<constants::PlayerRace> selectRace() {
     return std::nullopt;
 }
 
+std::vector<std::string> readMaps(std::ifstream& s) {
+    std::vector<std::string> maps;
+
+    while (true) {
+        std::string map;
+        for (int h = 0; h < constants::board::HEIGHT; h++) {
+            std::string line;
+            std::getline(s, line);
+            if (s.eof()) {
+                return maps;
+            }
+            map += line;
+        }
+
+        maps.push_back(map);
+    }
+}
 
 int main(int argc, char* argv[]) {
+    std::vector<std::string> maps;
+    if (argc > 1) {
+        std::ifstream file(argv[1]);
+        maps = std::move(readMaps(file));
+    }
+
     std::string cmd1, cmd2;
 
     while (true) {
         auto playerRace = selectRace();
         if (!playerRace) return 0;
-        Game game(playerRace.value());
+        Game game(playerRace.value(), maps.empty() ? constants::board::NUM_FLOORS : maps.size(),
+                  constants::board::NUM_CHAMBERS, maps);
 
         while (!game.isOver()) {
             game.display(std::cout);
