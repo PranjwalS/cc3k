@@ -52,9 +52,7 @@ export class Drow : public Player {
 
 export class Vampire : public Player {
     public:
-    Vampire(Floor& f) : Player{constants::PlayerRace::Vampire, f} {
-        maxHp = constants::info(constants::PlayerRace::Vampire).value().maxHp;
-    }
+    Vampire(Floor& f) : Player{constants::PlayerRace::Vampire, f} {}
     void onHit(constants::EnemyRace race);
 };
 
