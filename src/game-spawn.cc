@@ -147,7 +147,7 @@ void Game::useNextMap() {
 
             bool isEnemy = isEnemySymbol(ch);
 
-            if (ch == static_cast<char>(constants::EnemyRace::Dragon)) {
+            if (ch == constants::symbol::DRAGON) {
                 auto opt = hoardFromDragonPos(map, x, y);
                 if (!opt) {
                     std::cerr << "Cannot find hoard from dragon position." << std::endl;
@@ -157,7 +157,7 @@ void Game::useNextMap() {
                 addEnemy(constants::EnemyRace::Dragon, x, y, hx, hy);
                 addGold(constants::goldPile::DRAGON_HOARD, true, hx, hy);
             } else if (isEnemy) { // non dragon enemies
-                auto race = static_cast<constants::EnemyRace>(ch);
+                auto race = symbolToEnemyRace(ch).value();
                 addEnemy(race, x, y);
             } else if ('0' <= ch && ch <= '5') { // potion
                 auto type = static_cast<constants::PotionType>(ch - '0');

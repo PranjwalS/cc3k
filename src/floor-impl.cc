@@ -108,7 +108,7 @@ bool Floor::spawnCapacityReached() const {
 
 void Floor::addEnemy(int x, int y, int index, constants::EnemyRace race) {
     enemiesIndex[y][x] = index;
-    grid[y][x] = static_cast<char>(race);
+    grid[y][x] = enemyRaceToSymbol(race);
 }
 
 void Floor::removeEnemy(int x, int y) {
