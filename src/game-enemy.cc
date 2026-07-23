@@ -19,6 +19,11 @@ void Game::enemyTurns() {
             e->move();
         }
     }
+    if (player->getRace() == constants::PlayerRace::Troll) {
+        int gainableHp = player->getMaxHp() - player->getHp();
+        int hpGain = std::min(constants::TROLL_REGEN, gainableHp);
+        if (hpGain > 0) currentAction += " PC regenerates " + std::to_string(hpGain) + " HP.";
+    }
     if (player->isAlive()) player->endTurn();
 }
 

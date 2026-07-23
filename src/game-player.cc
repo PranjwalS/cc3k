@@ -11,8 +11,12 @@ bool Game::playerAttack(constants::Direction d) {
 
     if (idx != -1) {
         Enemy* e = enemies[idx].get();
+        std::string enemySymbol(1, enemyRaceToSymbol(e->getRace()));
         // halfling chance of evasion — takes priority
-        if (e->evasionChance()) return true;
+        if (e->evasionChance()) {
+            currentAction = enemySymbol + " evades PC's attack.";
+            return true;
+        }
 
         // player hits
         int dmg = calcDamage(player->getAtk(), e->getDef());
@@ -24,10 +28,21 @@ bool Game::playerAttack(constants::Direction d) {
 
         e->takeDamage(dmg);
         player->onHit(e->getRace());
-        std::string enemySymbol(1, enemyRaceToSymbol(e->getRace()));
-        currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemySymbol 
-                        + " (" + std::to_string(e->getHp()) + " HP).";
+        currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemySymbol
+                        + " (" + std::to_string(e->getHp()) + " HP)";
 
+        if (player->getRace() == constants::PlayerRace::Vampire) {
+            if (e->getRace() == constants::EnemyRace::Dwarf) {
+                currentAction += ". PC has an allergic reaction and loses " 
+                              + std::to_string(constants::VAMPIRE_ALLERGY_HP_LOSS) + " HP";
+            } else {
+                currentAction += " and PC gains " 
+                              + std::to_string(constants::VAMPIRE_LIFESTEAL) + " HP";
+            }
+        }
+
+        currentAction += ".";
+        
         if (e->getRace() == constants::EnemyRace::Merchant) {
             merchantsHostile = true;
             for (auto& ptr : enemies) {
@@ -47,6 +62,13 @@ bool Game::playerAttack(constants::Direction d) {
                 gld->toggleDragonGuarded();
             } else { e->onDeath(*player); }
             player->onKill(e->getRace());
+
+            currentAction += " " + enemySymbol + " is slain";
+            if (player->getRace() == constants::PlayerRace::Goblin) {
+                currentAction += " and PC steals " 
+                                 + std::to_string(constants::GOBLIN_STEAL) + " Gold";
+            }
+            currentAction += ".";
         }
         return true;
     }
