@@ -4,6 +4,7 @@ import <optional>;
 import <utility>;
 import <string_view>;
 import <array>;
+import <climits>;
 
 // Returns value of key in table of key-value pairs
 template <typename Key, typename Value, std::size_t N>
@@ -141,17 +142,17 @@ export namespace constants {
 
     struct CharacterInfo {
         std::string_view name;
-        int hp, atk, def;
+        int hp, maxHp, atk, def;
     };
 
     struct PlayerInfo : public CharacterInfo { std::string_view command; };
 
     constexpr std::array PLAYER_DATA = std::to_array<std::pair<PlayerRace, PlayerInfo>>({
-        { PlayerRace::Shade,    {"Shade", 125, 25, 25, command::player::SHADE} },
-        { PlayerRace::Drow,     {"Drow", 150, 25, 15, command::player::DROW} },
-        { PlayerRace::Vampire,  {"Vampire", 50, 25, 25, command::player::VAMPIRE} },
-        { PlayerRace::Troll,    {"Troll", 120, 25, 15, command::player::TROLL} },
-        { PlayerRace::Goblin,   {"Goblin", 110, 15, 20, command::player::GOBLIN} }
+        { PlayerRace::Shade,    {"Shade", 125, 125, 25, 25, command::player::SHADE} },
+        { PlayerRace::Drow,     {"Drow", 150, 125, 25, 15, command::player::DROW} },
+        { PlayerRace::Vampire,  {"Vampire", 50, INT_MAX, 25, 25, command::player::VAMPIRE} },
+        { PlayerRace::Troll,    {"Troll", 120, 120, 25, 15, command::player::TROLL} },
+        { PlayerRace::Goblin,   {"Goblin", 110, 110, 15, 20, command::player::GOBLIN} }
     });
 
     constexpr int NUM_PLAYER_RACES = PLAYER_DATA.size();
@@ -168,13 +169,13 @@ export namespace constants {
     struct EnemyInfo : public CharacterInfo { char symbol; };
 
     constexpr std::array ENEMY_DATA = std::to_array<std::pair<EnemyRace, EnemyInfo>>({
-        { EnemyRace::Human,     {"Human", 140, 20, 20, symbol::HUMAN} },
-        { EnemyRace::Dwarf,     {"Dwarf", 100, 20, 30, symbol::DWARF} },
-        { EnemyRace::Elf,       {"Elf", 140, 30, 10, symbol::ELF} },
-        { EnemyRace::Orc,       {"Orc", 180, 30, 25, symbol::ORC} },
-        { EnemyRace::Merchant,  {"Merchant", 30, 70, 5, symbol::MERCHANT} },
-        { EnemyRace::Halfling,  {"Halfling", 100, 15, 20, symbol::HALFLING} },
-        { EnemyRace::Dragon,    {"Dragon", 150, 20, 20, symbol::DRAGON} }
+        { EnemyRace::Human,     {"Human", 140, 140, 20, 20, symbol::HUMAN} },
+        { EnemyRace::Dwarf,     {"Dwarf", 100, 100, 20, 30, symbol::DWARF} },
+        { EnemyRace::Elf,       {"Elf", 140, 140, 30, 10, symbol::ELF} },
+        { EnemyRace::Orc,       {"Orc", 180, 180, 30, 25, symbol::ORC} },
+        { EnemyRace::Merchant,  {"Merchant", 30, 30, 70, 5, symbol::MERCHANT} },
+        { EnemyRace::Halfling,  {"Halfling", 100, 100, 15, 20, symbol::HALFLING} },
+        { EnemyRace::Dragon,    {"Dragon", 150, 150, 20, 20, symbol::DRAGON} }
     });
 
     constexpr int NUM_ENEMY_RACES = ENEMY_DATA.size();

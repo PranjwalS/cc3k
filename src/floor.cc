@@ -41,7 +41,6 @@ export class Floor {
 
     bool validSpawn(int x, int y) const ;
     bool spawnCapacityReached() const;
-    // bool isWalkable(int x, int y); unused
 
     Chamber& chooseChamber();
 
