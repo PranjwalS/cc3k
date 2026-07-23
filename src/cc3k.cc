@@ -1,5 +1,6 @@
 import constants;
 import game;
+import getch;
 import <iostream>;
 import <string>;
 import <optional>;
@@ -40,11 +41,28 @@ std::vector<std::string> readMaps(std::ifstream& s) {
     }
 }
 
+void input(std::string& s, bool useGetch=false) {
+    if (useGetch) {
+        char c = getch();
+        s = c;
+    } else {
+        std::cin >> s;
+    }
+}
+
 int main(int argc, char* argv[]) {
     std::vector<std::string> maps;
+    bool useGetch = false;
+
     if (argc > 1) {
         std::ifstream file(argv[1]);
-        maps = std::move(readMaps(file));
+        if (file.good()) maps = std::move(readMaps(file));
+
+        for (int i = file.good() + 1; i < std::min(argc, 3); i++) {
+            if (std::string(argv[i]) == "getch") {
+                useGetch = true;
+            }
+        }
     }
 
     std::string cmd1, cmd2;
@@ -59,19 +77,18 @@ int main(int argc, char* argv[]) {
             game.display(std::cout);
             game.setAction("");
 
-            std::cin >> cmd1;
-
+            input(cmd1, useGetch);
             if (cmd1 == constants::command::ATTACK ||
                 cmd1 == constants::command::USE_POTION) {
-                std::cin >> cmd2;
-                constants::Direction dir = cmdToDir(cmd2);
+                input(cmd2, useGetch);
+                constants::Direction dir = cmd2.size() == 1 ? cmdToDir(szxcToDir(cmd2)) : cmdToDir(cmd2);
                 if (cmd1 == constants::command::ATTACK) {
                     game.playerAttack(dir);
                 } else {
                     game.usePotion(dir);
                 }
-            } else if (isDirection(cmd1)) {
-                game.playerMove(cmdToDir(cmd1));
+            } else if (isDirection(cmd1) || isDirection(szxcToDir(cmd1))) {
+                game.playerMove(cmd1.size() == 1 ? cmdToDir(szxcToDir(cmd1)) : cmdToDir(cmd1));
             } else if (cmd1 == constants::command::FREEZE) {
                 game.toggleFreeze();
             } else if (cmd1 == constants::command::RESTART) {
@@ -90,8 +107,8 @@ int main(int argc, char* argv[]) {
             std::cout << "You lose..." << std::endl;
         }
 
-        std::cout << "Play again huh? (y/n): ";
-        std::cin >> cmd1;
+        std::cout << "Play again huh? (y/n): " << std::endl;
+        input(cmd1, useGetch);
         if (cmd1 != "y") {
             std::cout << "Closing game" << std::endl;
             return 0;

@@ -1,3 +1,4 @@
+src/getch.cc
 src/random.cc
 src/constants.cc
 src/gold.cc
