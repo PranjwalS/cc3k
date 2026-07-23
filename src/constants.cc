@@ -133,7 +133,7 @@ export namespace constants {
         { symbol::DOORWAY,          colour::RESET },
         { symbol::PASSAGE,          colour::RESET },
         { symbol::FLOOR,            colour::RESET },
-        { symbol::STAIRS,           colour::RESET }
+        { symbol::STAIRS,           colour::BLUE }
     });
 
     enum class PlayerRace { Shade, Drow, Vampire, Troll, Goblin };
