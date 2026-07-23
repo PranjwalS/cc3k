@@ -18,6 +18,9 @@ export class Floor {
 
     int stairX, stairY;
     char underPlayer = constants::symbol::FLOOR;   // previous char before @ moved on it
+
+    void initChambers();
+    
     public:
 
     Floor(const int numChambers);
@@ -40,7 +43,6 @@ export class Floor {
     bool spawnCapacityReached() const;
     // bool isWalkable(int x, int y); unused
 
-    void initChambers();
     Chamber& chooseChamber();
 
     void addEnemy(int x, int y, int index, constants::EnemyRace e);

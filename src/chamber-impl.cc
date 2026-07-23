@@ -10,7 +10,6 @@ Chamber::Chamber(bool (&other)[constants::board::HEIGHT][constants::board::WIDTH
             occupancy[i][j] = other[i][j];
 
             if (occupancy[i][j]) {
-                occupiedCells.emplace_back(j, i);
                 emptyCells.emplace(j, i);
             }
         }

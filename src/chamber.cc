@@ -8,14 +8,12 @@ import constants;
 
 export class Chamber {
     bool occupancy[constants::board::HEIGHT][constants::board::WIDTH];
-    std::vector<std::pair<int, int>> occupiedCells;
     std::set<std::pair<int, int>> emptyCells;
 
     public:
     Chamber() = default;
     Chamber(bool (&other)[constants::board::HEIGHT][constants::board::WIDTH]);
 
-    const std::vector<std::pair<int, int>>& getOccupiedCells() const { return occupiedCells; };
     const std::set<std::pair<int, int>>& getEmptyCells() const { return emptyCells; };
 
     void removeEmpty(int x, int y);

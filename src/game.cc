@@ -37,6 +37,17 @@ export class Game {
 
     std::vector<std::string> maps;
 
+    int calcDamage(int atkVal, int defVal) const;
+
+    Chamber& spawnPlayer();
+    void spawnStairs(const Chamber& playerChamber);
+    void spawnEnemies();
+    void spawnPotions();
+    void spawnGold();
+
+    void displayAction(std::ostream& os) const;
+    void displayInfo(std::ostream& os) const;
+
     public:
 
     Game(const constants::PlayerRace race,
@@ -54,9 +65,6 @@ export class Game {
     const Floor& getFloor() const { return floor; }
     const std::unique_ptr<Player>& getPlayer() const { return player; }
     const std::vector<Chamber>& getChambers() const { return chambers; }
-        
-    void setAction(const std::string& action) { currentAction = action; }
-    void appendAction(const std::string& action) { currentAction += action; }
 
     int getFloorNum() const { return floorNum; }
     int getNumFloors() const { return numFloors; }
@@ -64,19 +72,18 @@ export class Game {
     bool areMerchantsHostile() const { return merchantsHostile; }
     bool isFrozen() const { return frozen; }
 
-    void nextFloor();
+    void setAction(const std::string& action) { currentAction = action; }
+    void appendAction(const std::string& action) { currentAction += action; }
 
-    Chamber& spawnPlayer();
-    void spawnStairs(const Chamber& playerChamber);
+    void nextFloor();
+    void useNextMap();
+    
     void addGold(int amount, bool isHoard, int x, int y, Chamber* chamber);
     void addEnemy(constants::EnemyRace race, int x, int y, int hx, int hy, Chamber* chamber);
     void addPotion(constants::PotionType type, int x, int y, Chamber* chamber);
-    void spawnEnemies();
-    void spawnPotions();
-    void spawnGold();
+    
     void spawnAll();
     void removeAll();
-    void useNextMap();
 
     bool playerMove(constants::Direction dir);
     bool playerAttack(constants::Direction dir);
@@ -84,15 +91,11 @@ export class Game {
     void enemyTurns();
     void enemyAttack(Enemy& e);
 
-    int calcDamage(int atkVal, int defVal) const;
-
     void toggleFreeze() { frozen = !frozen; }
     void quitGame();
     bool isOver() const;
     bool isWon() const;
     
-    void displayAction(std::ostream& os) const;
-    void displayInfo(std::ostream& os) const;
     void displayScore(std::ostream& os) const;
     void display(std::ostream& os) const;
 
