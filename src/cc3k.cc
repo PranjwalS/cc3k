@@ -10,7 +10,7 @@ import <vector>;
 
 std::optional<constants::PlayerRace> selectRace() {
     std::string cmd;
-    std::cout << "Choose player race: " << std::endl;
+    std::cout << "Choose player race: " ;
     while (std::cin >> cmd) {
         if (isPlayerRaceCmd(cmd)) {
             return cmdToPlayerRace(cmd).value();
@@ -18,6 +18,7 @@ std::optional<constants::PlayerRace> selectRace() {
             return std::nullopt;
         } else {
             std::cout << "Please choose valid player race" << std::endl;
+            std::cout << "Choose player race: " ;
         }
     }
     return std::nullopt;
@@ -74,6 +75,7 @@ int main(int argc, char* argv[]) {
                   constants::board::NUM_CHAMBERS, maps);
 
         while (!game.isOver()) {
+            std::cout << '\n';
             game.display(std::cout);
             game.setAction("");
 
@@ -96,6 +98,9 @@ int main(int argc, char* argv[]) {
             } else if (cmd1 == constants::command::QUIT) {
                 std::cout << "Closing game" << std::endl;
                 return 0;
+            } else {
+                std::cout << "Invalid command!" << std::endl;
+                continue;
             }
             game.enemyTurns();
         }
