@@ -26,11 +26,8 @@ bool Enemy::isValidMove(const constants::Direction& dir) {
 
 void Enemy::move() {
     std::vector<constants::Direction> legal;
-    for (int i = 0; i < constants::NUM_DIRECTIONS; i++) {
-        constants::Direction n = static_cast<constants::Direction>(i);
-        if (isValidMove(n)) {
-            legal.push_back(n);
-        }
+    for (const auto& [dir, info] : constants::DIRECTION_DATA) {
+        if (isValidMove(dir)) legal.push_back(dir);
     }
 
     if (legal.size() == 0) return;

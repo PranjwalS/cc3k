@@ -124,8 +124,7 @@ void Game::removeAll() {
 }
 
 std::optional<std::pair<int, int>> hoardFromDragonPos(std::string& map, int x, int y) {
-    for (int d = 0; d < constants::NUM_DIRECTIONS; d++) {
-        auto dir = static_cast<constants::Direction>(d);
+    for (const auto& [dir, info] : constants::DIRECTION_DATA) {
         auto [px, py] = std::make_pair(x, y) + dir;
         int idx = py * constants::board::WIDTH + px;
 
