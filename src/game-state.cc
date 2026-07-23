@@ -60,7 +60,7 @@ void Game::displayScore(std::ostream& os) const {
     if (player->getRace() == constants::PlayerRace::Shade) {
         score = static_cast<int>(score * constants::multiplier::SHADE_SCORE);
     }
-    os << "Score: " << score;
+    os << "Score: " << score << "\n";
 }
 
 void Game::display(std::ostream& os) const {
