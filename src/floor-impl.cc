@@ -94,7 +94,9 @@ Chamber& Floor::chooseChamber() {
 }
 
 bool Floor::validSpawn(int x, int y) const {
-    return grid[y][x] == constants::symbol::FLOOR && goldIndex[y][x] == -1 && potionsIndex[y][x] == -1;
+    return grid[y][x] == constants::symbol::FLOOR && 
+                         goldIndex[y][x] == -1 && 
+                         potionsIndex[y][x] == -1;
 }
 
 bool Floor::spawnCapacityReached() const {

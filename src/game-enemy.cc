@@ -25,14 +25,16 @@ void Game::enemyTurns() {
 // called by enemyTurns
 void Game::enemyAttack(Enemy& e) {      
     // elf double attack unless drow
-    int attacks = (e.getRace() == constants::EnemyRace::Elf && player->getRace() != constants::PlayerRace::Drow) ? 2 : 1;
+    int attacks = (e.getRace() == constants::EnemyRace::Elf && 
+                                  player->getRace() != constants::PlayerRace::Drow) ? 2 : 1;
     std::string enemySymbol(1, enemyRaceToSymbol(e.getRace()));
 
     for (int i = 0; i < attacks; i++) {
         if (randomChance(constants::probability::ENEMY_MISS)) {
             int dmg = calcDamage(e.getAtk(), player->getDef());
             player->takeDamage(dmg);
-            currentAction += " " + enemySymbol + " deals " + std::to_string(dmg) + " damage to PC.";
+            currentAction += " " + enemySymbol + " deals " 
+                             + std::to_string(dmg) + " damage to PC.";
         }
     }
 }

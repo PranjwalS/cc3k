@@ -25,7 +25,8 @@ bool Game::playerAttack(constants::Direction d) {
         e->takeDamage(dmg);
         player->onHit(e->getRace());
         std::string enemySymbol(1, enemyRaceToSymbol(e->getRace()));
-        currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemySymbol + " (" + std::to_string(e->getHp()) + " HP).";
+        currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemySymbol 
+                        + " (" + std::to_string(e->getHp()) + " HP).";
 
         if (e->getRace() == constants::EnemyRace::Merchant) {
             merchantsHostile = true;

@@ -377,7 +377,8 @@ export constexpr std::string_view dirToStr(const Direction dir) {
     return data ? data->string : "";
 }
 
-export constexpr std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir) {
+export constexpr std::pair<int, int> operator+(const std::pair<int, int> pos, 
+                                               const Direction dir) {
     auto [dx, dy] = dirToPair(dir);
     return {pos.first + dx, pos.second + dy};
 }

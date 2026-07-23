@@ -7,7 +7,8 @@ void Game::addGold(int amount, bool isHoard, int x, int y, Chamber *chamber=null
     if (chamber) chamber->removeEmpty(x, y);
 }
 
-void Game::addEnemy(constants::EnemyRace race, int x, int y, int hx=0, int hy=0, Chamber *chamber=nullptr) {
+void Game::addEnemy(constants::EnemyRace race, int x, int y, 
+                    int hx=0, int hy=0, Chamber *chamber=nullptr) {
     enemies.emplace_back(newEnemy(race, floor, hx, hy));
     int enemyIdx = enemies.size() - 1;
     floor.addEnemy(x, y, enemyIdx, race);

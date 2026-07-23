@@ -9,7 +9,7 @@ bool Character::isValidMove(const constants::Direction& dir) {
     auto [dx, dy] = dirToPair(dir);
     int tx = x + dx;
     int ty = y + dy;
-    if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
+    if (!constants::board::isInBounds(tx, ty)) return false;
     return floor.getGrid()[ty][tx] == constants::symbol::FLOOR || 
            floor.getGrid()[ty][tx] == constants::symbol::DOORWAY || 
            floor.getGrid()[ty][tx] == constants::symbol::PASSAGE || 
