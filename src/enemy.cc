@@ -15,7 +15,7 @@ export class Enemy : public Character {
     public:
 
     Enemy(constants::EnemyRace race, Floor& f, bool hostile = true) :
-        Character{constants::ENEMY_DATA.at(race), f}, race{race}, hostile{hostile} {}
+        Character{constants::info(race).value(), f}, race{race}, hostile{hostile} {}
 
     virtual ~Enemy() = default;
 
@@ -61,7 +61,8 @@ export class Dragon : public Enemy {
     public:
     int getHoardX() const { return hoardX; }
     int getHoardY() const { return hoardY; }
-    Dragon(Floor& f, int hx, int hy) : Enemy{constants::EnemyRace::Dragon, f}, hoardX{hx}, hoardY{hy} {}
+    Dragon(Floor& f, int hx, int hy) : 
+        Enemy{constants::EnemyRace::Dragon, f}, hoardX{hx}, hoardY{hy} {}
     virtual void move();
     void onDeath(Player& player);
 };
@@ -73,4 +74,5 @@ export class Halfling : public Enemy {
 };
 
 export constants::EnemyRace randomEnemy();
-export std::unique_ptr<Enemy> newEnemy(constants::EnemyRace race, Floor& floor, int dragonHoardX = 0, int dragonHoardY = 0);
+export std::unique_ptr<Enemy> newEnemy(constants::EnemyRace race, Floor& floor, 
+                                       int dragonHoardX = 0, int dragonHoardY = 0);

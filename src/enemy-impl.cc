@@ -20,17 +20,14 @@ bool Enemy::isValidMove(const constants::Direction& dir) {
     auto [dx, dy] = dirToPair(dir);
     int tx = x + dx;
     int ty = y + dy;
-    if (tx < 0 || tx > constants::board::MAX_X || ty < 0 || ty > constants::board::MAX_Y) return false;
+    if (!constants::board::isInBounds(tx, ty)) return false;
     return floor.getGrid()[ty][tx] == constants::symbol::FLOOR;
 }
 
 void Enemy::move() {
     std::vector<constants::Direction> legal;
-    for (int i = 0; i < constants::NUM_DIRECTIONS; i++) {
-        constants::Direction n = static_cast<constants::Direction>(i);
-        if (isValidMove(n)) {
-            legal.push_back(n);
-        }
+    for (const auto& [dir, info] : constants::DIRECTION_DATA) {
+        if (isValidMove(dir)) legal.push_back(dir);
     }
 
     if (legal.size() == 0) return;
@@ -70,7 +67,8 @@ constants::EnemyRace randomEnemy() {
     return ENEMIES[idx].race;
 }
 
-std::unique_ptr<Enemy> newEnemy(constants::EnemyRace race, Floor& f, int dragonHoardX, int dragonHoardY) {
+std::unique_ptr<Enemy> newEnemy(constants::EnemyRace race, Floor& f, 
+                                int dragonHoardX, int dragonHoardY) {
     switch (race) {
         case constants::EnemyRace::Human:
             return std::make_unique<Human>(f);

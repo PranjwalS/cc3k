@@ -94,7 +94,9 @@ Chamber& Floor::chooseChamber() {
 }
 
 bool Floor::validSpawn(int x, int y) const {
-    return grid[y][x] == constants::symbol::FLOOR && goldIndex[y][x] == -1 && potionsIndex[y][x] == -1;
+    return grid[y][x] == constants::symbol::FLOOR && 
+                         goldIndex[y][x] == -1 && 
+                         potionsIndex[y][x] == -1;
 }
 
 bool Floor::spawnCapacityReached() const {
@@ -106,7 +108,7 @@ bool Floor::spawnCapacityReached() const {
 
 void Floor::addEnemy(int x, int y, int index, constants::EnemyRace race) {
     enemiesIndex[y][x] = index;
-    grid[y][x] = static_cast<char>(race);
+    grid[y][x] = enemyRaceToSymbol(race);
 }
 
 void Floor::removeEnemy(int x, int y) {
@@ -122,7 +124,7 @@ void Floor::moveEnemy(int px, int py, int nx, int ny) {
 
 void Floor::addPotion(int x, int y, int index) {
     potionsIndex[y][x] = index;
-    grid[y][x] = itemToSymbol(constants::Item::Potion);
+    grid[y][x] = constants::symbol::POTION;
 }
 
 void Floor::removePotion(int x, int y) {
@@ -132,7 +134,7 @@ void Floor::removePotion(int x, int y) {
 
 void Floor::addGold(int x, int y, int index) {
     goldIndex[y][x] = index;
-    grid[y][x] = itemToSymbol(constants::Item::Gold);
+    grid[y][x] = constants::symbol::GOLD;
 }
 
 void Floor::removeGold(int x, int y) {

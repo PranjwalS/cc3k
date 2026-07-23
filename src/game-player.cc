@@ -25,7 +25,8 @@ bool Game::playerAttack(constants::Direction d) {
         e->takeDamage(dmg);
         player->onHit(e->getRace());
         std::string enemySymbol(1, enemyRaceToSymbol(e->getRace()));
-        currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemySymbol + " (" + std::to_string(e->getHp()) + " HP).";
+        currentAction = "PC deals " + std::to_string(dmg) + " damage to " + enemySymbol 
+                        + " (" + std::to_string(e->getHp()) + " HP).";
 
         if (e->getRace() == constants::EnemyRace::Merchant) {
             merchantsHostile = true;
@@ -58,7 +59,7 @@ bool Game::playerMove(constants::Direction dir) {
     if (!player->move(dir)) return false;
     int nx = player->getX();
     int ny = player->getY();
-    currentAction = "PC moves " + dirToStr(dir) + ".";
+    currentAction = "PC moves " + std::string(dirToStr(dir)) + ".";
 
     std::string seenPotions = "";
     for (int dy = -1; dy <= 1; dy++) {
@@ -69,7 +70,12 @@ bool Game::playerMove(constants::Direction dir) {
             if (!constants::board::isInBounds(cx, cy)) continue;
             int potionIdx = floor.getPotionsIndex()[cy][cx];
             if (potionIdx == -1) continue;
-            std::string name = knownPotions.count(potions[potionIdx]->getType()) ? potionTypeToStr(potions[potionIdx]->getType()) : "an unknown potion";
+            std::string name;
+            if (knownPotions.count(potions[potionIdx]->getType())) {
+                name = std::string(potionTypeToStr(potions[potionIdx]->getType()));
+            } else {
+                name = "an unknown potion";
+            }
             seenPotions += (seenPotions.empty() ? "" : ", ") + name;
         }
     }
@@ -92,7 +98,7 @@ bool Game::playerMove(constants::Direction dir) {
         tempAtk = 0;
         tempDef = 0;
         nextFloor();
-        currentAction = " PC descends to floor " + std::to_string(floorNum) + ".";
+        currentAction = "PC descends to floor " + std::to_string(floorNum) + ".";
         return true;
     }
 
@@ -114,7 +120,7 @@ void Game::usePotion(constants::Direction dir) {
     }
 
     player->applyPotion(p->getHpMod(), p->getAtkMod(), p->getDefMod());
-    std::string potionName = potionTypeToStr(p->getType());
+    std::string potionName = std::string(potionTypeToStr(p->getType()));
     knownPotions.insert(p->getType());
     floor.removePotion(tx, ty);
     playerMove(dir);

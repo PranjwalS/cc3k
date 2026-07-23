@@ -20,6 +20,8 @@ export class Chamber {
 
     void removeEmpty(int x, int y);
     bool contains(int x, int y) const;
-    std::optional<std::pair<std::pair<int, int>, constants::Direction>> randomHoard() const; // for dragon
+    // Returns random empty cell and a direction representing a cell next to the empty cell
+    // in the given direction: used for dragon spawning logic
+    std::optional<std::pair<std::pair<int, int>, constants::Direction>> randomHoard() const;
     std::optional<std::pair<int, int>> randomEmptyCell() const;
 };

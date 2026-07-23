@@ -2,10 +2,26 @@ export module constants;
 
 import <optional>;
 import <utility>;
-import <string>;
 import <string_view>;
 import <array>;
-import <unordered_map>;
+
+// Returns value of key in table of key-value pairs
+template <typename Key, typename Value, std::size_t N>
+constexpr std::optional<Value> tableLookup(const std::array<std::pair<Key, Value>, N>& table, 
+                                           const Key key) {
+    for (const auto& [k, v] : table)
+        if (k == key) return v;
+    return std::nullopt;
+}
+
+// Returns key in table of key-value pairs given the value of one member
+template <typename Key, typename Value, std::size_t N, typename Field>
+constexpr std::optional<Key> reverseLookup(const std::array<std::pair<Key, Value>, N>& table,
+                                           Field Value::* member, const Field& value) {
+    for (const auto& [k, v] : table)
+        if (v.*member == value) return k;
+    return std::nullopt;
+}
 
 export namespace constants {
     // Board features
@@ -17,7 +33,7 @@ export namespace constants {
         // Maximum x/y positions: DO NOT MODIFY
         constexpr int MAX_Y = HEIGHT - 1;
         constexpr int MAX_X = WIDTH - 1;
-
+ 
         constexpr int NUM_FLOORS = 5;
         constexpr int NUM_CHAMBERS = 5;
 
@@ -41,31 +57,6 @@ export namespace constants {
         constexpr std::string_view PURPLE        = "\033[0;35m";
         constexpr std::string_view CYAN          = "\033[0;36m";
         constexpr std::string_view WHITE         = "\033[0;37m";
-
-        // Game symbol colours:
-        // Player
-        constexpr std::string_view PLAYER = BLUE;
-
-        // Items
-        constexpr std::string_view GOLD = YELLOW;
-        constexpr std::string_view POTION = GREEN;
-
-        // Environment
-        constexpr std::string_view WALL = RESET;
-        constexpr std::string_view FLOOR = RESET;
-        constexpr std::string_view PASSAGE = RESET;
-        constexpr std::string_view DOORWAY = RESET;
-        constexpr std::string_view EMPTY = RESET;
-        constexpr std::string_view STAIRS = BLUE;
-
-        // Enemies
-        constexpr std::string_view HUMAN = RED;
-        constexpr std::string_view DWARF = RED;
-        constexpr std::string_view ELF = RED;
-        constexpr std::string_view ORC = RED;
-        constexpr std::string_view MERCHANT = RED;
-        constexpr std::string_view HALFLING = RED;
-        constexpr std::string_view DRAGON = RED;
     }
 
     constexpr int NUM_POTIONS = 10;
@@ -89,87 +80,31 @@ export namespace constants {
             constexpr std::string_view SOUTH_EAST = "se";
             constexpr std::string_view SOUTH_WEST = "sw";
         }
-        // Player commands stored in PlayerRace enum class
+
+        namespace player {
+            constexpr std::string_view SHADE = "s";
+            constexpr std::string_view DROW = "d";
+            constexpr std::string_view VAMPIRE = "v";
+            constexpr std::string_view TROLL = "t";
+            constexpr std::string_view GOBLIN = "g";
+        }
     }
-
-    // Player Races : Command
-    enum class PlayerRace : char {
-        Shade='s',
-        Drow='d',
-        Vampire='v',
-        Troll='t',
-        Goblin='g'
-    };
-
-    constexpr int NUM_PLAYER_RACES = 5;
-
-    // Enemy Races : Symbol
-    enum class EnemyRace : char {
-        Human = 'H',
-        Dwarf = 'W',
-        Elf = 'E',
-        Orc = 'O',
-        Merchant = 'M',
-        Dragon = 'D',
-        Halfling = 'L'
-    };
-    constexpr char enemyRaceToSymbol(const EnemyRace e) { return static_cast<char>(e); }
-    constexpr EnemyRace ENEMY_RACES[] = {
-        EnemyRace::Human,
-        EnemyRace::Dwarf,
-        EnemyRace::Elf,
-        EnemyRace::Orc,
-        EnemyRace::Merchant,
-        EnemyRace::Dragon,
-        EnemyRace::Halfling
-    };
-    constexpr int NUM_ENEMY_RACES = 7;
-
-    struct CharacterInfo {
-        std::string_view name;
-        int hp, atk, def;
-    };
-
-    const std::unordered_map<PlayerRace, CharacterInfo> PLAYER_DATA = {
-        { PlayerRace::Shade,    {"Shade", 125, 25, 25} },
-        { PlayerRace::Drow,     {"Drow", 150, 25, 15} },
-        { PlayerRace::Vampire,  {"Vampire", 50, 25, 25} },
-        { PlayerRace::Troll,    {"Troll", 120, 25, 15} },
-        { PlayerRace::Goblin,   {"Goblin", 110, 15, 20} }
-    };
-
-    const std::unordered_map<EnemyRace, CharacterInfo> ENEMY_DATA = {
-        { EnemyRace::Human,     {"Human", 140, 20, 20} },
-        { EnemyRace::Dwarf,     {"Dwarf", 100, 20, 30} },
-        { EnemyRace::Elf,       {"Elf", 140, 30, 10} },
-        { EnemyRace::Orc,       {"Orc", 180, 30, 25} },
-        { EnemyRace::Merchant,  {"Merchant", 30, 70, 5} },
-        { EnemyRace::Halfling,  {"Halfling", 100, 15, 20} },
-        { EnemyRace::Dragon,    {"Dragon", 150, 20, 20} }
-    };
-
-    // Item : Symbol
-    enum class Item : char {
-        Gold = 'G',
-        Potion = 'P'
-    };
-    constexpr char itemToSymbol(const Item i) { return static_cast<char>(i); }
 
     namespace symbol {
         constexpr char PLAYER = '@';
 
         // Enemies
-        constexpr char HUMAN = enemyRaceToSymbol(EnemyRace::Human);
-        constexpr char DWARF = enemyRaceToSymbol(EnemyRace::Dwarf);
-        constexpr char ELF = enemyRaceToSymbol(EnemyRace::Elf);
-        constexpr char ORC = enemyRaceToSymbol(EnemyRace::Orc);
-        constexpr char MERCHANT = enemyRaceToSymbol(EnemyRace::Merchant);
-        constexpr char HALFLING = enemyRaceToSymbol(EnemyRace::Halfling);
-        constexpr char DRAGON = enemyRaceToSymbol(EnemyRace::Dragon);
+        constexpr char HUMAN = 'H';
+        constexpr char DWARF = 'W';
+        constexpr char ELF = 'E';
+        constexpr char ORC = 'O';
+        constexpr char MERCHANT = 'M';
+        constexpr char HALFLING = 'L';
+        constexpr char DRAGON = 'D';
 
         // Items
-        constexpr char GOLD = itemToSymbol(Item::Gold);
-        constexpr char POTION = itemToSymbol(Item::Potion);
+        constexpr char GOLD = 'G';
+        constexpr char POTION = 'P';
 
         // Environment
         constexpr char VERTICAL_WALL = '|';
@@ -182,15 +117,45 @@ export namespace constants {
         constexpr char EMPTY = '\0';
     }
 
-    // Amount of gold in each type of pile
-    namespace goldPile {
-        constexpr int SMALL = 1;
-        constexpr int NORMAL = 2;
-        constexpr int MERCHANT_HOARD = 4;
-        constexpr int DRAGON_HOARD = 6;
-    }
+    constexpr std::array SYMBOL_COLOURS = std::to_array<std::pair<char, std::string_view>>({
+        { symbol::PLAYER,           colour::BLUE },
+        { symbol::HUMAN,            colour::RED },
+        { symbol::DWARF,            colour::RED },
+        { symbol::ELF,              colour::RED },
+        { symbol::ORC,              colour::RED },
+        { symbol::MERCHANT,         colour::RED },
+        { symbol::HALFLING,         colour::RED },
+        { symbol::DRAGON,           colour::RED },
+        { symbol::GOLD,             colour::YELLOW },
+        { symbol::POTION,           colour::GREEN },
+        { symbol::VERTICAL_WALL,    colour::RESET },
+        { symbol::HORIZONTAL_WALL,  colour::RESET },
+        { symbol::DOORWAY,          colour::RESET },
+        { symbol::PASSAGE,          colour::RESET },
+        { symbol::FLOOR,            colour::RESET },
+        { symbol::STAIRS,           colour::BLUE }
+    });
 
-    // Player behaviour constants
+    enum class PlayerRace { Shade, Drow, Vampire, Troll, Goblin };
+    enum class EnemyRace { Human, Dwarf, Elf, Orc, Merchant, Halfling, Dragon };
+
+    struct CharacterInfo {
+        std::string_view name;
+        int hp, atk, def;
+    };
+
+    struct PlayerInfo : public CharacterInfo { std::string_view command; };
+
+    constexpr std::array PLAYER_DATA = std::to_array<std::pair<PlayerRace, PlayerInfo>>({
+        { PlayerRace::Shade,    {"Shade", 125, 25, 25, command::player::SHADE} },
+        { PlayerRace::Drow,     {"Drow", 150, 25, 15, command::player::DROW} },
+        { PlayerRace::Vampire,  {"Vampire", 50, 25, 25, command::player::VAMPIRE} },
+        { PlayerRace::Troll,    {"Troll", 120, 25, 15, command::player::TROLL} },
+        { PlayerRace::Goblin,   {"Goblin", 110, 15, 20, command::player::GOBLIN} }
+    });
+
+    constexpr int NUM_PLAYER_RACES = PLAYER_DATA.size();
+
     // HP gained when a vampire attacks an enemy
     constexpr int VAMPIRE_LIFESTEAL = 5;
     // HP lost when vampire attacks a dwarf
@@ -200,20 +165,31 @@ export namespace constants {
     // Gold goblin steals after every slain enemy
     constexpr int GOBLIN_STEAL = 5;
 
-    // Potion Type : int value
-    enum class PotionType : int { 
-        // Positive Potions:
-        RH, // Restore health: Restore up to 10 HP
-        BA, // Boost Atk: Increase ATK by 5
-        BD, // Boost Def: Increase Def by 5
+    struct EnemyInfo : public CharacterInfo { char symbol; };
 
-        // Negative Potions:
-        PH, // Poison health: Lose up to 10 HP
-        WA, // Wound Atk: Decrease Atk by 5
-        WD, // Wound Def: Decrease Def by 5
-    };
-    
-    constexpr int NUM_POTION_TYPES = 6;
+    constexpr std::array ENEMY_DATA = std::to_array<std::pair<EnemyRace, EnemyInfo>>({
+        { EnemyRace::Human,     {"Human", 140, 20, 20, symbol::HUMAN} },
+        { EnemyRace::Dwarf,     {"Dwarf", 100, 20, 30, symbol::DWARF} },
+        { EnemyRace::Elf,       {"Elf", 140, 30, 10, symbol::ELF} },
+        { EnemyRace::Orc,       {"Orc", 180, 30, 25, symbol::ORC} },
+        { EnemyRace::Merchant,  {"Merchant", 30, 70, 5, symbol::MERCHANT} },
+        { EnemyRace::Halfling,  {"Halfling", 100, 15, 20, symbol::HALFLING} },
+        { EnemyRace::Dragon,    {"Dragon", 150, 20, 20, symbol::DRAGON} }
+    });
+
+    constexpr int NUM_ENEMY_RACES = ENEMY_DATA.size();
+
+    constexpr std::optional<PlayerInfo> info(const PlayerRace race) {
+        return tableLookup(PLAYER_DATA, race);
+    }
+
+    constexpr std::optional<EnemyInfo> info(const EnemyRace race) {
+        return tableLookup(ENEMY_DATA, race);
+    }
+
+    enum class Item { Gold, Potion };
+
+    enum class PotionType : int { RH, BA, BD, PH, WA, WD };
 
     struct PotionInfo {
         std::string_view name;
@@ -221,14 +197,28 @@ export namespace constants {
         bool permanent;
     };
 
-    const std::unordered_map<PotionType, PotionInfo> POTION_DATA = {
+    constexpr std::array POTION_DATA = std::to_array<std::pair<PotionType, PotionInfo>>({
         { PotionType::RH,   {"RH", 10, 0, 0, true} },
         { PotionType::BA,   {"BA", 0, 5, 0, false} },
         { PotionType::BD,   {"BD", 0, 0, 5, false} },
         { PotionType::PH,   {"PH", -10, 0, 0, true} },
         { PotionType::WA,   {"WA", 0, 5, 0, false} },
         { PotionType::WD,   {"WD", 0, 0, -5, false} }
-    };
+    });
+
+    constexpr int NUM_POTION_TYPES = POTION_DATA.size();
+
+    constexpr std::optional<PotionInfo> info(const PotionType type) {
+        return tableLookup(POTION_DATA, type);
+    }
+
+    // Amount of gold in each type of pile
+    namespace goldPile {
+        constexpr int SMALL = 1;
+        constexpr int NORMAL = 2;
+        constexpr int MERCHANT_HOARD = 4;
+        constexpr int DRAGON_HOARD = 6;
+    }
 
     namespace probability {
         namespace spawn {
@@ -247,7 +237,6 @@ export namespace constants {
                 { EnemyRace::Merchant, 1.0 / 9.0 }
             });
 
-            // Note: std::array::size() is determined at compile time -> this is valid
             constexpr int NUM_WEIGHTED_ENEMIES = ENEMIES.size(); 
 
             // Gold rates
@@ -262,7 +251,7 @@ export namespace constants {
                 { goldPile::SMALL, 1.0 / 4.0 }
             });
 
-            constexpr int NUM_WEIGHTED_GOLD = GOLD.size(); // determined at compile time
+            constexpr int NUM_WEIGHTED_GOLD = GOLD.size();
         }
         constexpr double ENEMY_MISS = 0.5;
         constexpr double HALFLING_EVASION = 0.5;
@@ -278,13 +267,33 @@ export namespace constants {
         constexpr double DROW_POTION = 1.5;
     }
 
-    // Direction : int value
     enum class Direction : int { 
         NO, NE, EA, SE, SO, SW, WE, NW,
         SELF
     };
 
-    constexpr int NUM_DIRECTIONS = 8;
+    struct DirectionInfo {
+        std::string_view command;
+        std::string_view string;
+        std::pair<int, int> pair;
+    };
+
+    constexpr std::array DIRECTION_DATA = std::to_array<std::pair<Direction, DirectionInfo>>({
+        { Direction::NO, { command::direction::NORTH,       "North",        {0, -1}  }},
+        { Direction::EA, { command::direction::EAST,        "East",         {1, 0}   }},
+        { Direction::SO, { command::direction::SOUTH,       "South",        {0, 1}   }},
+        { Direction::WE, { command::direction::WEST,        "West",         {-1, 0}  }},
+        { Direction::NE, { command::direction::NORTH_EAST,  "North East",   {1, -1}  }},
+        { Direction::NW, { command::direction::NORTH_WEST,  "North West",   {-1, -1} }},
+        { Direction::SE, { command::direction::SOUTH_EAST,  "South East",   {1, 1}   }},
+        { Direction::SW, { command::direction::SOUTH_WEST,  "South West",   {-1, 1}  }}
+    });
+
+    constexpr int NUM_DIRECTIONS = DIRECTION_DATA.size();
+
+    constexpr std::optional<DirectionInfo> info(const Direction dir) {
+        return tableLookup(DIRECTION_DATA, dir);
+    }
 
     constexpr std::string_view EMPTY_FLOOR = 
     "|-----------------------------------------------------------------------------|"
@@ -316,18 +325,60 @@ export namespace constants {
 
 using namespace constants;
 
-export bool isDirection(std::string_view s);
+export constexpr std::string_view symbolToColour(const char sym) {
+    auto col = tableLookup(SYMBOL_COLOURS, sym);
+    return col ? *col : colour::RESET;
+}
 
-export std::optional<PlayerRace> cmdToPlayerRace(std::string_view s);
-export bool isPlayerRaceCmd(std::string_view s);
-export std::optional<std::string> playerRaceToStr(const PlayerRace race);
+export constexpr std::optional<PlayerRace> cmdToPlayerRace(std::string_view s) {
+    return reverseLookup(PLAYER_DATA, &PlayerInfo::command, s);
+}
 
-export std::optional<EnemyRace> symbolToEnemyRace(const char c);
+export constexpr bool isPlayerRaceCmd(std::string_view s) {
+    return cmdToPlayerRace(s) != std::nullopt; 
+}
 
-export std::string symbolToColour(const char sym);
+export constexpr std::string_view playerRaceToStr(const PlayerRace race) {
+    auto data = info(race);
+    return data ? data->name : "";
+}
 
-export Direction cmdToDir(std::string_view s);
-export std::pair<int, int> dirToPair(const Direction dir);
-export std::pair<int, int> operator+(const std::pair<int, int> pos, const Direction dir);
-export std::string dirToStr(const Direction dir);
-export std::string potionTypeToStr(const PotionType t);
+export constexpr std::string_view potionTypeToStr(const PotionType t) {
+    auto data = info(t);
+    return data ? data->name : "unknown";
+}
+
+export constexpr char enemyRaceToSymbol(const EnemyRace race) { return info(race)->symbol; }
+
+export constexpr std::optional<EnemyRace> symbolToEnemyRace(const char c) {
+    return reverseLookup(ENEMY_DATA, &EnemyInfo::symbol, c);
+}
+
+export constexpr bool isEnemySymbol(const char c) {
+    return symbolToEnemyRace(c) != std::nullopt;
+}
+
+export constexpr Direction cmdToDir(std::string_view s) {
+    auto dir = reverseLookup(DIRECTION_DATA, &DirectionInfo::command, s);
+    return dir ? *dir : Direction::SELF;
+}
+
+export constexpr bool isDirection(std::string_view s) {
+    return cmdToDir(s) != Direction::SELF;
+}
+
+export constexpr std::pair<int, int> dirToPair(const Direction dir) {
+    auto data = info(dir);
+    return data ? data->pair : std::pair{0, 0};
+}
+
+export constexpr std::string_view dirToStr(const Direction dir) {
+    auto data = info(dir);
+    return data ? data->string : "";
+}
+
+export constexpr std::pair<int, int> operator+(const std::pair<int, int> pos, 
+                                               const Direction dir) {
+    auto [dx, dy] = dirToPair(dir);
+    return {pos.first + dx, pos.second + dy};
+}

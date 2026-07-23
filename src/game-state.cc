@@ -36,7 +36,7 @@ void Game::displayInfo(std::ostream& os) const {
     int lineWidth = constants::board::WIDTH - constants::board::OFFSET;
 
     // Outputting the first line of info output
-    std::string playerRaceStr = playerRaceToStr(player->getRace()).value();
+    std::string playerRaceStr = std::string(playerRaceToStr(player->getRace()));
     std::string leftSide = "Race " + playerRaceStr + " ";
     leftSide += "Gold: " + std::to_string(player->getGold());
 

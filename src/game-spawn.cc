@@ -7,7 +7,8 @@ void Game::addGold(int amount, bool isHoard, int x, int y, Chamber *chamber=null
     if (chamber) chamber->removeEmpty(x, y);
 }
 
-void Game::addEnemy(constants::EnemyRace race, int x, int y, int hx=0, int hy=0, Chamber *chamber=nullptr) {
+void Game::addEnemy(constants::EnemyRace race, int x, int y, 
+                    int hx=0, int hy=0, Chamber *chamber=nullptr) {
     enemies.emplace_back(newEnemy(race, floor, hx, hy));
     int enemyIdx = enemies.size() - 1;
     floor.addEnemy(x, y, enemyIdx, race);
@@ -123,8 +124,7 @@ void Game::removeAll() {
 }
 
 std::optional<std::pair<int, int>> hoardFromDragonPos(std::string& map, int x, int y) {
-    for (int d = 0; d < constants::NUM_DIRECTIONS; d++) {
-        auto dir = static_cast<constants::Direction>(d);
+    for (const auto& [dir, info] : constants::DIRECTION_DATA) {
         auto [px, py] = std::make_pair(x, y) + dir;
         int idx = py * constants::board::WIDTH + px;
 
@@ -144,13 +144,9 @@ void Game::useNextMap() {
             int idx = y * constants::board::WIDTH + x;
             char ch = map[idx];
 
-            bool isEnemy = std::any_of(std::begin(constants::ENEMY_RACES), 
-                           std::end(constants::ENEMY_RACES),
-                           [c = ch](constants::EnemyRace e) {
-                               return constants::enemyRaceToSymbol(e) == c;
-                           });
+            bool isEnemy = isEnemySymbol(ch);
 
-            if (ch == static_cast<char>(constants::EnemyRace::Dragon)) {
+            if (ch == constants::symbol::DRAGON) {
                 auto opt = hoardFromDragonPos(map, x, y);
                 if (!opt) {
                     std::cerr << "Cannot find hoard from dragon position." << std::endl;
@@ -160,7 +156,7 @@ void Game::useNextMap() {
                 addEnemy(constants::EnemyRace::Dragon, x, y, hx, hy);
                 addGold(constants::goldPile::DRAGON_HOARD, true, hx, hy);
             } else if (isEnemy) { // non dragon enemies
-                auto race = static_cast<constants::EnemyRace>(ch);
+                auto race = symbolToEnemyRace(ch).value();
                 addEnemy(race, x, y);
             } else if ('0' <= ch && ch <= '5') { // potion
                 auto type = static_cast<constants::PotionType>(ch - '0');

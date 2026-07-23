@@ -11,7 +11,7 @@ export class Potion {
     public:
 
     Potion(constants::PotionType t) : type{t} {
-        const constants::PotionInfo& info = constants::POTION_DATA.at(t);
+        const constants::PotionInfo& info = constants::info(t).value();
         hpMod = info.hpMod;
         atkMod = info.atkMod;
         defMod = info.defMod;

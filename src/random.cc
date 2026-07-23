@@ -9,4 +9,5 @@ export bool randomChance(double probability);
 
 // Return random index of an array where probabilities[i] is the probability index i is chosen
 // If normalize enabled, normalize probabilities to standard uniform distribution
-export int randomWeightedIndex(const std::span<const double> probabilities, const bool normalize = false);
+export int randomWeightedIndex(const std::span<const double> probabilities, 
+                               const bool normalize = false);
