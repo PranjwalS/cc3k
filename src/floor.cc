@@ -18,8 +18,6 @@ export class Floor {
 
     int stairX, stairY;
     char underPlayer = constants::symbol::FLOOR;   // previous char before @ moved on it
-
-    void initChambers();
     
     public:
 
@@ -56,6 +54,9 @@ export class Floor {
 
     void movePlayer(int px, int py, int nx, int ny);
     friend std::ostream& operator<<(std::ostream& os, const Floor& f);
+
+    private:
+    void initChambers();
 };
 
 export std::ostream& operator<<(std::ostream& os, const Floor& f);

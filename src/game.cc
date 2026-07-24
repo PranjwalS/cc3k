@@ -36,17 +36,6 @@ export class Game {
 
     std::vector<std::string> maps;
 
-    int calcDamage(int atkVal, int defVal) const;
-
-    Chamber& spawnPlayer();
-    void spawnStairs(const Chamber& playerChamber);
-    void spawnEnemies();
-    void spawnPotions();
-    void spawnGold();
-
-    void displayAction(std::ostream& os) const;
-    void displayInfo(std::ostream& os) const;
-
     public:
 
     Game(const constants::PlayerRace race,
@@ -99,6 +88,18 @@ export class Game {
     void display(std::ostream& os) const;
 
     friend std::ostream& operator<<(std::ostream& os, const Game& g);
+
+    private:
+    int calcDamage(int atkVal, int defVal) const;
+
+    Chamber& spawnPlayer();
+    void spawnStairs(const Chamber& playerChamber);
+    void spawnEnemies();
+    void spawnPotions();
+    void spawnGold();
+
+    void displayAction(std::ostream& os) const;
+    void displayInfo(std::ostream& os) const;
 };
 
 export std::ostream& operator<<(std::ostream& os, const Game& g) {
