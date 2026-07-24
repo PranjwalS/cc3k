@@ -28,7 +28,6 @@ export class Game {
 
     const int numFloors;
     int floorNum = 0;
-    bool merchantsHostile = false;
     bool frozen = false;
     bool forceQuit = false;
     int tempAtk = 0;
@@ -69,7 +68,6 @@ export class Game {
     int getFloorNum() const { return floorNum; }
     int getNumFloors() const { return numFloors; }
     
-    bool areMerchantsHostile() const { return merchantsHostile; }
     bool isFrozen() const { return frozen; }
 
     void setAction(const std::string& action) { currentAction = action; }
@@ -90,6 +88,7 @@ export class Game {
     void usePotion(constants::Direction dir);
     void enemyTurns();
     void enemyAttack(Enemy& e);
+    void setMerchantsPassive() { Merchant::becomePassive(); }
 
     void toggleFreeze() { frozen = !frozen; }
     void quitGame();

@@ -43,14 +43,7 @@ bool Game::playerAttack(constants::Direction d) {
 
         currentAction += ".";
         
-        if (e->getRace() == constants::EnemyRace::Merchant) {
-            merchantsHostile = true;
-            for (auto& ptr : enemies) {
-                if (ptr->getRace() == constants::EnemyRace::Merchant) {
-                    static_cast<Merchant*>(ptr.get())->becomeHostile();
-                }
-            }
-        }
+        if (e->getRace() == constants::EnemyRace::Merchant) Merchant::becomeHostile();
 
         if (!e->isAlive()) {
             floor.removeEnemy(tx, ty);

@@ -104,6 +104,7 @@ int main(int argc, char* argv[]) {
             }
             game.enemyTurns();
         }
+        game.setMerchantsPassive();
 
         if (game.isWon()) {
             std::cout << "You win!" << std::endl;

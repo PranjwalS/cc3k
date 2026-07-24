@@ -20,9 +20,9 @@ export class Enemy : public Character {
     virtual ~Enemy() = default;
 
     constants::EnemyRace getRace() const { return race; }
-    bool isHostile() const { return hostile; }
 
     virtual bool evasionChance() { return false; }
+    virtual bool isHostile() const { return hostile; }
     virtual void onDeath(Player& player);
     virtual void move();
     virtual bool isValidMove(const constants::Direction& dir) override;  
@@ -50,9 +50,12 @@ export class Orc : public Enemy {
 };
 
 export class Merchant : public Enemy {
+    inline static bool allMerchantsHostile = false; 
     public:
     Merchant(Floor& f) : Enemy{constants::EnemyRace::Merchant, f, false} {}
-    void becomeHostile() { hostile = true; }
+    static void becomeHostile() { allMerchantsHostile = true; }
+    static void becomePassive() { allMerchantsHostile = false; }
+    bool isHostile() const override { return allMerchantsHostile; }
     void onDeath(Player& player);
 };
 
