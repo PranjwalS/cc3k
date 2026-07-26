@@ -1,6 +1,8 @@
 export module shapes;
 import <utility>;
 import <vector>;
+import <algorithm>;
+import <optional>;
 import <span>;
 
 export class Shape {
@@ -19,4 +21,10 @@ export class Shape {
 
     void addPoints(std::span<const std::pair<int, int>> newPoints);
     void addRectangle(const std::pair<int, int>& start, const std::pair<int, int>& end);
+    void addLine(const std::pair<int, int>& start, const std::pair<int, int>& end);
+
+    void shrink(double minScale, double maxScale, int minSize);
+
+    private:
+    std::optional<std::pair<std::pair<int, int>, std::pair<int, int>>> getMinMax() const;
 };
