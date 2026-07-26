@@ -48,8 +48,7 @@ export class Generation {
 
     int minLeafSize;
     int maxLeafSize;
-    int roomPadding = 3;
-    int gridSize = 3;
+    int roomPadding = constants::generation::ROOM_PADDING;
 
     public:
     Generation(int minLeafSize, int maxLeafSize);

@@ -13,7 +13,8 @@ void Game::nextFloor() {
     player->changeFloor(floor);
 
     if (maps.empty()) {
-        Generation randomFloor{9, 13};
+        Generation randomFloor{constants::generation::MIN_CHAMBER_SIZE, 
+                               constants::generation::MAX_CHAMBER_SIZE};
         floor.loadGrid(randomFloor.getLayout());
         spawnAll();
     } else {

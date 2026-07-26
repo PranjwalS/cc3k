@@ -40,31 +40,13 @@ void Node::shrinkRoom(double minScale, double maxScale, int minSize) {
 }
 
 void Node::addPassage(int x1, int y1, int x2, int y2, Node& neighbour) {
-    const std::pair<int, int> start{x1, y1};
-    const std::pair<int, int> end{x2, y2};
-    const auto& points  = room->getPoints();
-    const auto& nPoints = neighbour.room->getPoints();
+    const std::pair<int, int> startDoor{x1, y1};
+    const std::pair<int, int> endDoor{x2, y2};
+    
+    doors->push_back(startDoor);
+    neighbour.doors->push_back(endDoor);
 
-    bool foundStart = false;
-    bool foundEnd = false;
-    for (const auto& dir : constants::CARDINAL_DIRECTIONS) {
-        if (foundStart && foundEnd) break;
-        if (!foundStart) {
-            auto candidate = start + dir;
-            if (std::ranges::find(points, candidate) != points.end()) {
-                doors->push_back(candidate);
-                foundStart = true;
-            }
-        }
-        if (!foundEnd) {
-            auto candidate = end + dir;
-            if (std::ranges::find(nPoints, candidate) != nPoints.end()) {
-                neighbour.doors->push_back(candidate);
-                foundEnd = true;
-            }
-        }
-    }
-    passages->addLine(start, end);
+    passages->addLine(startDoor, endDoor);
 }
 
 // ====================================================
@@ -73,7 +55,7 @@ void Node::addPassage(int x1, int y1, int x2, int y2, Node& neighbour) {
 
 Generation::Generation(int minLeafSize, int maxLeafSize) : 
         minLeafSize{minLeafSize}, maxLeafSize{maxLeafSize} {
-    root = std::make_unique<Node>(0, constants::board::WIDTH, 0, constants::board::HEIGHT);
+    root = std::make_unique<Node>(2, constants::board::WIDTH - 2, 2, constants::board::HEIGHT - 2);
     createLayout(constants::board::NUM_CHAMBERS);
 }
 
@@ -228,7 +210,7 @@ void Generation::mergeNeighbour(Node& leaf) {
 void Generation::merge(int maxRooms) {
     if (static_cast<int>(leaves.size()) <= maxRooms) return;
     // Guard to prevent infinite loop
-    int guard = static_cast<int>(leaves.size()) * 4;
+    int guard = static_cast<int>(leaves.size()) * constants::generation::GUARD_NUM;
     while (static_cast<int>(leaves.size()) > maxRooms && guard > 0) {
         Node& leaf = *leaves.at(randomNum(0, static_cast<int>(leaves.size()) - 1));
         mergeNeighbour(leaf);
@@ -238,21 +220,53 @@ void Generation::merge(int maxRooms) {
 
 void Generation::buildPassages() {
     for (Node* leaf : leaves) {
+        auto minMaxA = leaf->room->getMinMax();
+        if (!minMaxA) continue;
+        auto [minA, maxA] = *minMaxA;
+        const auto wallsA = leaf->room->getExterior();
+
         for (Node* h : leaf->horNeighbours) {
-            int overlapStart = std::max(leaf->topY, h->topY);
-            int overlapEnd = std::min(leaf->bottomY, h->bottomY);
-            if (overlapEnd - overlapStart > gridSize) {
-                int y = randomNum(overlapStart, overlapEnd - gridSize);
-                leaf->addPassage(leaf->rightX, y, h->leftX, y + gridSize, *h);
+            auto minMaxB = h->room->getMinMax();
+            if (!minMaxB) continue;
+            auto [minB, maxB] = *minMaxB;
+            const auto wallsB = h->room->getExterior();
+
+            std::vector<int> commonYs;
+            for (const auto& a : wallsA) {
+                if (a.first != maxA.first) continue;
+                for (const auto& b : wallsB) {
+                    if (b.first == minB.first && a.second == b.second) {
+                        commonYs.push_back(a.second);
+                    }
+                }
             }
+
+            if (commonYs.empty()) continue;
+
+            int y = commonYs.at(randomNum(0, static_cast<int>(commonYs.size()) - 1));
+            leaf->addPassage(maxA.first, y, minB.first, y, *h);
         }
+
         for (Node* v : leaf->vertNeighbours) {
-            int overlapStart = std::max(leaf->leftX, v->leftX);
-            int overlapEnd = std::min(leaf->rightX, v->rightX);
-            if (overlapEnd - overlapStart > gridSize) {
-                int x = randomNum(overlapStart, overlapEnd - gridSize);
-                leaf->addPassage(x, leaf->bottomY, x + gridSize, v->topY, *v);
+            auto minMaxB = v->room->getMinMax();
+            if (!minMaxB) continue;
+            auto [minB, maxB] = *minMaxB;
+            const auto wallsB = v->room->getExterior();
+
+            std::vector<int> commonXs;
+            for (const auto& a : wallsA) {
+                if (a.second != maxA.second) continue;
+                for (const auto& b : wallsB) {
+                    if (b.second == minB.second && a.first == b.first) {
+                        commonXs.push_back(a.first);
+                    }
+                }
             }
+
+            if (commonXs.empty()) continue;
+
+            int x = commonXs.at(randomNum(0, static_cast<int>(commonXs.size()) - 1));
+            leaf->addPassage(x, maxA.second, x, minB.second, *v);
         }
     }
 }
@@ -262,7 +276,9 @@ void Generation::buildDungeon(int numChambers) {
     for (Node* leaf : leaves) leaf->buildRoom();
     merge(numChambers);
     for (Node* leaf : leaves)  {
-        leaf->shrinkRoom(0.4, 0.8, minLeafSize);
+        leaf->shrinkRoom(constants::generation::MIN_SCALE, 
+                         constants::generation::MAX_SCALE, 
+                         minLeafSize);
         if (leaf->room) rooms.push_back(*leaf->room);
     }
     buildPassages();

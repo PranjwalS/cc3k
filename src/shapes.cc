@@ -27,10 +27,11 @@ export class Shape {
     void addRectangle(const std::pair<int, int>& start, const std::pair<int, int>& end);
     void addLine(const std::pair<int, int>& start, const std::pair<int, int>& end);
 
+    std::optional<std::pair<std::pair<int, int>, std::pair<int, int>>> getMinMax() const;
+
     void shrink(double minScale, double maxScale, int minSize);
 
     private:
-    std::optional<std::pair<std::pair<int, int>, std::pair<int, int>>> getMinMax() const;
     bool listHas(const std::vector<std::pair<int,int>>& list,
                         const std::pair<int,int>& point) const;
 };

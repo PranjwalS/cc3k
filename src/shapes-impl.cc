@@ -66,14 +66,28 @@ void Shape::addLine(const std::pair<int, int>& start, const std::pair<int, int>&
     int x = start.first;
     int y = start.second;
     points.emplace_back(x, y);
-    while (x != end.first) {
+    if (randomChance()) {
+        // Horizontal first, vertical after
+        while (x != end.first) {
         x += (end.first > x) ? 1 : -1;
         points.emplace_back(x, y);
-    }
-    while (y != end.second) {
+        }
+        while (y != end.second) {
+            y += (end.second > y) ? 1 : -1;
+            points.emplace_back(x, y);
+        }
+    } else {
+        // Vertical first, horizontal after
+        while (y != end.second) {
         y += (end.second > y) ? 1 : -1;
         points.emplace_back(x, y);
+        }
+        while (x != end.first) {
+            x += (end.first > x) ? 1 : -1;
+            points.emplace_back(x, y);
+        }
     }
+    
 }
 
 std::optional<std::pair<std::pair<int, int>, std::pair<int, int>>> Shape::getMinMax() const {
