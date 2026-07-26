@@ -3,7 +3,6 @@ module floor;
 import random;
 import constants;
 import chamber;
-import generation;
 import <string>;
 import <utility>;
 

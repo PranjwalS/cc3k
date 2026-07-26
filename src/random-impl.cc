@@ -11,6 +11,11 @@ int randomNum(const int min, const int max) {
     return dist(gen);
 }
 
+double randomNum(const double min, const double max) {
+    std::uniform_real_distribution<double> dist(min, max);
+    return dist(gen);
+}
+
 bool randomChance(double probability) {
     std::bernoulli_distribution dist(probability);
     return dist(gen) == 1;

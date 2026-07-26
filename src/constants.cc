@@ -115,7 +115,7 @@ export namespace constants {
         constexpr char FLOOR = '.';
         constexpr char STAIRS = '\\';
 
-        constexpr char EMPTY = '\0';
+        constexpr char EMPTY = ' ';
     }
 
     constexpr std::array SYMBOL_COLOURS = std::to_array<std::pair<char, std::string_view>>({
