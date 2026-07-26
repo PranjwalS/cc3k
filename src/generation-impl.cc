@@ -1,4 +1,7 @@
 module generation;
+import shapes;
+import random;
+import constants;
 import <array>;
 import <algorithm>;
 import <cstddef>;
@@ -36,7 +39,7 @@ void Node::shrinkRoom(double minScale, double maxScale, int minSize) {
     room->shrink(minScale, maxScale, minSize);
 }
 
-void Node::addPassage(int x1, int x2, int y1, int y2, Node& neighbour) {
+void Node::addPassage(int x1, int y1, int x2, int y2, Node& neighbour) {
     const std::pair<int, int> start{x1, y1};
     const std::pair<int, int> end{x2, y2};
     const auto& points  = room->getPoints();
@@ -55,7 +58,7 @@ void Node::addPassage(int x1, int x2, int y1, int y2, Node& neighbour) {
         }
         if (!foundEnd) {
             auto candidate = end + dir;
-            if (std::ranges::find(nPoints, candidate) != points.end()) {
+            if (std::ranges::find(nPoints, candidate) != nPoints.end()) {
                 neighbour.doors->push_back(candidate);
                 foundEnd = true;
             }
@@ -67,6 +70,13 @@ void Node::addPassage(int x1, int x2, int y1, int y2, Node& neighbour) {
 // ====================================================
 // Generation
 // ====================================================
+
+Generation::Generation(int minLeafSize, int maxLeafSize) : 
+        minLeafSize{minLeafSize}, maxLeafSize{maxLeafSize} {
+    root = std::make_unique<Node>(0, constants::board::WIDTH, 0, constants::board::HEIGHT);
+    createLayout(constants::board::NUM_CHAMBERS);
+}
+
 std::string Generation::createLayout(int numChambers) {
     binarySpacePartition(numChambers);
     buildDungeon(numChambers);
@@ -92,25 +102,28 @@ std::string Generation::createLayout(int numChambers) {
         }
     }
     for (const Node* leaf : leaves) {
-        if (leaf->passages) {
-            for (const auto& [x, y] : leaf->passages->getPoints()) {
-                if (x <= 0 || x >= constants::board::MAX_X || 
-                    y <= 0 || y >= constants::board::MAX_Y) continue;
-                grid[y][x] = constants::symbol::PASSAGE;
-            }
-        }
-        if (leaf->doors) {
-            for (const auto& [x, y] : *leaf->doors) {
-                if (x <= 0 || x >= constants::board::MAX_X || 
-                    y <= 0 || y >= constants::board::MAX_Y) continue;
-                grid[y][x] = constants::symbol::DOORWAY;
-            }
-        }
+        if (!leaf->room) continue;
         for (const auto& wall : leaf->room->getExterior()) {
             auto [x, y] = wall;
             if (x <= 0 || x >= constants::board::MAX_X || 
                 y <= 0 || y >= constants::board::MAX_Y) continue;
             grid[y][x] = leaf->room->getWallSymbol(wall);
+        }
+    }
+    for (const Node* leaf : leaves) {
+        if (!leaf->passages) continue;
+        for (const auto& [x, y] : leaf->passages->getPoints()) {
+            if (x <= 0 || x >= constants::board::MAX_X || 
+                y <= 0 || y >= constants::board::MAX_Y) continue;
+            grid[y][x] = constants::symbol::PASSAGE;
+        }
+    }
+    for (const Node* leaf : leaves) {
+        if (!leaf->doors) continue;
+        for (const auto& [x, y] : *leaf->doors) {
+            if (x <= 0 || x >= constants::board::MAX_X || 
+                y <= 0 || y >= constants::board::MAX_Y) continue;
+            grid[y][x] = constants::symbol::DOORWAY;
         }
     }
 

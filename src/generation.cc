@@ -4,10 +4,8 @@ import random;
 import constants;
 import <utility>;
 import <vector>;
-import <stdexcept>;
 import <optional>;
 import <memory>;
-import <algorithm>;
 import <string>;
 
 struct Node {
@@ -37,7 +35,7 @@ struct Node {
     void appendRoom(const Node& other);
     void shrinkRoom(double minScale, double maxScale, int minSize);
 
-    void addPassage(int x1, int x2, int y1, int y2, Node& neighbour);
+    void addPassage(int x1, int y1, int x2, int y2, Node& neighbour);
 };
 
 export class Generation {
@@ -50,18 +48,13 @@ export class Generation {
 
     int minLeafSize;
     int maxLeafSize;
-    int roomPadding = 1;
-    int gridSize = 1;
+    int roomPadding = 3;
+    int gridSize = 3;
 
     public:
+    Generation(int minLeafSize, int maxLeafSize);
+
     std::string createLayout(int numChambers);
-
-    Generation(int minLeafSize, int maxLeafSize) : 
-        minLeafSize{minLeafSize}, maxLeafSize{maxLeafSize} {
-        root = std::make_unique<Node>(0, constants::board::WIDTH, 0, constants::board::HEIGHT);
-        createLayout(constants::board::NUM_CHAMBERS);
-    }
-
     std::string getLayout() { return layout; }
 
     private:

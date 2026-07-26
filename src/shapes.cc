@@ -31,4 +31,6 @@ export class Shape {
 
     private:
     std::optional<std::pair<std::pair<int, int>, std::pair<int, int>>> getMinMax() const;
+    bool listHas(const std::vector<std::pair<int,int>>& list,
+                        const std::pair<int,int>& point) const;
 };

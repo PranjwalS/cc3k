@@ -3,60 +3,46 @@ import random;
 import constants;
 import <utility>;
 import <vector>;
+import <algorithm>;
 import <optional>;
 import <span>;
-import <unordered_set>;
 
 Shape::Shape(const std::pair<int, int>& start, const std::pair<int, int>& end) {
     addRectangle(start, end);
 }
 
-struct PairHash {
-    std::size_t operator()(const std::pair<int,int>& p) const noexcept {
-        return std::hash<int>{}(p.first) ^
-               (std::hash<int>{}(p.second) << 1);
-    }
-};
+bool Shape::listHas(const std::vector<std::pair<int,int>>& list,
+                    const std::pair<int,int>& point) const {
+    return std::find(list.begin(), list.end(), point) != list.end();
+}
 
 std::vector<std::pair<int,int>> Shape::getExterior() const {
     std::vector<std::pair<int,int>> exterior;
 
-    std::unordered_set<std::pair<int,int>, PairHash> pointSet(
-        points.begin(), points.end()
-    );
-
-    for (const auto& [x, y] : points) {
-        bool exposed =
-            !pointSet.contains({x - 1, y}) ||
-            !pointSet.contains({x + 1, y}) ||
-            !pointSet.contains({x, y - 1}) ||
-            !pointSet.contains({x, y + 1});
-
-        if (exposed)
-            exterior.emplace_back(x, y);
+    for (const auto& p : points) {
+        for (auto dir : constants::CARDINAL_DIRECTIONS) {
+            if (!listHas(points, p + dir)) {
+                exterior.emplace_back(p);
+                break;
+            }
+        }
     }
 
     return exterior;
 }
 
 char Shape::getWallSymbol(const std::pair<int,int>& point) const {
-    auto exterior = getExterior();
+    auto walls = getExterior();
 
-    std::unordered_set<std::pair<int,int>, PairHash> exteriorSet(
-        exterior.begin(), exterior.end()
-    );
-
-    int x = point.first;
-    int y = point.second;
-
-    bool up = exteriorSet.contains({x, y - 1});
-    bool down = exteriorSet.contains({x, y + 1});
-    bool left = exteriorSet.contains({x - 1, y});
-    bool right = exteriorSet.contains({x + 1, y});
+    bool up = listHas(walls, point + constants::Direction::NO);
+    bool down = listHas(walls, point + constants::Direction::SO);
+    bool left = listHas(walls, point + constants::Direction::WE);
+    bool right = listHas(walls, point + constants::Direction::EA);
 
     if (up || down) return constants::symbol::VERTICAL_WALL;
     if (left || right) return constants::symbol::HORIZONTAL_WALL;
-    // Corner case
+
+    // Corners are vertical walls by default
     return constants::symbol::VERTICAL_WALL;
 }
 
@@ -77,7 +63,17 @@ void Shape::addRectangle(const std::pair<int, int>& start,
 }
 
 void Shape::addLine(const std::pair<int, int>& start, const std::pair<int, int>& end) {
-    addRectangle(start, end);
+    int x = start.first;
+    int y = start.second;
+    points.emplace_back(x, y);
+    while (x != end.first) {
+        x += (end.first > x) ? 1 : -1;
+        points.emplace_back(x, y);
+    }
+    while (y != end.second) {
+        y += (end.second > y) ? 1 : -1;
+        points.emplace_back(x, y);
+    }
 }
 
 std::optional<std::pair<std::pair<int, int>, std::pair<int, int>>> Shape::getMinMax() const {
@@ -113,31 +109,27 @@ void Shape::shrink(double minScale, double maxScale, int minSize) {
     int width = maxX - minX + 1;
     int height = maxY - minY + 1;
 
-    // Width and height are scaled separately
-    double widthScale = randomNum(minScale, maxScale);
-    double heightScale = randomNum(minScale, maxScale);
-
     // Scale dimensions
-    int newWidth = std::max(static_cast<int>(width * widthScale), minSize);
-    int newHeight = std::max(static_cast<int>(height * heightScale), minSize);
+    double scale = randomNum(minScale, maxScale);
+    int newWidth = std::max(static_cast<int>(width * scale), minSize);
+    int newHeight = std::max(static_cast<int>(height * scale), minSize);
     
     // Dimensions cannot exceed original dimensions
     newWidth = std::min(newWidth, width);
     newHeight = std::min(newHeight, height);
 
-    // Center shape
-    int centerX = (minX + maxX) / 2;
-    int centerY = (minY + maxY) / 2;
+    while (true) {
+        auto mm = getMinMax();
+        if (!mm) break;
 
-    int newMinX = centerX - newWidth / 2;
-    int newMaxX = newMinX + newWidth - 1;
-    int newMinY = centerY - newHeight / 2;
-    int newMaxY = newMinY + newHeight - 1;
-
-    for (auto point = points.begin(); point != points.end(); ) {
-        auto [x, y] = *point;
-        if (x < newMinX || x > newMaxX || y < newMinY || y > newMaxY) {
-            point = points.erase(point);
-        } else ++point;
+        int curWidth  = mm->second.first  - mm->first.first  + 1;
+        int curHeight = mm->second.second - mm->first.second + 1;
+        if (curWidth <= newWidth && curHeight <= newHeight) break;
+        if (curWidth <= minSize || curHeight <= minSize) break;
+ 
+        auto boundary = getExterior();
+        if (boundary.empty() || boundary.size() >= points.size()) break;
+ 
+        std::erase_if(points, [&](const auto& p) { return listHas(boundary, p); });
     }
 }

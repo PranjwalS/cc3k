@@ -13,7 +13,7 @@ void Game::nextFloor() {
     player->changeFloor(floor);
 
     if (maps.empty()) {
-        Generation randomFloor{3, 15};
+        Generation randomFloor{9, 13};
         floor.loadGrid(randomFloor.getLayout());
         spawnAll();
     } else {
