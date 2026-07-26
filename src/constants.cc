@@ -290,6 +290,11 @@ export namespace constants {
         { Direction::SW, { command::direction::SOUTH_WEST,  "South West",   {-1, 1}  }}
     });
 
+    // Four cardinal directions
+    constexpr std::array CARDINAL_DIRECTIONS{
+        Direction::NO, Direction::EA, Direction::SO, Direction::WE
+    };
+
     constexpr int NUM_DIRECTIONS = DIRECTION_DATA.size();
 
     constexpr std::optional<DirectionInfo> info(const Direction dir) {
