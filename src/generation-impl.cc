@@ -106,6 +106,12 @@ std::string Generation::createLayout(int numChambers) {
                 grid[y][x] = constants::symbol::DOORWAY;
             }
         }
+        for (const auto& wall : leaf->room->getExterior()) {
+            auto [x, y] = wall;
+            if (x <= 0 || x >= constants::board::MAX_X || 
+                y <= 0 || y >= constants::board::MAX_Y) continue;
+            grid[y][x] = leaf->room->getWallSymbol(wall);
+        }
     }
 
     layout.clear();

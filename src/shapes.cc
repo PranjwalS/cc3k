@@ -18,6 +18,10 @@ export class Shape {
     Shape(std::span<const std::pair<int, int>> newPoints);
 
     const std::vector<std::pair<int, int>>& getPoints() const { return points; };
+    
+    std::vector<std::pair<int, int>> getExterior() const;
+    char getWallSymbol(const std::pair<int, int>& point) const;
+    std::vector<std::pair<std::pair<int,int>, char>> getExteriorWalls() const;
 
     void addPoints(std::span<const std::pair<int, int>> newPoints);
     void addRectangle(const std::pair<int, int>& start, const std::pair<int, int>& end);

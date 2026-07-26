@@ -1,12 +1,63 @@
 module shapes;
 import random;
+import constants;
 import <utility>;
 import <vector>;
 import <optional>;
 import <span>;
+import <unordered_set>;
 
 Shape::Shape(const std::pair<int, int>& start, const std::pair<int, int>& end) {
     addRectangle(start, end);
+}
+
+struct PairHash {
+    std::size_t operator()(const std::pair<int,int>& p) const noexcept {
+        return std::hash<int>{}(p.first) ^
+               (std::hash<int>{}(p.second) << 1);
+    }
+};
+
+std::vector<std::pair<int,int>> Shape::getExterior() const {
+    std::vector<std::pair<int,int>> exterior;
+
+    std::unordered_set<std::pair<int,int>, PairHash> pointSet(
+        points.begin(), points.end()
+    );
+
+    for (const auto& [x, y] : points) {
+        bool exposed =
+            !pointSet.contains({x - 1, y}) ||
+            !pointSet.contains({x + 1, y}) ||
+            !pointSet.contains({x, y - 1}) ||
+            !pointSet.contains({x, y + 1});
+
+        if (exposed)
+            exterior.emplace_back(x, y);
+    }
+
+    return exterior;
+}
+
+char Shape::getWallSymbol(const std::pair<int,int>& point) const {
+    auto exterior = getExterior();
+
+    std::unordered_set<std::pair<int,int>, PairHash> exteriorSet(
+        exterior.begin(), exterior.end()
+    );
+
+    int x = point.first;
+    int y = point.second;
+
+    bool up = exteriorSet.contains({x, y - 1});
+    bool down = exteriorSet.contains({x, y + 1});
+    bool left = exteriorSet.contains({x - 1, y});
+    bool right = exteriorSet.contains({x + 1, y});
+
+    if (up || down) return constants::symbol::VERTICAL_WALL;
+    if (left || right) return constants::symbol::HORIZONTAL_WALL;
+    // Corner case
+    return constants::symbol::VERTICAL_WALL;
 }
 
 Shape::Shape(std::span<const std::pair<int, int>> newPoints) : 
