@@ -5,6 +5,7 @@ import constants;
 import chamber;
 import <string>;
 import <utility>;
+import <stdexcept>;
 
 Floor::Floor(const int numChambers) : numChambers{numChambers} {
     for (int i = 0; i < constants::board::HEIGHT; i++) {
@@ -16,6 +17,25 @@ Floor::Floor(const int numChambers) : numChambers{numChambers} {
         }
     }
 
+    initChambers();
+}
+
+void Floor::loadGrid(const std::string& map) {
+    if (static_cast<int>(map.size()) != constants::board::WIDTH * constants::board::HEIGHT) {
+        throw std::invalid_argument("Map size does not match board dimensions");
+    }
+
+    for (int y = 0; y < constants::board::HEIGHT; ++y) {
+        for (int x = 0; x < constants::board::WIDTH; ++x) {
+            int idx = y * constants::board::WIDTH + x;
+            grid[y][x] = map[idx];
+            enemiesIndex[y][x] = -1;
+            goldIndex[y][x] = -1;
+            potionsIndex[y][x] = -1;
+        }
+    }
+
+    chambers.clear();
     initChambers();
 }
 
@@ -76,12 +96,19 @@ void expand(std::string &emptyBoard, int x, int y,
 }
 
 void Floor::initChambers() {
-    std::string emptyBoard(constants::EMPTY_FLOOR);
+    std::string currentBoard;
+    currentBoard.reserve(constants::board::WIDTH * constants::board::HEIGHT);
+    for (int y = 0; y < constants::board::HEIGHT; ++y) {
+        for (int x = 0; x < constants::board::WIDTH; ++x) {
+            currentBoard.push_back(grid[y][x]);
+        }
+    }
+
     for (int y = 0; y < constants::board::HEIGHT; y++) {
         for (int x = 0; x < constants::board::WIDTH; x++) {
-            if (emptyBoard[y * constants::board::WIDTH + x] == constants::symbol::FLOOR) {
+            if (currentBoard[y * constants::board::WIDTH + x] == constants::symbol::FLOOR) {
                 bool cells[constants::board::HEIGHT][constants::board::WIDTH] = {};
-                expand(emptyBoard, x, y, cells);
+                expand(currentBoard, x, y, cells);
                 chambers.emplace_back(cells);
             }
         }
@@ -89,7 +116,20 @@ void Floor::initChambers() {
 }
 
 Chamber& Floor::chooseChamber() { 
-    return chambers.at(randomNum(0, numChambers - 1));
+    std::vector<int> available;
+    available.reserve(chambers.size());
+    for (int i = 0; i < static_cast<int>(chambers.size()); ++i) {
+        if (!chambers[i].getEmptyCells().empty()) {
+            available.push_back(i);
+        }
+    }
+
+    if (available.empty()) {
+        throw std::runtime_error("No chambers with available empty floor cells");
+    }
+
+    int idx = randomNum(0, static_cast<int>(available.size()) - 1);
+    return chambers.at(available[idx]);
 }
 
 bool Floor::validSpawn(int x, int y) const {

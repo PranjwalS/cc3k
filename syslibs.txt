@@ -18,4 +18,6 @@ map
 unordered_map
 fstream
 streambuf
+sstream
 cstddef
+ranges

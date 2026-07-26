@@ -1,5 +1,12 @@
 module generation;
+import <array>;
+import <algorithm>;
 import <cstddef>;
+import <memory>;
+import <optional>;
+import <ranges>;
+import <string>;
+import <vector>;
 
 // ====================================================
 // Node
@@ -96,7 +103,7 @@ std::string Generation::createLayout(int numChambers) {
             for (const auto& [x, y] : *leaf->doors) {
                 if (x <= 0 || x >= constants::board::MAX_X || 
                     y <= 0 || y >= constants::board::MAX_Y) continue;
-                grid[y][x] = constants::symbol::FLOOR;
+                grid[y][x] = constants::symbol::DOORWAY;
             }
         }
     }
@@ -188,13 +195,13 @@ void Generation::mergeNeighbour(Node& leaf) {
         if (h == &leaf) continue;
         std::replace(h->horNeighbours.begin(), h->horNeighbours.end(), &neighbour, &leaf);
         std::replace(h->vertNeighbours.begin(), h->vertNeighbours.end(), &neighbour, &leaf);
-        if (std::ranges::find(leaf.horNeighbours, h) != leaf.horNeighbours.end()) leaf.horNeighbours.push_back(h);
+        if (std::ranges::find(leaf.horNeighbours, h) == leaf.horNeighbours.end()) leaf.horNeighbours.push_back(h);
     }
     for (Node* v : neighbour.vertNeighbours) {
         if (v == &leaf) continue;
         std::replace(v->horNeighbours.begin(), v->horNeighbours.end(), &neighbour, &leaf);
         std::replace(v->vertNeighbours.begin(), v->vertNeighbours.end(), &neighbour, &leaf);
-        if (std::ranges::find(leaf.vertNeighbours, v) != leaf.vertNeighbours.end()) leaf.vertNeighbours.push_back(v);
+        if (std::ranges::find(leaf.vertNeighbours, v) == leaf.vertNeighbours.end()) leaf.vertNeighbours.push_back(v);
     }
     std::erase(leaves, &neighbour);
 }

@@ -36,6 +36,7 @@ export class Floor {
     int getUnderPlayer() const { return underPlayer; }
 
     bool setGrid(int x, int y, char c);
+    void loadGrid(const std::string& map);
 
     bool validSpawn(int x, int y) const ;
     bool spawnCapacityReached() const;

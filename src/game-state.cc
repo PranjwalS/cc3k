@@ -1,5 +1,6 @@
 module game;
 
+import generation;
 import <cmath>;
 import <iomanip>;
 
@@ -12,9 +13,16 @@ void Game::nextFloor() {
     player->changeFloor(floor);
 
     if (maps.empty()) {
+        Generation randomFloor{3, 15};
+        floor.loadGrid(randomFloor.getLayout());
         spawnAll();
     } else {
-        useNextMap();
+        floor.loadGrid(maps[floorNum - 1]);
+        if (manualMaps) {
+            useNextMap();
+        } else {
+            spawnAll();
+        }
     }
 }
 
