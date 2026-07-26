@@ -8,7 +8,7 @@ import <stdexcept>;
 import <optional>;
 import <memory>;
 import <algorithm>;
-import <string_view>;
+import <string>;
 
 struct Node {
     int leftX, rightX;
@@ -19,8 +19,8 @@ struct Node {
     std::unique_ptr<Node> left;
     std::unique_ptr<Node> right;
     
-    std::vector<const Node*> horNeighbours;
-    std::vector<const Node*> vertNeighbours;
+    std::vector<Node*> horNeighbours;
+    std::vector<Node*> vertNeighbours;
 
     std::optional<Shape> room;
     std::optional<Shape> passages;
@@ -46,19 +46,23 @@ export class Generation {
 
     std::vector<Shape> rooms;
 
+    std::string layout;
+
     int minLeafSize;
     int maxLeafSize;
     int roomPadding = 1;
     int gridSize = 1;
 
     public:
-    Generation(int minLeafSize, int maxLeafSize,
-               int width = constants::board::WIDTH, int height = constants::board::HEIGHT) : 
+    std::string createLayout(int numChambers);
+
+    Generation(int minLeafSize, int maxLeafSize) : 
         minLeafSize{minLeafSize}, maxLeafSize{maxLeafSize} {
-        root = std::make_unique<Node>(0, width, 0, height);
+        root = std::make_unique<Node>(0, constants::board::WIDTH, 0, constants::board::HEIGHT);
+        createLayout(constants::board::NUM_CHAMBERS);
     }
 
-    std::string_view createLayout(int numChambers = constants::board::NUM_CHAMBERS);
+    std::string getLayout() { return layout; }
 
     private:
     bool divide(Node* node);

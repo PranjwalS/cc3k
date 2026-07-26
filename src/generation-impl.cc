@@ -1,4 +1,5 @@
 module generation;
+import <cstddef>;
 
 // ====================================================
 // Node
@@ -59,13 +60,13 @@ void Node::addPassage(int x1, int x2, int y1, int y2, Node& neighbour) {
 // ====================================================
 // Generation
 // ====================================================
-std::string_view Generation::createLayout(int numChambers) {
-    binarySpacePartition();
+std::string Generation::createLayout(int numChambers) {
+    binarySpacePartition(numChambers);
     buildDungeon(numChambers);
     // Initialize grid
-    std::array<std::array<char, board::WIDTH>, board::HEIGHT> grid;
-    for (int y = 0; i < constants::board::HEIGHT; ++y) {
-        for (int x = 0; j < constants::board::WIDTH; ++x) {
+    std::array<std::array<char, constants::board::WIDTH>, constants::board::HEIGHT> grid;
+    for (int y = 0; y < constants::board::HEIGHT; ++y) {
+        for (int x = 0; x < constants::board::WIDTH; ++x) {
             if (x == 0 || x == constants::board::MAX_X) {
                 grid[y][x] = constants::symbol::VERTICAL_WALL;
             } else if (y == 0 || y == constants::board::MAX_Y) {
@@ -92,13 +93,20 @@ std::string_view Generation::createLayout(int numChambers) {
             }
         }
         if (leaf->doors) {
-            for (const auto& [x, y] : leaf->doors) {
+            for (const auto& [x, y] : *leaf->doors) {
                 if (x <= 0 || x >= constants::board::MAX_X || 
                     y <= 0 || y >= constants::board::MAX_Y) continue;
                 grid[y][x] = constants::symbol::FLOOR;
             }
         }
     }
+
+    layout.clear();
+    layout.reserve(static_cast<std::size_t>(constants::board::WIDTH) * constants::board::HEIGHT);
+    for (int y = 0; y < constants::board::HEIGHT; ++y) {
+        layout.append(grid[y].data(), constants::board::WIDTH);
+    }
+    return layout;
 }
 
 bool Generation::divide(Node* node) {
@@ -171,7 +179,7 @@ void Generation::mergeNeighbour(Node& leaf) {
     if (candidates.empty()) return;
 
     Node& neighbour = *candidates.at(randomNum(0, static_cast<int>(candidates.size()) - 1));
-    leaf.appendRoom(neighbour.room);
+    leaf.appendRoom(neighbour);
 
     std::erase(leaf.horNeighbours, &neighbour);
     std::erase(leaf.vertNeighbours, &neighbour);
@@ -180,13 +188,13 @@ void Generation::mergeNeighbour(Node& leaf) {
         if (h == &leaf) continue;
         std::replace(h->horNeighbours.begin(), h->horNeighbours.end(), &neighbour, &leaf);
         std::replace(h->vertNeighbours.begin(), h->vertNeighbours.end(), &neighbour, &leaf);
-        if (!std::ranges::find(leaf.horNeighbours, h) != leaf.horNeighbours.end()) leaf.horNeighbours.push_back(h);
+        if (std::ranges::find(leaf.horNeighbours, h) != leaf.horNeighbours.end()) leaf.horNeighbours.push_back(h);
     }
-    for (Node& v : neighbour.vertNeighbours) {
-        if (h == &leaf) continue;
+    for (Node* v : neighbour.vertNeighbours) {
+        if (v == &leaf) continue;
         std::replace(v->horNeighbours.begin(), v->horNeighbours.end(), &neighbour, &leaf);
         std::replace(v->vertNeighbours.begin(), v->vertNeighbours.end(), &neighbour, &leaf);
-        if (!std::ranges::find(leaf.vertNeighbours, v) != leaf.vertNeighbours.end()) leaf.vertNeighbours.push_back(v);
+        if (std::ranges::find(leaf.vertNeighbours, v) != leaf.vertNeighbours.end()) leaf.vertNeighbours.push_back(v);
     }
     std::erase(leaves, &neighbour);
 }
@@ -221,16 +229,15 @@ void Generation::buildPassages() {
             }
         }
     }
+}
 
-    void Generation::buildDungeon(int numChambers) {
-        rooms.clear();
-        passages.clear();
-        for (Node* leaf : leaves) leaf.buildRoom();
-        merge(numChambers);
-        for (Node* leaf : leaves)  {
-            leaf.shrinkRoom(0.4, 0.8, minLeafSize);
-            if (leaf->room) rooms.push_back(leaf->room);
-        }
-        buildPassages();
+void Generation::buildDungeon(int numChambers) {
+    rooms.clear();
+    for (Node* leaf : leaves) leaf->buildRoom();
+    merge(numChambers);
+    for (Node* leaf : leaves)  {
+        leaf->shrinkRoom(0.4, 0.8, minLeafSize);
+        if (leaf->room) rooms.push_back(*leaf->room);
     }
+    buildPassages();
 }
