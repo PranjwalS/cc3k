@@ -35,17 +35,20 @@ export class Game {
     std::string currentAction = "";
 
     std::vector<std::string> maps;
+    bool manualMaps = false;
 
     public:
 
     Game(const constants::PlayerRace race,
          const int numFloors = constants::board::NUM_FLOORS, 
          const int numChambers = constants::board::NUM_CHAMBERS,
-         std::vector<std::string> maps = {}):
+         std::vector<std::string> maps = {},
+         bool manualMaps = false):
             floor(numChambers), 
             player{newPlayer(race, floor)}, 
             numFloors{numFloors},
-            maps{maps} {
+            maps{maps},
+            manualMaps{manualMaps} {
                 nextFloor();
             }
     ~Game() = default;

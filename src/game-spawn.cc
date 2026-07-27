@@ -36,10 +36,20 @@ Chamber& Game::spawnPlayer() {
 
 void Game::spawnStairs(const Chamber& playerChamber) {
     Chamber* c = nullptr;
-    do {
-        c = &floor.chooseChamber();
-    } while (c == &playerChamber);
-    auto [x, y] = *c->randomEmptyCell();
+
+    if (floor.getChambers().size() > 1) {
+        do {
+            c = &floor.chooseChamber();
+        } while (c == &playerChamber);
+    } else {
+        c = const_cast<Chamber*>(&playerChamber);
+    }
+
+    auto cell = c->randomEmptyCell();
+    if (!cell) {
+        throw std::runtime_error("No empty cell available for stairs");
+    }
+    auto [x, y] = *cell;
     floor.setGrid(x, y, constants::symbol::STAIRS);
     c->removeEmpty(x, y);
 }

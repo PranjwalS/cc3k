@@ -3,10 +3,12 @@ import game;
 import getch;
 import <iostream>;
 import <string>;
+import <string_view>;
 import <optional>;
 import <algorithm>;
 import <fstream>;
 import <vector>;
+import <sstream>;
 
 std::optional<constants::PlayerRace> selectRace() {
     std::string cmd;
@@ -24,22 +26,27 @@ std::optional<constants::PlayerRace> selectRace() {
     return std::nullopt;
 }
 
-std::vector<std::string> readMaps(std::ifstream& s) {
+std::vector<std::string> readMaps(std::istream& s) {
     std::vector<std::string> maps;
+    std::string map;
+    char ch;
 
-    while (true) {
-        std::string map;
-        for (int h = 0; h < constants::board::HEIGHT; h++) {
-            std::string line;
-            std::getline(s, line);
-            if (s.eof()) {
-                return maps;
-            }
-            map += line;
+    while (s.get(ch)) {
+        if (ch == '\n' || ch == '\r') continue;
+        map.push_back(ch);
+        if (static_cast<int>(map.size()) == constants::board::WIDTH * constants::board::HEIGHT) {
+            maps.push_back(map);
+            map.clear();
         }
-
-        maps.push_back(map);
     }
+
+    if (!map.empty()) {
+        if (static_cast<int>(map.size()) == constants::board::WIDTH * constants::board::HEIGHT) {
+            maps.push_back(map);
+        }
+    }
+
+    return maps;
 }
 
 void input(std::string& s, bool useGetch=false) {
@@ -52,18 +59,23 @@ void input(std::string& s, bool useGetch=false) {
 }
 
 int main(int argc, char* argv[]) {
+    std::ifstream file;
     std::vector<std::string> maps;
+    bool hasFile = false;
     bool useGetch = false;
 
     if (argc > 1) {
-        std::ifstream file(argv[1]);
-        if (file.good()) maps = std::move(readMaps(file));
+        file.open(argv[1]);
+        hasFile = file.good();
+    }
 
-        for (int i = file.good() + 1; i < std::min(argc, 3); i++) {
-            if (std::string(argv[i]) == "getch") {
-                useGetch = true;
-            }
-        }
+    if (hasFile) {
+        maps = readMaps(file);
+    }
+
+    int optionIdx = hasFile ? 2 : 1;
+    if (optionIdx < argc && std::string(argv[optionIdx]) == "getch") {
+        useGetch = true;
     }
 
     std::string cmd1, cmd2;
@@ -72,11 +84,12 @@ int main(int argc, char* argv[]) {
         auto playerRace = selectRace();
         if (!playerRace) return 0;
         Game game(playerRace.value(), maps.empty() ? constants::board::NUM_FLOORS : maps.size(),
-                  constants::board::NUM_CHAMBERS, maps);
+                  constants::board::NUM_CHAMBERS, maps, hasFile);
 
         while (!game.isOver()) {
             std::cout << '\n';
             game.display(std::cout);
+            std::cout << "Enter command: " << std::flush;
             game.setAction("");
 
             input(cmd1, useGetch);
