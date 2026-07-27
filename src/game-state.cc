@@ -1,5 +1,6 @@
 module game;
 
+import generation;
 import <cmath>;
 import <iomanip>;
 
@@ -12,9 +13,17 @@ void Game::nextFloor() {
     player->changeFloor(floor);
 
     if (maps.empty()) {
+        Generation randomFloor{constants::generation::MIN_CHAMBER_SIZE, 
+                               constants::generation::MAX_CHAMBER_SIZE};
+        floor.loadGrid(randomFloor.getLayout());
         spawnAll();
     } else {
-        useNextMap();
+        floor.loadGrid(maps[floorNum - 1]);
+        if (manualMaps) {
+            useNextMap();
+        } else {
+            spawnAll();
+        }
     }
 }
 
