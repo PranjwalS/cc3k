@@ -138,12 +138,12 @@ bool Generation::divide(Node* node) {
 
     if (splitHorizontally) {
         int splitX = node->leftX + roomPadding +
-                        randomNum(minLeafSize, node->width - roomPadding - minLeafSize);
+                        randomNum(minLeafSize, node->width - 2 * roomPadding - minLeafSize);
         node->left  = std::make_unique<Node>(node->leftX, splitX, node->topY, node->bottomY);
         node->right = std::make_unique<Node>(splitX, node->rightX, node->topY, node->bottomY);
     } else {
         int splitY = node->topY + roomPadding +
-                        randomNum(minLeafSize, node->height - roomPadding - minLeafSize);
+                        randomNum(minLeafSize, node->height - 2 * roomPadding - minLeafSize);
         node->left  = std::make_unique<Node>(node->leftX, node->rightX, node->topY, splitY);
         node->right = std::make_unique<Node>(node->leftX, node->rightX, splitY, node->bottomY);
     }
@@ -192,16 +192,18 @@ void Generation::mergeNeighbour(Node& leaf) {
     std::erase(leaf.horNeighbours, &neighbour);
     std::erase(leaf.vertNeighbours, &neighbour);
     
+    for (Node* other : leaves) {
+        if (other == &neighbour) continue;
+        std::replace(other->horNeighbours.begin(), other->horNeighbours.end(), &neighbour, &leaf);
+        std::replace(other->vertNeighbours.begin(), other->vertNeighbours.end(), &neighbour, &leaf);
+    }
+
     for (Node* h : neighbour.horNeighbours) {
         if (h == &leaf) continue;
-        std::replace(h->horNeighbours.begin(), h->horNeighbours.end(), &neighbour, &leaf);
-        std::replace(h->vertNeighbours.begin(), h->vertNeighbours.end(), &neighbour, &leaf);
         if (std::ranges::find(leaf.horNeighbours, h) == leaf.horNeighbours.end()) leaf.horNeighbours.push_back(h);
     }
     for (Node* v : neighbour.vertNeighbours) {
         if (v == &leaf) continue;
-        std::replace(v->horNeighbours.begin(), v->horNeighbours.end(), &neighbour, &leaf);
-        std::replace(v->vertNeighbours.begin(), v->vertNeighbours.end(), &neighbour, &leaf);
         if (std::ranges::find(leaf.vertNeighbours, v) == leaf.vertNeighbours.end()) leaf.vertNeighbours.push_back(v);
     }
     std::erase(leaves, &neighbour);
@@ -218,55 +220,46 @@ void Generation::merge(int maxRooms) {
     }
 }
 
+bool Generation::passagePathClear(const std::pair<int, int>& start,
+                                  const std::pair<int, int>& end, 
+                                  const Node* skip1, const Node* skip2) const {
+    const int minX = std::min(start.first, end.first),  maxX = std::max(start.first, end.first);
+    const int minY = std::min(start.second, end.second), maxY = std::max(start.second, end.second);
+    for (const Node* other : leaves) {
+        if (other == skip1 || other == skip2 || !other->room) continue;
+        for (const auto& [x, y] : other->room->getPoints()) {
+            if (x >= minX && x <= maxX && y >= minY && y <= maxY) return false;
+        }
+    }
+    return true;
+}
+
 void Generation::buildPassages() {
     for (Node* leaf : leaves) {
-        auto minMaxA = leaf->room->getMinMax();
-        if (!minMaxA) continue;
-        auto [minA, maxA] = *minMaxA;
-        const auto wallsA = leaf->room->getExterior();
+        if (!leaf->room) continue;
 
         for (Node* h : leaf->horNeighbours) {
-            auto minMaxB = h->room->getMinMax();
-            if (!minMaxB) continue;
-            auto [minB, maxB] = *minMaxB;
-            const auto wallsB = h->room->getExterior();
-
-            std::vector<int> commonYs;
-            for (const auto& a : wallsA) {
-                if (a.first != maxA.first) continue;
-                for (const auto& b : wallsB) {
-                    if (b.first == minB.first && a.second == b.second) {
-                        commonYs.push_back(a.second);
-                    }
+            if (!h->room) continue;
+            for (int i = 0; i < constants::generation::MAX_PASSAGE_ATTEMPTS; ++i) {
+                auto a = leaf->room->pickBound(true, true);
+                auto b = h->room->pickBound(true, false);
+                if (a && b && passagePathClear(*a, *b, leaf, h)) {
+                    leaf->addPassage(a->first, a->second, b->first, b->second, *h);
+                    break;
                 }
             }
-
-            if (commonYs.empty()) continue;
-
-            int y = commonYs.at(randomNum(0, static_cast<int>(commonYs.size()) - 1));
-            leaf->addPassage(maxA.first, y, minB.first, y, *h);
         }
 
         for (Node* v : leaf->vertNeighbours) {
-            auto minMaxB = v->room->getMinMax();
-            if (!minMaxB) continue;
-            auto [minB, maxB] = *minMaxB;
-            const auto wallsB = v->room->getExterior();
-
-            std::vector<int> commonXs;
-            for (const auto& a : wallsA) {
-                if (a.second != maxA.second) continue;
-                for (const auto& b : wallsB) {
-                    if (b.second == minB.second && a.first == b.first) {
-                        commonXs.push_back(a.first);
-                    }
+            if (!v->room) continue;
+            for (int attempt = 0; attempt < constants::generation::MAX_PASSAGE_ATTEMPTS; ++attempt) {
+                auto a = leaf->room->pickBound(false, true);
+                auto b = v->room->pickBound(false, false);
+                if (a && b && passagePathClear(*a, *b, leaf, v)) {
+                    leaf->addPassage(a->first, a->second, b->first, b->second, *v);
+                    break;
                 }
             }
-
-            if (commonXs.empty()) continue;
-
-            int x = commonXs.at(randomNum(0, static_cast<int>(commonXs.size()) - 1));
-            leaf->addPassage(x, maxA.second, x, minB.second, *v);
         }
     }
 }

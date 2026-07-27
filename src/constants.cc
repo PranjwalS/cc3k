@@ -47,8 +47,8 @@ export namespace constants {
     }
 
     namespace generation {
-        constexpr int MIN_CHAMBER_SIZE = 6;
-        constexpr int MAX_CHAMBER_SIZE = 12;
+        constexpr int MIN_CHAMBER_SIZE = 7;
+        constexpr int MAX_CHAMBER_SIZE = 14;
 
         constexpr int ROOM_PADDING = 1;
         constexpr int GRID_SIZE = 3;
@@ -57,6 +57,7 @@ export namespace constants {
         constexpr double MAX_SCALE = 0.75;
 
         constexpr int GUARD_NUM = 4;
+        constexpr int MAX_PASSAGE_ATTEMPTS = 8;
     }
 
     namespace colour {

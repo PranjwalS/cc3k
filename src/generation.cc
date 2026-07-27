@@ -66,4 +66,7 @@ export class Generation {
     void binarySpacePartition(const int numChambers);
     void buildPassages();
     void buildDungeon(int numChambers);
+    
+    bool passagePathClear(const std::pair<int, int>& start, const std::pair<int, int>& end, 
+                          const Node* skip1, const Node* skip2) const;
 };

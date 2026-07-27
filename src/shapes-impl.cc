@@ -147,3 +147,38 @@ void Shape::shrink(double minScale, double maxScale, int minSize) {
         std::erase_if(points, [&](const auto& p) { return listHas(boundary, p); });
     }
 }
+
+std::optional<std::pair<int,int>> Shape::pickBound(bool verticalWall, bool maxSide) const {
+    auto minMax = getMinMax();
+    if (!minMax) return std::nullopt;
+
+    auto [minP, maxP] = *minMax;
+    const auto walls = getExterior();
+    std::vector<std::pair<int,int>> candidates;
+
+    for (const auto& p : walls) {
+        bool onSide = false;
+
+        if (verticalWall) onSide = maxSide ? (p.first == maxP.first) : (p.first == minP.first);
+        else onSide = maxSide ? (p.second == maxP.second) : (p.second == minP.second);
+
+        if (!onSide) continue;
+
+        bool hasPrev = false;
+        bool hasNext = false;
+        for (const auto& q : walls) {
+            if (verticalWall) {
+                if (q.first == p.first && q.second == p.second - 1) hasPrev = true;
+                if (q.first == p.first && q.second == p.second + 1) hasNext = true;
+            } else {
+                if (q.second == p.second && q.first == p.first - 1) hasPrev = true;
+                if (q.second == p.second && q.first == p.first + 1) hasNext = true;
+            }
+        }
+        if (hasPrev && hasNext) candidates.push_back(p);
+    }
+
+    if (candidates.empty()) return std::nullopt;
+
+    return candidates.at(randomNum(0, static_cast<int>(candidates.size()) - 1));
+}
