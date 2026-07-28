@@ -49,7 +49,7 @@ void Game::displayInfo(std::ostream& os) const {
 
     // Outputting the first line of info output
     std::string playerRaceStr = std::string(playerRaceToStr(player->getRace()));
-    std::string leftSide = "Race " + playerRaceStr + " ";
+    std::string leftSide = "Race: " + playerRaceStr + " ";
     leftSide += "Gold: " + std::to_string(player->getGold());
 
     std::string rightSide = "Floor " + std::to_string(floorNum);
