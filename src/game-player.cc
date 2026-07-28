@@ -12,7 +12,7 @@ bool Game::playerAttack(constants::Direction d) {
     if (idx != -1) {
         Enemy* e = enemies[idx].get();
         std::string enemySymbol(1, enemyRaceToSymbol(e->getRace()));
-        // halfling chance of evasion — takes priority
+        // halfling chance of evasion takes priority
         if (e->evasionChance()) {
             currentAction = enemySymbol + " evades PC's attack.";
             return true;

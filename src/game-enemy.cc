@@ -1,10 +1,10 @@
 module game;
 
-//  basically handles both enemy moves and enemy attacks internally at once, since enemy can only do one or the other per turn!
+//  basically handles both enemy moves and enemy attacks internally at once, since enemy can only do one or the other per turn
 void Game::enemyTurns() {
     if (frozen) return;
     for (auto& ptr : enemies) {
-        Enemy* e = ptr.get(); // unique ptr to raw ptr
+        Enemy* e = ptr.get();
         if (!e->isAlive()) continue;
         bool inRadius = std::abs(e->getX() - player->getX()) <= 1 && std::abs(e->getY() - player->getY()) <= 1;
         if (e->getRace() == constants::EnemyRace::Dragon) { // dragon stuff, if player near hoard then ATTACK

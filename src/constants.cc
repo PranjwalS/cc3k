@@ -46,17 +46,22 @@ export namespace constants {
         }
     }
 
+    // DLC stuff
     namespace generation {
         constexpr int MIN_CHAMBER_SIZE = 7;
         constexpr int MAX_CHAMBER_SIZE = 14;
 
+        // Padding between rooms
         constexpr int ROOM_PADDING = 1;
-        constexpr int GRID_SIZE = 3;
 
+        // Minimum and maximum amounts of scaling from a leaf node to a room
         constexpr double MIN_SCALE = 0.4;
         constexpr double MAX_SCALE = 0.75;
 
+        // Guard number to prevent infinite loop when merging leaves to create rooms
         constexpr int GUARD_NUM = 4;
+
+        // Maximum attempts to attempt to create a passage between two rooms
         constexpr int MAX_PASSAGE_ATTEMPTS = 8;
     }
 
@@ -74,10 +79,12 @@ export namespace constants {
         constexpr std::string_view WHITE         = "\033[0;37m";
     }
 
+    // Number of things in each floor
     constexpr int NUM_POTIONS = 10;
     constexpr int NUM_GOLD = 10;
     constexpr int NUM_ENEMIES = 20;
 
+    // User inputted commands
     namespace command {
         constexpr std::string_view FREEZE = "f";
         constexpr std::string_view RESTART = "r";

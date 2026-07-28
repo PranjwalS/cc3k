@@ -120,8 +120,8 @@ std::string Generation::createLayout(int numChambers) {
 bool Generation::divide(Node* node) {
     if (!node->isLeaf()) return false;
 
-    bool canSplitWide = node->width  >= 2 * minLeafSize + 2 * roomPadding;
-    bool canSplitTall = node->height >= 2 * minLeafSize + 2 * roomPadding;
+    bool canSplitWide = node->width  >= 2 * minLeafSize + 2 * constants::generation::ROOM_PADDING;
+    bool canSplitTall = node->height >= 2 * minLeafSize + 2 * constants::generation::ROOM_PADDING;
     if (!canSplitWide && !canSplitTall) return false;
 
     bool mustSplit = node->width > maxLeafSize || node->height > maxLeafSize;
@@ -137,13 +137,15 @@ bool Generation::divide(Node* node) {
     }
 
     if (splitHorizontally) {
-        int splitX = node->leftX + roomPadding +
-                        randomNum(minLeafSize, node->width - 2 * roomPadding - minLeafSize);
+        int splitX = node->leftX + constants::generation::ROOM_PADDING +
+                        randomNum(minLeafSize, node->width - 2 * 
+                                  constants::generation::ROOM_PADDING - minLeafSize);
         node->left  = std::make_unique<Node>(node->leftX, splitX, node->topY, node->bottomY);
         node->right = std::make_unique<Node>(splitX, node->rightX, node->topY, node->bottomY);
     } else {
-        int splitY = node->topY + roomPadding +
-                        randomNum(minLeafSize, node->height - 2 * roomPadding - minLeafSize);
+        int splitY = node->topY + constants::generation::ROOM_PADDING +
+                        randomNum(minLeafSize, node->height - 2 * 
+                                  constants::generation::ROOM_PADDING - minLeafSize);
         node->left  = std::make_unique<Node>(node->leftX, node->rightX, node->topY, splitY);
         node->right = std::make_unique<Node>(node->leftX, node->rightX, splitY, node->bottomY);
     }

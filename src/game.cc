@@ -32,6 +32,8 @@ export class Game {
     bool forceQuit = false;
     int tempAtk = 0;
     int tempDef = 0;
+
+    // The "..." when displaying "Action: ..."
     std::string currentAction = "";
 
     std::vector<std::string> maps;
@@ -78,9 +80,12 @@ export class Game {
     void spawnAll();
     void removeAll();
 
+    // Player actions
     bool playerMove(constants::Direction dir);
     bool playerAttack(constants::Direction dir);
     void usePotion(constants::Direction dir);
+    
+    // Enemy actions
     void enemyTurns();
     void enemyAttack(Enemy& e);
     void setMerchantsPassive() { Merchant::becomePassive(); }

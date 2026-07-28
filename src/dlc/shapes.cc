@@ -25,6 +25,7 @@ export class Shape {
 
     void addPoints(std::span<const std::pair<int, int>> newPoints);
     void addRectangle(const std::pair<int, int>& start, const std::pair<int, int>& end);
+
     // Z-line, random orientation
     void addLine(const std::pair<int, int>& start, const std::pair<int, int>& end);
 
@@ -38,6 +39,7 @@ export class Shape {
     std::optional<std::pair<int, int>> pickBound(bool verticalWall, bool maxSide) const;
 
     private:
+    // Returns true if list has point; false otherwise
     bool listHas(const std::vector<std::pair<int,int>>& list,
                         const std::pair<int,int>& point) const;
 };

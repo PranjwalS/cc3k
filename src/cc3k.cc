@@ -48,6 +48,35 @@ std::vector<std::string> readMaps(std::istream& s) {
     return maps;
 }
 
+// Usage: ./executable [custom_map_file] [dlc]
+//
+// Command Line options
+//    custom_map_file  Optional file containing a custom floor layout.
+//    dlc              Optional flag to enable DLC content.
+//
+// Examples:
+//    ./game
+//       Starts the game with the default map layout.
+//
+//    ./game custom_map.txt
+//       Starts the game using the custom map layout from the file.
+//
+//    ./game dlc
+//       Starts the game with DLC content enabled.
+//
+//    ./game custom_map.txt dlc
+//       Starts the game with both a custom map and DLC enabled.
+//
+// Command Interpreter
+//    - no,so,ea,we,ne,nw,se,sw: moves the player character one block in the appropriate 
+//         cardinal direction.
+//    - a direction: attacks the enemy in the specified direction, if the monster is in the 
+//         immediately specified block (e.g. must be one block north of the @).
+//    - s, d, v, g, t: specifies the race the player wishes to be when starting a game.
+//    - f: stops enemies from moving until this key is pressed again.
+//    - r: restarts the game. All stats, inventory, and gold are reset. A new race should 
+//         be selected.
+//    - q: allows the player to admit defeat and exit the game.
 int main(int argc, char* argv[]) {
     std::ifstream file;
     std::vector<std::string> maps;
