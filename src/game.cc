@@ -35,7 +35,8 @@ export class Game {
     std::string currentAction = "";
 
     std::vector<std::string> maps;
-    bool manualMaps = false;
+    bool manualMaps;
+    bool randomGeneration;
 
     public:
 
@@ -43,12 +44,14 @@ export class Game {
          const int numFloors = constants::board::NUM_FLOORS, 
          const int numChambers = constants::board::NUM_CHAMBERS,
          std::vector<std::string> maps = {},
-         bool manualMaps = false):
+         bool manualMaps = false,
+         bool randomGeneration = false):
             floor(numChambers), 
             player{newPlayer(race, floor)}, 
             numFloors{numFloors},
             maps{maps},
-            manualMaps{manualMaps} {
+            manualMaps{manualMaps},
+            randomGeneration{randomGeneration} {
                 nextFloor();
             }
     ~Game() = default;

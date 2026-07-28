@@ -6,24 +6,27 @@ import <iomanip>;
 
 void Game::nextFloor() {
     if (floorNum > numFloors) return;
+
     int numChambers = floor.getNumChambers();
     ++floorNum;
     floor = Floor(numChambers);
+
     removeAll();
     player->changeFloor(floor);
 
-    if (maps.empty()) {
-        Generation randomFloor{constants::generation::MIN_CHAMBER_SIZE, 
-                               constants::generation::MAX_CHAMBER_SIZE};
+    // Custom layout takes priority
+    if (!maps.empty()) {
+        useNextMap();
+    } else if (randomGeneration) {
+        Generation randomFloor{
+            constants::generation::MIN_CHAMBER_SIZE,
+            constants::generation::MAX_CHAMBER_SIZE
+        };
+
         floor.loadGrid(randomFloor.getLayout());
         spawnAll();
     } else {
-        floor.loadGrid(maps[floorNum - 1]);
-        if (manualMaps) {
-            useNextMap();
-        } else {
-            spawnAll();
-        }
+        spawnAll();
     }
 }
 

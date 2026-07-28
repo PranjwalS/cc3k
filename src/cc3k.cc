@@ -1,7 +1,6 @@
 import constants;
 import game;
 import getch;
-import generation;
 import <iostream>;
 import <string>;
 import <string_view>;
@@ -62,21 +61,36 @@ void input(std::string& s, bool useGetch=false) {
 int main(int argc, char* argv[]) {
     std::ifstream file;
     std::vector<std::string> maps;
-    bool hasFile = false;
+
+    bool useCustom = false;
     bool useGetch = false;
+    bool useDLC = false;
+    
+    int arg = 1;
 
-    if (argc > 1) {
-        file.open(argv[1]);
-        hasFile = file.good();
+    // First parameter may possibly be custom floor layout file
+    if (arg < argc) {
+        file.open(argv[arg]);
+        if (file.good()) {
+            maps = readMaps(file);
+            useCustom = true;
+            ++arg;
+        }
     }
 
-    if (hasFile) {
-        maps = readMaps(file);
-    }
+    // Flags
+    while (arg < argc) {
+        std::string option = argv[arg];
 
-    int optionIdx = hasFile ? 2 : 1;
-    if (optionIdx < argc && std::string(argv[optionIdx]) == "getch") {
-        useGetch = true;
+        if (option == "getch") {
+            useGetch = true;
+        } else if (option == "dlc") {
+            useDLC = true;
+        } else {
+            std::cerr << "Unknown option: " << option << '\n';
+            return 1;
+        }
+        ++arg;
     }
 
     std::string cmd1, cmd2;
@@ -85,7 +99,7 @@ int main(int argc, char* argv[]) {
         auto playerRace = selectRace();
         if (!playerRace) return 0;
         Game game(playerRace.value(), maps.empty() ? constants::board::NUM_FLOORS : maps.size(),
-                  constants::board::NUM_CHAMBERS, maps, hasFile);
+                  constants::board::NUM_CHAMBERS, maps, useCustom, useDLC);
 
         while (!game.isOver()) {
             std::cout << '\n';

@@ -3,8 +3,8 @@ src/random.cc
 src/constants.cc
 src/gold.cc
 src/potion.cc
-src/shapes.cc
-src/generation.cc
+src/dlc/shapes.cc
+src/dlc/generation.cc
 src/chamber.cc
 src/floor.cc
 src/character.cc
@@ -14,8 +14,8 @@ src/game.cc
 
 src/random-impl.cc
 src/gold-impl.cc
-src/shapes-impl.cc
-src/generation-impl.cc
+src/dlc/shapes-impl.cc
+src/dlc/generation-impl.cc
 src/chamber-impl.cc
 src/floor-impl.cc
 src/character-impl.cc
