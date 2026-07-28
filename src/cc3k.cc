@@ -1,6 +1,5 @@
 import constants;
 import game;
-import getch;
 import <iostream>;
 import <string>;
 import <string_view>;
@@ -49,21 +48,11 @@ std::vector<std::string> readMaps(std::istream& s) {
     return maps;
 }
 
-void input(std::string& s, bool useGetch=false) {
-    if (useGetch) {
-        char c = getch();
-        s = c;
-    } else {
-        std::cin >> s;
-    }
-}
-
 int main(int argc, char* argv[]) {
     std::ifstream file;
     std::vector<std::string> maps;
 
     bool useCustom = false;
-    bool useGetch = false;
     bool useDLC = false;
     
     int arg = 1;
@@ -78,13 +67,11 @@ int main(int argc, char* argv[]) {
         }
     }
 
-    // Flags
+    // Easy to add new optional flags when more content is added
     while (arg < argc) {
         std::string option = argv[arg];
 
-        if (option == "getch") {
-            useGetch = true;
-        } else if (option == "dlc") {
+        if (option == "dlc") {
             useDLC = true;
         } else {
             std::cerr << "Unknown option: " << option << '\n';
@@ -107,27 +94,33 @@ int main(int argc, char* argv[]) {
             std::cout << "Enter command: " << std::flush;
             game.setAction("");
 
-            input(cmd1, useGetch);
+            std::cin >> cmd1;
             if (cmd1 == constants::command::ATTACK ||
                 cmd1 == constants::command::USE_POTION) {
-                input(cmd2, useGetch);
-                constants::Direction dir = cmd2.size() == 1 ? cmdToDir(szxcToDir(cmd2)) : cmdToDir(cmd2);
+
+                std::cin >> cmd2;
+                if (!isDirection(cmd2)) {
+                    std::cout << "Invalid direction!\n";
+                    continue;
+                }
+                constants::Direction dir = cmdToDir(cmd2);
+                
                 if (cmd1 == constants::command::ATTACK) {
                     game.playerAttack(dir);
                 } else {
                     game.usePotion(dir);
                 }
-            } else if (isDirection(cmd1) || isDirection(szxcToDir(cmd1))) {
-                game.playerMove(cmd1.size() == 1 ? cmdToDir(szxcToDir(cmd1)) : cmdToDir(cmd1));
+            } else if (isDirection(cmd1)) {
+                game.playerMove(cmdToDir(cmd1));
             } else if (cmd1 == constants::command::FREEZE) {
                 game.toggleFreeze();
             } else if (cmd1 == constants::command::RESTART) {
                 break;  // breaks inner loop, outer loop prompts new race
             } else if (cmd1 == constants::command::QUIT) {
-                std::cout << "Closing game" << std::endl;
+                std::cout << "Closing game\n";
                 return 0;
             } else {
-                std::cout << "Invalid command!" << std::endl;
+                std::cout << "Invalid command!\n";
                 continue;
             }
             game.enemyTurns();
@@ -142,7 +135,7 @@ int main(int argc, char* argv[]) {
         }
 
         std::cout << "Play again huh? (y/n): " << std::endl;
-        input(cmd1, useGetch);
+        std::cin >> cmd1;
         if (cmd1 != "y") {
             std::cout << "Closing game" << std::endl;
             return 0;
